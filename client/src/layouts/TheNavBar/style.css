@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    
+    .test{
+        @apply  max-w-8xl mx-auto
+    }
+}
