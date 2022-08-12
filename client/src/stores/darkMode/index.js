@@ -1,7 +1,7 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, computed } from 'vue'
 
-export const useDarkmode = defineStore('darkmode', () => {
+const useDarkmode = defineStore('darkmode', () => {
   const darkmode = ref(localStorage.getItem('theme') === 'true')
   const init = () => (document.documentElement.classList.add(darkmode.value ? 'dark' : 'light'))
   const toggleMode = () => {
@@ -18,3 +18,5 @@ export const useDarkmode = defineStore('darkmode', () => {
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useDarkmode, import.meta.hot))
 }
+
+export default useDarkmode

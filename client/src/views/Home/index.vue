@@ -1,6 +1,5 @@
 <script setup>
-// import { useCounter } from '../../stores/counter.js'
-import { useDarkmode } from '../../stores/darkMode/darkMode'
+import { useDarkmode } from '../../stores'
 import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
 const { darkmode } = storeToRefs(myDarkmode)
