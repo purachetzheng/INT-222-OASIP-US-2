@@ -5,7 +5,7 @@ import NavItems from './NavItems.vue';
  
 <template>
     <header class="bg-white w-full">
-        <div class="flex items-center justify-between test py-2">
+        <div class="myContainer flex items-center justify-between py-2">
             <div class="font-bold text-2xl">OASIP</div>
 
             <ul class="flex gap-4">
