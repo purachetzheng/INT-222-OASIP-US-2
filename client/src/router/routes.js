@@ -7,6 +7,11 @@ export default [
     {
         path: '/schedules',
         name: 'Schedules',
-        component: () => import('../views/Schedules/index.vue'),
+        component: () => import('../views/event/Schedules/index.vue'),
+    },
+    {
+        path: '/schedules/:eventId',
+        name: 'EventDetail',
+        component: () => import('../views/event/Detail/index.vue'),
     },
 ]
