@@ -10,6 +10,9 @@ export const formatDatetime = {
     monthDayYear: (dateTime) => dayjs(dateTime).format('LL'),
     dayMonthYear: (dateTime) => dayjs(dateTime).format('D MMM YYYY'),
     hourTime: (dateTime) => dayjs(dateTime).format('LT'),
+    inputDate: (dateTime) => dayjs(dateTime).format('YYYY-MM-DD'),
+    inputTime: (dateTime) => dayjs(dateTime).format('HH:mm'),
+    jsonDatetime: (date, time) => dayjs(date + time).toJSON()
 }
 export const formatFull1 = (dateTime) => dayjs(dateTime).format('LLLL')
 
@@ -24,3 +27,4 @@ export const formatDayMonthYear = (dateTime) => dayjs(dateTime).format('D MMM YY
 export const formatHourTime = (dateTime) => dayjs(dateTime).format('LT')
 
 export const isFuture = (dateTime) => dayjs(dateTime).isAfter(dayjs())
+
