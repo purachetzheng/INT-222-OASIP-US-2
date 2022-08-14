@@ -1,11 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import {
-    formatMonthDayYear,
-    formatHourTime,
-    formatFull1,
-    formatFull2,
-    isFuture
+    isFuture,
+    formatDatetime
 } from '../../../utils/dateTime'
 import { IcClock, IcClockOutline } from '../../../assets/icons/time-icons'
 import { IcArrowRight, IcArrowRightBold } from '../../../assets/icons/arrows-icons'
@@ -26,8 +23,8 @@ const event = computed(() => {
             name: props.event.eventCategoryName,
         },
         duration: props.event.eventDuration,
-        startDate: formatMonthDayYear(props.event.eventStartTime),
-        startTime: formatHourTime(props.event.eventStartTime),
+        startDate: formatDatetime.monthDayYear(props.event.eventStartTime),
+        startTime: formatDatetime.hourTime(props.event.eventStartTime),
         isFuture: isFuture(props.event.eventStartTime)
     }
 })
