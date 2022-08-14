@@ -10,8 +10,8 @@ myDarkmode.init()
 </script>
  
 <template>
-  <div>
-    <div class="">
+  <main class="">
+    <div >
       <h1 class="text-3xl font-bold underline">
         {{ $t("hello") }}
       </h1>
@@ -19,8 +19,8 @@ myDarkmode.init()
       <button @click="myDarkmode.toggleMode()">toggle</button>
 
     </div>
-  </div>
   <h1>{{ darkmode }}</h1>
+  </main>
 </template>
  
 <style>

@@ -8,6 +8,7 @@ specifiers:
   pinia: ^2.0.18
   postcss: ^8.4.16
   tailwindcss: ^3.1.8
+  vee-validate: ^4.6.5
   vite: ^3.0.0
   vue: ^3.2.37
   vue-i18n: '9'
@@ -17,6 +18,7 @@ dependencies:
   axios: 0.27.2
   dayjs: 1.11.4
   pinia: 2.0.18_vue@3.2.37
+  vee-validate: 4.6.5_vue@3.2.37
   vue: 3.2.37
   vue-i18n: 9.2.2_vue@3.2.37
   vue-router: 4.1.3_vue@3.2.37
@@ -986,6 +988,15 @@ packages:
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /vee-validate/4.6.5_vue@3.2.37:
+    resolution: {integrity: sha512-lh3aV7z7iwzzfRZ8/zcW74G1K7aWCQ4sINcliVordHin9TRBfLMdJvzzfwLHdTqYmtq25y+GUu1bNN4S2lreCA==}
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.2.37
+      '@vue/devtools-api': 6.2.1
+    dev: false
 
   /vite/3.0.5:
     resolution: {integrity: sha512-bRvrt9Tw8EGW4jj64aYFTnVg134E8hgDxyl/eEHnxiGqYk7/pTPss6CWlurqPOUzqvEoZkZ58Ws+Iu8MB87iMA==}
