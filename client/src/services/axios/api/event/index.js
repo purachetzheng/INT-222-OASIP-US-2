@@ -14,6 +14,9 @@ const apiEvent = {
   getById(id) {
     return apiClient.get(`/events/${id}`)
   },
+  patch(id, data){
+    return apiClient.patch(`/events/${id}`, data)
+  }
 }
 
 export default apiEvent
