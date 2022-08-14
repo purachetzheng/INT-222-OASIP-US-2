@@ -6,7 +6,7 @@ import {
     formatFull1,
     formatFull2,
     isFuture
-} from '../utils/dateTime'
+} from '../../../utils/dateTime'
 import { IcClock, IcClockOutline } from '../../../assets/icons/time-icons'
 import { IcArrowRight, IcArrowRightBold } from '../../../assets/icons/arrows-icons'
 
