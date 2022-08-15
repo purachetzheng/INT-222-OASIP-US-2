@@ -5,11 +5,10 @@ import { apiEvent } from '../../../services/axios/api'
 import { isFuture, formatDatetime } from '../../../utils/dateTime'
 import {
   IcClockOutline,
-  IcHourglassEmpty,
+  IcHourglassEmpty, IcCalendarRound
 } from '../../../assets/icons/time-icons'
 import { IcEmailOutline } from '../../../assets/icons/social-icons'
 import IcPersonOutline from '../../../assets/icons/social-icons/IcPersonOutline.vue'
-import IcCalendarRound from '../../../assets/icons/time-icons/IcCalendarRound.vue'
 
 import EditEvent from './EditEvent.vue'
 
@@ -81,7 +80,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="gap-4 grid grid-cols-12 px-20">
+  <main class="myContainer py-4 gap-4 grid grid-cols-12 px-20">
     <!-- <h1 class="text-3xl font-bold text-center">Event Detail</h1> -->
 
     <div class="col-span-12">
