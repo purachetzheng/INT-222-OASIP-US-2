@@ -1,15 +1,9 @@
 <script setup>
 import { computed, reactive } from 'vue'
-import { apiEvent } from '../../../services/axios/api'
 import { useRoute, useRouter } from 'vue-router'
 import { Form, Field, ErrorMessage } from 'vee-validate'
 import {validateEmail,validateNotes, validateDateTime} from '../../../services/validater'
-import {
-    BaseTextarea,
-    BaseInputText,
-    BaseInputDate,
-    BaseInputTime,
-} from '../../../components/base'
+
 import { isFuture, formatDatetime } from '../../../utils/dateTime'
 import IcArrowRightBold from '../../../assets/icons/arrows-icons/IcArrowRightBold.vue'
 
@@ -88,7 +82,7 @@ const onSubmit = ({date, time, notes} = {}) => {
                 </div>
                 <div class="flex justify-center gap-4">
                     <button class="bg-blue-500 p-2">Edit</button>
-                    <button class="bg-red-500 p-2" @click="$emit('closeModal')">
+                    <button type="button" class="bg-red-500 p-2" @click="$emit('closeModal')">
                         Cancel
                     </button>
                 </div>
