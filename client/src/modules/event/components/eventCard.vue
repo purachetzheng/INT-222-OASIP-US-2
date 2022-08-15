@@ -32,13 +32,13 @@ const event = computed(() => {
 </script>
 
 <template>
-    <li class="flex flex-col overflow-hidden shadow-md bg-white  font-semibold rounded-md cursor-pointer group"
+    <li class="h-42 flex flex-col overflow-hidden shadow-md bg-white  font-semibold rounded-md cursor-pointer group"
         @click="$emit('clickEventCard')">
         <div class="h-8 w-full flex items-center justify-center gap-1 text-white group-hover:-mt-8 duration-300 ease-in-out"
             :class="[event.isFuture ? 'bg-blue-500' : 'bg-gray-400']">
             {{ event.isFuture ? 'Upcoming' : 'Past' }}
         </div>
-        <div class="relative bg-white p-4 flex flex-col gap-0.5">
+        <div class="relative h-34 bg-white p-4 flex flex-col gap-0.5">
             <span class="text-sm text-blue-500">{{ event.startDate }}</span>
             <h1 class="text-xl pb-1 font-bold truncate">{{ event.name }}</h1>
             <h2 class="text-md text-gray-800">{{ event.category.name }}</h2>
