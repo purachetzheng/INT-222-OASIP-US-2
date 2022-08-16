@@ -1,14 +1,12 @@
 <script setup>
-// import { getEvent } from '../../services/axios/api/event'
-// import apiEvent from '../../services/axios/api/event'
-import { apiEvent } from '../../../services/axios/api'
-import { EventCard } from '../../../modules/event/components/'
+import { apiEvent } from '@/services/axios/api'
+// import { EventCard } from '@/modules/event/components/'
+import EventCard from '@/modules/event/components/eventCard/index.vue'
+
 import { onBeforeMount, ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import EventFilter from './eventFilter.vue'
 import Pagination from './Pagination.vue'
-import { IcClock, IcClockOutline } from '../../../assets/icons/time-icons'
-import { IcArrowRight, IcArrowRightBold } from '../../../assets/icons/arrows-icons'
 const router = useRouter()
 const events = ref([])
 const pageInfo = reactive({
@@ -51,22 +49,22 @@ onBeforeMount(async () => {
 
 <template>
   <main
-    class="myContainer h-full flex flex-col py-4 gap-4 justify-between "
+    class="my-container h-full flex flex-col py-4 gap-4 justify-between test"
   >
- 
-    <h1 class="text-center text-2xl font-bold">All Bookings</h1>
+    <h1 class="text-center text-2xl font-bold">Schedules</h1>
     <EventFilter />
-    <ul
+    <TransitionGroup name="event-list" tag="ul"
       id="event-list"
-      class="h-full auto-rows-min grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2"
+      class="h-full auto-rows-min grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4"
     >
+      
       <EventCard
-        v-for="event in events"
+        v-for="event in events" :key="event.id"
         :event="event"
         @click-event-card="
           router.push({ name: 'EventDetail', params: { eventId: event.id } })"
       />
-    </ul>
+    </TransitionGroup>
     
     <!-- <Pagination
       :page="pageInfo.number"
@@ -79,4 +77,6 @@ onBeforeMount(async () => {
   </main>
 </template>
 
-<style></style>
+<style>
+
+</style>
