@@ -17,7 +17,7 @@ const isHover = ref(false)
 </script>
 
 <template>
-  <div
+  <li
     class="relative group hover:bg-gray-200 rounded-full"
     @mouseenter="isHover = true"
     @mouseleave="isHover = false"
@@ -48,7 +48,7 @@ const isHover = ref(false)
         </ul>
       </div>
     </Transition>
-  </div>
+  </li>
 </template>
 
 <style>
