@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 @layer components {
-    .myContainer{
+    .my-container{
         @apply max-w-8xl w-full mx-auto px-6 xl:px-0 
     }
     .form-control{

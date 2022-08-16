@@ -80,7 +80,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="myContainer py-4 gap-4 grid grid-cols-12 px-20">
+  <main class="my-container py-4 gap-4 grid grid-cols-12 px-20">
     <!-- <h1 class="text-3xl font-bold text-center">Event Detail</h1> -->
 
     <div class="col-span-12">

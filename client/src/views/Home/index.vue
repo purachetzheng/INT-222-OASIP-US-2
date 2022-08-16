@@ -7,9 +7,9 @@ myDarkmode.init()
 </script>
 
 <template>
-  <main class="">
+  <main class="my-container">
     <div>
-      <h1 class="text-3xl font-bold underline">
+      <h1 class="text-3xl font-bold underline ">
         {{ $t('hello') }}
       </h1>
       <button @click="myDarkmode.toggleMode()">toggle</button>
@@ -18,6 +18,7 @@ myDarkmode.init()
     <fa-icon icon="fa-solid fa-user-secret" />
     <fa-icon icon="coffee" />
     <fa-icon icon="times" />
+      <fa-icon :icon="['fas', 'circle']" class="text-red-500" />
     <fa-layer class="fa-4x">
       <fa-icon :icon="['fas', 'circle']" class="text-red-500" />
       <fa-icon :icon="['fas', 'times']" transform="shrink-8" inverse />
