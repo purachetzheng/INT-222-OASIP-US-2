@@ -10,7 +10,7 @@ import {
 import { IcEmailOutline } from '../../../assets/icons/social-icons'
 import IcPersonOutline from '../../../assets/icons/social-icons/IcPersonOutline.vue'
 
-import EditEvent from './EditEvent.vue'
+import EditEventModal from './EditEventModal.vue'
 
 const { params } = useRoute()
 const router = useRouter()
@@ -123,7 +123,7 @@ onBeforeMount(async () => {
       <!-- <BaseTextarea :text="event.note" /> -->
     </section>
 
-    <EditEvent
+    <EditEventModal
       :visible="editModal.visible.status"
       :event-datetime="event.startDateTime"
       :eventNotes="event.notes"
