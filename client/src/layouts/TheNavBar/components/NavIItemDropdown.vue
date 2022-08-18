@@ -37,7 +37,7 @@ const isHover = ref(false)
       >
         <ul class="flex flex-col w-max max-w-xs">
           <li v-for="item in subItems">
-          <router-link :to="{ name: subItems.route }" class="flex gap-4 p-4 rounded-2xl hover:bg-gray-200">
+          <router-link :to="{ name: item.route }" class="flex gap-4 p-4 rounded-2xl hover:bg-gray-200">
             <component :is="item.icon" class="basis-10 -mt-2 w-10 h-10"></component>
             <div class="flex flex-col item-center gap-1">
                 <p class="font-semibold">{{ item.name }}</p>
