@@ -3,7 +3,7 @@ import NavItems from './NavItems.vue'
 import IcArrowDown from '@/assets/icons/arrows-icons/IcArrowDown.vue'
 import { IcCalendarRound } from '@/assets/icons/time-icons'
 import { IcPlusCircleOutline } from '@/assets/icons/editing-icons'
-import { NavIItemDropdown } from './components'
+import { NavIItemDropdown, DarkmodeToggle } from './components'
 
 const navItemDropdown = [
   {
@@ -56,7 +56,7 @@ const navItemDropdown = [
 </script>
 
 <template>
-  <header class="w-full h-20 bg-whit sticky top-0 z-10  bg-gray-100 backdrop-blur-md bg-opacity-50">
+  <header class="w-full h-20 bg-whit sticky top-0 z-10 bg-gray-100 dark:bg-transparent backdrop-blur-md bg-opacity-50">
     <div class="my-container flex items-center h-full">
       <section class="grow basis-1/3 font-bold text-2xl">
         <router-link :to="{ name: 'Home' }"> OASIP </router-link>
@@ -72,7 +72,9 @@ const navItemDropdown = [
           />
         </ul>
       </nav>
-      <section class="grow basis-1/3"></section>
+      <section class="grow basis-1/3 flex justify-end overflow-hidden ">
+        <DarkmodeToggle />
+      </section>
     </div>
   </header>
 </template>

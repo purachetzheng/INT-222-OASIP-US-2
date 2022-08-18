@@ -1,9 +1,13 @@
 <script setup>
 import { Navbar } from './layouts'
+import { useDarkmode } from '@/stores'
+import { storeToRefs } from 'pinia'
+const myDarkmode = useDarkmode()
+myDarkmode.init()
 </script>
  
 <template>
-  <div class="min-h-screen w-full flex flex-col bg-gray-100 dark:bg-gray-700">
+  <div class="min-h-screen w-full flex flex-col bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700">
     <Navbar />
     <!-- <TheNavBar /> -->
       <router-view></router-view>
