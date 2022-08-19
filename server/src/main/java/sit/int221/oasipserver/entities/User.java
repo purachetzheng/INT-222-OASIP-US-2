@@ -2,6 +2,8 @@ package sit.int221.oasipserver.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -24,9 +26,13 @@ public class User {
     @Column(name = "role", nullable = false, length = 10)
     private String role;
 
+
+    @CreationTimestamp
     @Column(name = "createdOn", insertable = false)
     private Instant createdOn;
 
+
+    @UpdateTimestamp
     @Column(name = "updatedOn", insertable = false)
     private Instant updatedOn;
 }
