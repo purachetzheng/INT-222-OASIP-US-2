@@ -30,7 +30,18 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
-        return userService.create(newUser, result);
+    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser) {
+        return userService.create(newUser);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Integer id) {userService.delete(id);}
+
+    @PatchMapping("/{id}")
+    public UserDto updateUser(
+            @Valid @RequestBody CreateUserDto updateUser,
+            @PathVariable Integer id) {
+        return userService.update(updateUser, id);
+    }
+
 }

@@ -7,7 +7,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import sit.int221.oasipserver.dtos.CreateUserDto;
-import sit.int221.oasipserver.dtos.Role;
 import sit.int221.oasipserver.dtos.UserDto;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
@@ -35,8 +34,27 @@ public class UserService {
         return user;
     }
 
-    public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+    public void delete(Integer id) {
+        repository.delete(getById(id));
+    }
+
+    public UserDto create(CreateUserDto newUser) {
         User user = modelMapper.map(newUser, User.class);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
+    }
+
+    public UserDto update(CreateUserDto updateUser, Integer id) {
+        User user = mapUser(getById(id), updateUser);
+        return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
+    }
+
+    private User mapUser(User existingUser, CreateUserDto updateUser) {
+        if(updateUser.getName() != null)
+            existingUser.setName(updateUser.getName());
+        if(updateUser.getEmail() != null)
+            existingUser.setEmail(updateUser.getEmail());
+        if(updateUser.getRole() != null)
+            existingUser.setRole(String.valueOf(updateUser.getRole()));
+        return existingUser;
     }
 }
