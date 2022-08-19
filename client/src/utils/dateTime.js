@@ -27,4 +27,6 @@ export const formatDayMonthYear = (dateTime) => dayjs(dateTime).format('D MMM YY
 export const formatHourTime = (dateTime) => dayjs(dateTime).format('LT')
 
 export const isFuture = (dateTime) => dayjs(dateTime).isAfter(dayjs())
+export const isFutureOrSameDay = (dateTime) => dayjs(dateTime).isAfter(dayjs(), 'day') || dayjs(dateTime).isSame(dayjs(), 'day')
+export const isBefore = (dateTime) => dayjs(dateTime).isBefore(dayjs())
 

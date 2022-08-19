@@ -1,67 +1,138 @@
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Form, Field, ErrorMessage } from 'vee-validate'
+import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
 import {
   validateEmail,
   validateNotes,
   validateDateTime,
 } from '../../../services/validater'
-
-import { isFuture, formatDatetime } from '../../../utils/dateTime'
+import * as yup from 'yup'
+import {
+  isFuture,
+  isBefore,
+  isFutureOrSameDay,
+  formatDatetime,
+} from '../../../utils/dateTime'
 import IcArrowRightBold from '../../../assets/icons/arrows-icons/IcArrowRightBold.vue'
 import BaseModal from '../../../components/base/BaseModal.vue'
-
+import InputField from './InputField.vue'
+import TextAreaField from './TextAreaField.vue'
+import MyTextInput from '../../testForm/MyTextInput.vue'
+import '../../../services/validater/YupCustomValidations'
+import { apiEvent } from '../../../services/axios/api'
 const { params } = useRoute()
 const { eventId } = params
 
 const emits = defineEmits(['closeModal', 'editEvent'])
 const props = defineProps({
-  visible: {
-    type: Boolean,
-    default: false,
+  categoryID: {
+    type: Number,
+    require: true,
   },
-  eventDatetime: {
+  datetime: {
     type: String,
     require: true,
   },
-  eventNotes: {
+  notes: {
     type: String,
+    require: true,
+  },
+  duration: {
+    type: Number,
     require: true,
   },
 })
 
-const datetime = computed(() => {
-  return {
-    startDate: formatDatetime.dayMonthYear(props.eventDatetime),
-    startTime: formatDatetime.hourTime(props.eventDatetime),
-    inputDate: formatDatetime.inputDate(props.eventDatetime),
-    inputTime: formatDatetime.inputTime(props.eventDatetime),
-  }
+const event = ref({
+  categoryId: props.categoryID,
+  startDate: formatDatetime.dayMonthYear(props.datetime),
+  startTime: formatDatetime.hourTime(props.datetime),
+  inputDate: formatDatetime.inputDate(props.datetime),
+  inputTime: formatDatetime.inputTime(props.datetime),
+  notes: props.notes,
 })
 
-const onSubmit = ({ date, time, notes } = {}) => {
+const timePool = ref([])
+const updateTimePool = async (inputDate, id = props.eventCategoryID) => {
+  try {
+    const param = {
+      keyword: inputDate,
+      eventCategoryID: id,
+    }
+    // console.log(param)
+    const { data } = await apiEvent.getAll(param)
+    timePool.value = data
+    console.log('timePool: ', timePool.value)
+  } catch (error) {}
+}
+const isOverlap = () => {
+  console.log(timeRef.value)
+  console.log(dateRef.value)
+}
+const schema = {
+  date(value) {
+    if (!isFutureOrSameDay(value)) {
+      return 'Start Time must be future'
+    }
+    if (isOverlap()) {
+      return 'Start Time must not be overlap'
+    }
+    return true
+  },
+  time(value) {
+    if (isOverlap()) {
+      return 'Start Time must not be overlap'
+    }
+    return true
+  },
+  notes(value) {
+    if (value && value.trim() === '') {
+      return 'Notes must not be blank'
+    }
+    return true
+  },
+}
+const { handleSubmit, errors, setValues, useFieldModel } = useForm({
+  validationSchema: schema,
+  // initialTouched: {
+  //   email: true, // touched
+  //   notes: false, // non-touched
+  // },
+  // initialErrors: {
+  //   email: 'This email is already taken',
+  //   password: 'The password is too short',
+  // },
+  keepValuesOnUnmount: false,
+})
+setValues({
+  date: event.value.inputDate,
+  time: event.value.inputTime,
+  notes: event.value.notes,
+})
+const [dateRef, timeRef, notes] = useFieldModel(['date', 'time', 'notes'])
+const onSubmit = handleSubmit(({ date, time, notes }) => {
   const data = {
     eventStartTime: formatDatetime.jsonDatetime(date, time),
   }
   if (!!notes) data.eventNotes = notes.trim()
   emits('editEvent', data)
-}
+})
+
+onMounted(() => {
+  updateTimePool(event.value.inputDate, event.value.categoryId)
+})
 </script>
 
 <template>
   <Teleport to="body">
-    <BaseModal :show="visible" @close="$emit('closeModal')" :width="'w-160'">
+    <BaseModal :show="true" @close="$emit('closeModal')" :width="'w-160'">
       <template #header>
         <h1 class="text-2xl font-semibold text-center">Edit Event</h1>
       </template>
 
       <template #body>
-        <Form
-          id="edit-form"
-          class="flex flex-col gap-4"
-          @submit="onSubmit"
-        >
+        <div class="flex flex-col gap-2">
           <div class="grid grid-cols-8 items-center">
             <p class="col-span-7 font-medium text-sm">Date</p>
             <p class="text-right text-red-500 text-sm">*</p>
@@ -69,16 +140,12 @@ const onSubmit = ({ date, time, notes } = {}) => {
               {{ datetime.startDate }}
             </p>
             <IcArrowRightBold class="col-span-1 w-6 h-6" />
-            <Field
+            <InputField
+              class="col-span-4"
+              name="date"
               type="date"
-              class="form-input col-span-4"
-              name="date"
-              :rules="validateDateTime"
-              :value="datetime.inputDate"
-            />
-            <ErrorMessage
-              class="col-span-8 text-right text-red-500 text-sm"
-              name="date"
+              label=""
+              @change="updateTimePool($event.target.value)"
             />
           </div>
 
@@ -89,41 +156,30 @@ const onSubmit = ({ date, time, notes } = {}) => {
               {{ datetime.startTime }}
             </p>
             <IcArrowRightBold class="col-span-1 w-6 h-6" />
-            <Field
+            <InputField
+              class="col-span-4"
+              name="time"
               type="time"
-              class="form-input col-span-4"
-              name="time"
-              :rules="validateDateTime"
-              :value="datetime.inputTime"
-            />
-            <ErrorMessage
-              class="col-span-8 text-right text-red-500 text-sm"
-              name="time"
+              label=""
             />
           </div>
 
           <div class="flex flex-col">
             <p class="font-medium text-sm mb-2">Notes</p>
-            <Field
-              as="textarea"
-              class="form-control col-span-4"
+            <TextAreaField
+              class="col-span-4"
               name="notes"
-              :rules="validateNotes"
-              :value="eventNotes"
-            />
-            <ErrorMessage
-              class="text-right text-red-500 text-sm"
-              name="notes"
+              type="notes"
+              label=""
             />
           </div>
-        </Form>
+        </div>
       </template>
 
       <template #footer>
         <div class="flex justify-center gap-4">
-          <button type="submit" form="edit-form" class="bg-blue-500 p-2">
-            Edit
-          </button>
+          <button @click="onSubmit" class="bg-blue-500 p-2">Edit</button>
+
           <button
             type="button"
             class="bg-red-500 p-2"
@@ -137,6 +193,4 @@ const onSubmit = ({ date, time, notes } = {}) => {
   </Teleport>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

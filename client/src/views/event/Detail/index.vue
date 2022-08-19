@@ -1,16 +1,8 @@
 <script setup>
-import { onBeforeMount, reactive, ref } from 'vue'
+import { defineAsyncComponent, onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiEvent } from '../../../services/axios/api'
 import { isFuture, formatDatetime } from '../../../utils/dateTime'
-import {
-  IcClockOutline,
-  IcHourglassEmpty, IcCalendarRound
-} from '../../../assets/icons/time-icons'
-import { IcEmailOutline } from '../../../assets/icons/social-icons'
-import IcPersonOutline from '../../../assets/icons/social-icons/IcPersonOutline.vue'
-
-import EditEventModal from './EditEventModal.vue'
 
 const { params } = useRoute()
 const router = useRouter()
@@ -18,10 +10,11 @@ const event = ref({
   category: {},
 })
 const { eventId } = params
-
+const testEvent = ref({})
 const getEvent = async () => {
   try {
     const { data, status } = await apiEvent.getById(eventId)
+    testEvent.value = data
     event.value = {
       id: data.id,
       name: data.bookingName,
@@ -64,18 +57,33 @@ const submitEdit = async (eventData) => {
     const data = await res.data
     console.log(res)
     getEvent()
-    
+
     editModal.visible.off()
     alert('Edit complete')
   } catch (error) {
-    console.log(error.message);
-    const {data, status} = error.response
+    console.log(error.message)
+    const { data, status } = error.response
     alert(data.message)
   }
 }
 
 onBeforeMount(async () => {
   getEvent()
+})
+
+const EditEventModal = defineAsyncComponent({
+  loader: () => import('./EditEventModal.vue'),
+
+  // A component to use while the async component is loading
+  // loadingComponent: LoadingComponent,
+  // Delay before showing the loading component. Default: 200ms.
+  delay: 200,
+
+  // A component to use if the load fails
+  // errorComponent: ErrorComponent,
+  // The error component will be displayed if a timeout is
+  // provided and exceeded. Default: Infinity.
+  timeout: 3000,
 })
 </script>
 
@@ -124,9 +132,11 @@ onBeforeMount(async () => {
     </section>
 
     <EditEventModal
-      :visible="editModal.visible.status"
-      :event-datetime="event.startDateTime"
-      :eventNotes="event.notes"
+      v-if="editModal.visible.status"
+      :datetime="event.startDateTime"
+      :notes="event.notes"
+      :categoryID="event.category.id"
+      :duration="event.duration"
       @close-modal="editModal.visible.off()"
       @edit-event="submitEdit"
     />
