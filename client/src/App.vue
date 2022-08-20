@@ -4,6 +4,7 @@ import { useDarkmode } from '@/stores'
 import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
 myDarkmode.init()
+
 </script>
  
 <template>
@@ -11,7 +12,6 @@ myDarkmode.init()
     <Navbar />
     <!-- <TheNavBar /> -->
       <router-view></router-view>
-
   </div>
 </template>
  

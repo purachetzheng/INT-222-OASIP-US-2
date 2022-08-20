@@ -3,7 +3,7 @@ import { useDarkmode } from '../../stores'
 import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
 const { darkmode } = storeToRefs(myDarkmode)
-myDarkmode.init()
+// myDarkmode.init()
 </script>
 
 <template>
