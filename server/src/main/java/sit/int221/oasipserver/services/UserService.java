@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import sit.int221.oasipserver.dtos.CreateUserDto;
+import sit.int221.oasipserver.dtos.Role;
 import sit.int221.oasipserver.dtos.UserDto;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
@@ -23,26 +24,47 @@ public class UserService {
     final private FieldError roleErrorObj = new FieldError("createUserDto",
             "role", "role must be 'student', 'admin', 'lecturer'");
 
+    //Get All
     public List<UserDto> getAll() {
         List<User> userList = repository.findAllByOrderByNameAsc();
         return listMapper.mapList(userList, UserDto.class, modelMapper);
     }
 
+    //Get By Id
     public User getById(Integer id) {
         User user = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("User id " + id + "Does Not Exist !!!"));
         return user;
     }
 
+    //Delete
     public void delete(Integer id) {
         repository.delete(getById(id));
     }
 
-    public UserDto create(CreateUserDto newUser) {
+    //Check Role
+    public static boolean findByName(String name) {
+        boolean result = true;
+        for (Role role : Role.values()) {
+            if (role.name().equalsIgnoreCase(name)) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
+    //Insert
+    public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         User user = modelMapper.map(newUser, User.class);
+        if(findByName(String.valueOf(newUser.getRole())))
+            result.addError(roleErrorObj);
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
     }
 
+    //Edit
     public UserDto update(CreateUserDto updateUser, Integer id) {
         User user = mapUser(getById(id), updateUser);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);

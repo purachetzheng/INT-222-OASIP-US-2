@@ -30,8 +30,8 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser) {
-        return userService.create(newUser);
+    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result)  throws MethodArgumentNotValidException {
+        return userService.create(newUser, result);
     }
 
     @DeleteMapping("/{id}")
