@@ -40,11 +40,9 @@ public class UserService {
         return listMapper.mapList(userList, UserDto.class, modelMapper);
     }
 
-    //Get By Id
+    //Get By ID
     public User getById(Integer id) {
-        User user = repository.findById(id).orElseThrow
-                (() -> new ApiNotFoundException("User id " + id + "Does Not Exist !!!"));
-        return user;
+        return repository.findById(id).orElseThrow(() -> new ApiNotFoundException("User id " + id + "Does Not Exist !!!"));
     }
 
     //Delete
@@ -57,14 +55,8 @@ public class UserService {
         newUser.setName(newUser.getName().trim());
         User user = modelMapper.map(newUser, User.class);
         if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
-        if(repository.existsByName(newUser.getName())){
-            result.addError(nameErrorObj);
-        }
-
-        if(repository.existsByEmail(newUser.getEmail())){
-            result.addError(emailErrorObj);
-        }
-
+        if (repository.existsByName(newUser.getName())) result.addError(nameErrorObj);
+        if (repository.existsByEmail(newUser.getEmail())) result.addError(emailErrorObj);
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
     }
