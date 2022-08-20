@@ -2,18 +2,21 @@
 import { apiEvent } from '@/services/axios/api'
 // import { EventCard } from '@/modules/event/components/'
 import EventCard from '@/modules/event/components/eventCard/index.vue'
-
-import { onBeforeMount, ref, reactive, onMounted } from 'vue'
+import Loading from './Loading.vue'
+import { onBeforeMount, ref, reactive, onMounted, defineAsyncComponent } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import EventFilter from './eventFilter.vue'
 import Pagination from './Pagination.vue'
+
+
 const router = useRouter()
 const events = ref([])
 const pageInfo = reactive({
   number: 0,
   totalPages: 2,
   toPage(number) {
-    console.log(number)
+    // console.log(number)
+    events.value = []
     getEvents(number)
     window.scrollTo(0,0);
   },
@@ -34,17 +37,28 @@ const getEvents = async (page) => {
     pageInfo.totalPages = totalPages
     return data.content
   } catch (error) {
-    console.log(error)
-    console.log(error.response)
+    // console.log(error)
+    // console.log(error.response)
     const res = error.response
     console.log(res.status)
     console.log('error ', error.message)
   }
 }
-
+// await getEvents()
 onBeforeMount(async () => {
+  // await getEvents()
   getEvents()
 })
+// const AsyncEventCard = defineAsyncComponent({
+//   // loader: async () => import("@/modules/event/components/eventCard/index.vue" /* webpackChunkName: "event" */ ),
+//   loader: () => new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve(import("@/modules/event/components/eventCard/index.vue" /* webpackChunkName: "event" */ ))
+//     }, 1000)}),
+//   loadingComponent: Loading,
+//   delay: 200,
+//   // suspensible: false,
+// })
 </script>
 
 <template>
@@ -64,16 +78,19 @@ onBeforeMount(async () => {
         @click-event-card="
           router.push({ name: 'EventDetail', params: { eventId: event.id } })"
       />
-    </TransitionGroup>
+      <!-- <component :is="AsyncEventCard" v-for="event in events" :key="event.id" :event="event" /> -->
+      
     
-    <!-- <Pagination
+    </TransitionGroup>
+
+    <h2 v-show="events.length === 0">No Scheduled Events</h2>
+    <Pagination
       :page="pageInfo.number"
       :total="pageInfo.totalPages"
       @emit-to-page="pageInfo.toPage"
       @emit-next-page="pageInfo.nextPage"
       @emit-prev-page="pageInfo.prevPage"
-    /> -->
-    <h2 v-show="events.length === 0">No Scheduled Events</h2>
+    />
   </main>
 </template>
 
