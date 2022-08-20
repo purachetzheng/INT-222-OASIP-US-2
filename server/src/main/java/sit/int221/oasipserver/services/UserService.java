@@ -84,6 +84,7 @@ public class UserService {
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
     }
 
+
     private User mapUser(User existingUser, CreateUserDto updateUser) {
         if(updateUser.getName() != null)
             existingUser.setName(updateUser.getName().trim());
