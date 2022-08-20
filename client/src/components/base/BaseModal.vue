@@ -5,17 +5,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  width:{
+  width: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 </script>
 
 <template>
-  <Transition name="modal">
-    <div v-if="show" class="modal-mask">
-        <div class="modal-container p-8 bg-gray-50 rounded-md flex flex-col gap-4" :class="width" >
+  <Teleport to="body">
+    <Transition name="modal">
+      <div v-if="show" class="modal-mask">
+        <div
+          class="modal-container p-8 bg-gray-50 rounded-md flex flex-col gap-4"
+          :class="width"
+        >
           <div class="modal-header">
             <slot name="header">default header</slot>
           </div>
@@ -27,15 +31,15 @@ const props = defineProps({
           <div class="modal-footer">
             <slot name="footer">
               default footer
-              <button
-                class="modal-default-button"
-                @click="$emit('close')"
-              >OK</button>
+              <button class="modal-default-button" @click="$emit('close')">
+                OK
+              </button>
             </slot>
           </div>
         </div>
-    </div>
-  </Transition>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <style>

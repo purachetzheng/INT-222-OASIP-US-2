@@ -14,12 +14,12 @@ const props = defineProps({
   },
   label: {
     type: String,
-    require: true,
+    default: ''
   },
   attribute: {
     type: Object,
     default: {},
-  }
+  },
 })
 
 const nameRef = toRef(props, 'name')
@@ -64,8 +64,7 @@ const validationListeners = computed(() => {
     <span
       v-show="errorMessage"
       class="absolute right-1 -bottom-5 text-red-500 text-sm"
-      >{{ errorMessage }}</span
-    >
+      >{{ errorMessage }}</span>
   </div>
 </template>
 
