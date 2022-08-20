@@ -21,8 +21,15 @@ public class UserService {
     @Autowired private UserRepository repository;
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
+    //nameError
+    final private FieldError nameErrorObj = new FieldError("createUserDto",
+            "name", "Role already exist");
+    //emailError
+    final private FieldError emailErrorObj = new FieldError("createUserDto",
+            "email", "Email already exist");
+    //roleError
     final private FieldError roleErrorObj = new FieldError("createUserDto",
-            "role", "role must be 'student', 'admin', 'lecturer'");
+            "role", "Role must be 'student' or 'admin'");
 
     //Get All
     public List<UserDto> getAll() {
@@ -56,9 +63,18 @@ public class UserService {
 
     //Insert
     public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+        newUser.setName(newUser.getName().trim());
         User user = modelMapper.map(newUser, User.class);
         if(findByName(String.valueOf(newUser.getRole())))
             result.addError(roleErrorObj);
+
+        if(repository.existsByName(newUser.getName())){
+            result.addError(nameErrorObj);
+        }
+
+        if(repository.existsByEmail(newUser.getEmail())){
+            result.addError(emailErrorObj);
+        }
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
@@ -72,11 +88,12 @@ public class UserService {
 
     private User mapUser(User existingUser, CreateUserDto updateUser) {
         if(updateUser.getName() != null)
-            existingUser.setName(updateUser.getName());
+            existingUser.setName(updateUser.getName().trim());
         if(updateUser.getEmail() != null)
-            existingUser.setEmail(updateUser.getEmail());
+            existingUser.setEmail(updateUser.getEmail().trim());
         if(updateUser.getRole() != null)
-            existingUser.setRole(String.valueOf(updateUser.getRole()));
+//            existingUser.setRole(String.valueOf(updateUser.getRole()).trim());
+            existingUser.setRole(updateUser.getRole());
         return existingUser;
     }
 }

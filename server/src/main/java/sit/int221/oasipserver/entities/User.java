@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import sit.int221.oasipserver.dtos.Role;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -23,8 +24,9 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 10)
-    private String role;
+    private Role role;
 
 
     @CreationTimestamp

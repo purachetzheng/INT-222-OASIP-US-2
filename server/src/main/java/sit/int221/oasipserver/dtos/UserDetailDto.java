@@ -14,7 +14,7 @@ import java.time.Instant;
 public class UserDetailDto {
     private String name;
     private String email;
-    private String role;
+    private Role role;
     private Instant createdOn;
     private Instant updatedOn;
 }
