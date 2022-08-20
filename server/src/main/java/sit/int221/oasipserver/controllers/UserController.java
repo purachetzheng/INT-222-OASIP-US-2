@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result)  throws MethodArgumentNotValidException {
+    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         return userService.create(newUser, result);
     }
 
@@ -40,8 +40,9 @@ public class UserController {
     @PatchMapping("/{id}")
     public UserDto updateUser(
             @Valid @RequestBody CreateUserDto updateUser,
-            @PathVariable Integer id) {
-        return userService.update(updateUser, id);
+            @PathVariable Integer id,
+            BindingResult result) throws MethodArgumentNotValidException {
+        return userService.update(updateUser, id, result);
     }
 
 }

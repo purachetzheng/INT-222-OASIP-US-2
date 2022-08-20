@@ -81,8 +81,17 @@ public class UserService {
     }
 
     //Edit
-    public UserDto update(CreateUserDto updateUser, Integer id) {
+    public UserDto update(CreateUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
         User user = mapUser(getById(id), updateUser);
+        if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
+            result.addError(nameErrorObj);
+        }
+
+        if(repository.existsByEmailAndIdNot(updateUser.getEmail(), id)){
+            result.addError(emailErrorObj);
+        }
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
         return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
     }
 
