@@ -1,8 +1,7 @@
 const validateNotes = (value) => {
   // if the field is not a valid email
-  const regex = /^\s+$/
-  if (regex.test(value)) {
-    return 'This field must be a not blank'
+  if(value && value.trim() === ''){
+    return 'Notes must not be blank'
   }
   // All is good
   return true
