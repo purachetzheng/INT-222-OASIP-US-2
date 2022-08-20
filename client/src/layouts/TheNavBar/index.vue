@@ -22,7 +22,7 @@ const navItemDropdown = [
         icon: IcPlusCircleOutline,
         name: 'Add Event',
         desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'Home',
+        route: 'AddEvent',
       },
     ],
   },
