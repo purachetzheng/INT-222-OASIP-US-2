@@ -3,6 +3,7 @@ import { defineAsyncComponent, onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiEvent } from '../../../services/axios/api'
 import { isFuture, formatDatetime } from '../../../utils/dateTime'
+import PageLoader from '../../../components/shared/Loading/PageLoader.vue';
 
 const { params } = useRoute()
 const router = useRouter()
@@ -169,7 +170,8 @@ const EditEventModal = defineAsyncComponent(async()=>{
         @edit-event="submitEdit"
       />
       <template #fallback>
-        <div class="fixed w-full h-full top-0 left-0 bg-black opacity-50 z-40"></div>
+        <!-- <div class="fixed w-full h-full top-0 left-0 bg-black opacity-50 z-40"></div> -->
+        <PageLoader />
       </template>
     </Suspense>
     

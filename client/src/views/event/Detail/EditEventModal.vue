@@ -2,11 +2,7 @@
 import { computed, onBeforeMount, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Form, Field, ErrorMessage, useForm } from 'vee-validate'
-import {
-  validateEmail,
-  validateNotes,
-  validateDateTime,
-} from '../../../services/validater'
+
 import * as yup from 'yup'
 import {
   isFuture,
@@ -19,8 +15,9 @@ import BaseModal from '../../../components/base/BaseModal.vue'
 import InputField from '../../../components/base/form/InputField.vue'
 import TextAreaField from '../../../components/base/form/TextAreaField.vue'
 import MyTextInput from '../../testForm/MyTextInput.vue'
-import '../../../services/validater/YupCustomValidations'
+// import '../../../services/validation/YupCustomValidations'
 import { apiEvent } from '../../../services/axios/api'
+// import EditEventSchema from '../../../services/validation/schema/EditEventSchema'
 const { params } = useRoute()
 const { eventId } = params
 
@@ -74,6 +71,7 @@ const isOverlap = () => {
   console.log(timeRef.value)
   console.log(dateRef.value)
 }
+
 const schema = {
   date(value) {
     if (!isFutureOrSameDay(value)) {
@@ -148,7 +146,6 @@ onMounted(() => {
               class="col-span-4"
               name="date"
               type="date"
-              label=""
               @change="updateTimePool($event.target.value)"
             />
           </div>
@@ -164,7 +161,6 @@ onMounted(() => {
               class="col-span-4"
               name="time"
               type="time"
-              label=""
             />
           </div>
 
@@ -173,8 +169,6 @@ onMounted(() => {
             <TextAreaField
               class="col-span-4"
               name="notes"
-              type="notes"
-              label=""
             />
           </div>
         </div>
