@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
+import sit.int221.oasipserver.utils.RoleValidate;
 
 
 @Configuration
@@ -27,6 +28,10 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     public OverlapValidate overlapValidate() {
         return OverlapValidate.getInstance();
+    }
+    @Bean
+    public RoleValidate roleValidate() {
+        return RoleValidate.getInstance();
     }
 
 }

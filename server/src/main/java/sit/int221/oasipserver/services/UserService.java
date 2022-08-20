@@ -12,6 +12,7 @@ import sit.int221.oasipserver.dtos.UserDto;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
+import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class UserService {
     @Autowired private UserRepository repository;
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
+    @Autowired private RoleValidate roleValidate;
+
     //nameError
     final private FieldError nameErrorObj = new FieldError("createUserDto",
             "name", "Role already exist");
@@ -49,25 +52,11 @@ public class UserService {
         repository.delete(getById(id));
     }
 
-    //Check Role
-    public static boolean findByName(String name) {
-        boolean result = true;
-        for (Role role : Role.values()) {
-            if (role.name().equalsIgnoreCase(name)) {
-                result = false;
-                break;
-            }
-        }
-        return result;
-    }
-
     //Insert
     public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         newUser.setName(newUser.getName().trim());
         User user = modelMapper.map(newUser, User.class);
-        if(findByName(String.valueOf(newUser.getRole())))
-            result.addError(roleErrorObj);
-
+        if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
         if(repository.existsByName(newUser.getName())){
             result.addError(nameErrorObj);
         }
