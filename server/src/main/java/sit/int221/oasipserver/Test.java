@@ -1,21 +1,18 @@
 package sit.int221.oasipserver;
 
+import sit.int221.oasipserver.dtos.CreateUserDto;
 import sit.int221.oasipserver.dtos.Role;
 
 public class Test {
     public static boolean findByName(String name) {
-        boolean result = true;
         for (Role role : Role.values()) {
-            if (role.name().equalsIgnoreCase(name)) {
-                result = false;
-                break;
-            }
+            if(role.name().equals(name))
+                return true;
         }
-        return result;
+        return false;
     }
 
     public static void main(String[] args) {
-
-        System.out.println(findByName("studentadfasdfadsf"));
+        System.out.println(findByName("admin2"));
     }
 }

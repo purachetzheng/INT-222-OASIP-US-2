@@ -21,7 +21,7 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +32,6 @@ public class User {
     @CreationTimestamp
     @Column(name = "createdOn", insertable = false)
     private Instant createdOn;
-
 
     @UpdateTimestamp
     @Column(name = "updatedOn", insertable = false)
