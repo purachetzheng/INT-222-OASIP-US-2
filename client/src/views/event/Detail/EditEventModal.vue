@@ -42,6 +42,10 @@ const props = defineProps({
     type: Number,
     require: true,
   },
+  show:{
+    type: Boolean,
+    default: false
+  }
 })
 
 const event = ref({
@@ -125,14 +129,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <Teleport to="body">
-    <BaseModal :show="true" @close="$emit('closeModal')" :width="'w-160'">
+
+    <BaseModal :show="show" @close="$emit('closeModal')" :width="'w-160'">
       <template #header>
         <h1 class="text-2xl font-semibold text-center">Edit Event</h1>
       </template>
 
       <template #body>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-4">
           <div class="grid grid-cols-8 items-center">
             <p class="col-span-7 font-medium text-sm">Date</p>
             <p class="text-right text-red-500 text-sm">*</p>
@@ -190,7 +194,20 @@ onMounted(() => {
         </div>
       </template>
     </BaseModal>
-  </Teleport>
+
 </template>
 
-<style scoped></style>
+<style scoped>
+.modal-enter-from {
+  opacity: 0;
+}
+
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}</style>

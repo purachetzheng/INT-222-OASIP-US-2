@@ -40,13 +40,18 @@ const getEvent = async () => {
 }
 
 const editModal = reactive({
+  preLoad: false,
+  show: false,
   visible: {
-    status: false,
     on() {
-      this.status = true
+      // editModal.preLoad = true
+      editModal.show = true
+      // setTimeout(()=>editModal.show = true,200)
     },
     off() {
-      this.status = false
+      // editModal.preLoad = false
+      editModal.show = false
+      // setTimeout(()=>editModal.show = false,200)
     },
   },
 })
@@ -67,23 +72,33 @@ const submitEdit = async (eventData) => {
   }
 }
 
+const cancelEvent = async () => {
+  try{
+    const res = await apiEvent.delete(eventId)
+    console.log(res.data)
+    alert('Cancel successfully')
+    router.push({ name: 'Schedules' })
+  } catch(error){
+    console.log(error.message)
+    const { data, status } = error.response
+    alert(data.message)
+  }
+}
+
 onBeforeMount(async () => {
   getEvent()
 })
 
-const EditEventModal = defineAsyncComponent({
-  loader: () => import('./EditEventModal.vue'),
+// const EditEventModal = defineAsyncComponent({
+//   loader: () => import(/* webpackPrefetch: true */'./EditEventModal.vue'),
 
-  // A component to use while the async component is loading
-  // loadingComponent: LoadingComponent,
-  // Delay before showing the loading component. Default: 200ms.
-  delay: 200,
+//   delay: 2000,
 
-  // A component to use if the load fails
-  // errorComponent: ErrorComponent,
-  // The error component will be displayed if a timeout is
-  // provided and exceeded. Default: Infinity.
-  timeout: 3000,
+//   timeout: 3000,
+// })
+const EditEventModal = defineAsyncComponent(async()=>{
+  await new Promise( resolve=> setTimeout(resolve,1000))
+  return import('./EditEventModal.vue')
 })
 </script>
 
@@ -91,9 +106,9 @@ const EditEventModal = defineAsyncComponent({
   <main class="my-container py-4 gap-4 grid grid-cols-12 px-20">
     <!-- <h1 class="text-3xl font-bold text-center">Event Detail</h1> -->
 
-    <div class="col-span-12">
-      <button @click="editModal.visible.on">Edit</button>
-      <button @click="editModal.visible.off">Edit</button>
+    <div class="col-span-12 flex gap-10">
+      <button class="bg-blue-500 p-2" @click="editModal.visible.on">Edit</button>
+      <button class="bg-red-500 p-2" @click="cancelEvent">Cancel</button>
     </div>
     <section
       class="col-span-8 grid grid-cols-3 gap-y-4 gap-x-10 p-4 bg-gray-300"
@@ -130,16 +145,34 @@ const EditEventModal = defineAsyncComponent({
       <p>{{ event.notes }}</p>
       <!-- <BaseTextarea :text="event.note" /> -->
     </section>
-
-    <EditEventModal
-      v-if="editModal.visible.status"
-      :datetime="event.startDateTime"
-      :notes="event.notes"
-      :categoryID="event.category.id"
-      :duration="event.duration"
-      @close-modal="editModal.visible.off()"
-      @edit-event="submitEdit"
-    />
+    <!-- <Suspense >
+      <Transition name="modal">
+      <EditEventModal v-if="editModal.show"
+        :show="editModal.show"
+        :datetime="event.startDateTime"
+        :notes="event.notes"
+        :categoryID="event.category.id"
+        :duration="event.duration"
+        @close-modal="editModal.visible.off()"
+        @edit-event="submitEdit"
+      /></Transition>
+      <template #fallback> Loading... </template>
+    </Suspense> -->
+    <Suspense>
+      <EditEventModal
+        :show="editModal.show"
+        :datetime="event.startDateTime"
+        :notes="event.notes"
+        :categoryID="event.category.id"
+        :duration="event.duration"
+        @close-modal="editModal.visible.off()"
+        @edit-event="submitEdit"
+      />
+      <template #fallback>
+        <div class="fixed w-full h-full top-0 left-0 bg-black opacity-50 z-40"></div>
+      </template>
+    </Suspense>
+    
   </main>
 </template>
 

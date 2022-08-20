@@ -1,6 +1,6 @@
 <script setup>
-import { useField } from 'vee-validate';
-import { toRef, computed } from 'vue';
+import { useField } from 'vee-validate'
+import { toRef, computed } from 'vue'
 
 defineEmits([])
 const props = defineProps({
@@ -15,12 +15,17 @@ const props = defineProps({
   label: {
     type: String,
     require: true,
+  },
+  attribute: {
+    type: Object,
+    default: {},
   }
 })
 
-const nameRef = toRef(props, 'name');
-const { value, errorMessage, handleChange } = useField(nameRef, ()=>{} ,{
-  validateOnValueUpdate: false, validateOnMount: false,
+const nameRef = toRef(props, 'name')
+const { value, errorMessage, handleChange } = useField(nameRef, () => {}, {
+  validateOnValueUpdate: false,
+  validateOnMount: false,
 })
 
 const validationListeners = computed(() => {
@@ -31,23 +36,36 @@ const validationListeners = computed(() => {
       blur: handleChange,
       change: handleChange,
       // disable `shouldValidate` to avoid validating on input
-      input: e => handleChange(e, false),
-    };
+      input: (e) => handleChange(e, false),
+    }
   }
   // Aggressive
   return {
     blur: handleChange,
     change: handleChange,
     input: handleChange, // only switched this
-  };
-});
+  }
+})
 </script>
 
 <template>
-  <div class="relative mb-6">
-    <label :for="name">{{label}}</label>
-    <input class="form-control" :id="name" :name="name" :type="type" v-on="validationListeners" v-model="value" />
-    <span v-show="errorMessage" class="absolute right-1 -bottom-6 text-red-500 text-sm">{{errorMessage}}</span>
+  <div class="relative">
+    <label :for="name">{{ label }}</label>
+    <input
+      :id="name"
+      class="form-control"
+      :class="errorMessage && 'bg-red-100 border-red-500'"
+      :name="name"
+      :type="type"
+      :max="attribute.max"
+      v-on="validationListeners"
+      v-model="value"
+    />
+    <span
+      v-show="errorMessage"
+      class="absolute right-1 -bottom-5 text-red-500 text-sm"
+      >{{ errorMessage }}</span
+    >
   </div>
 </template>
 

@@ -42,10 +42,10 @@ const validationListeners = computed(() => {
 </script>
 
 <template>
-  <div class="relative mb-6">
+  <div class="relative">
     <label :for="name">{{label}}</label>
-    <textarea :id="name" class="form-control" :name="name" v-on="validationListeners" v-model="value" rows="6"></textarea>
-    <span v-show="errorMessage" class="absolute right-1 -bottom-6 text-red-500 text-sm">{{errorMessage}}</span>
+    <textarea :id="name" class="form-control" :class="errorMessage && 'bg-red-100 border-red-500'" :name="name" v-on="validationListeners" v-model="value" rows="6"></textarea>
+    <span v-show="errorMessage" class="absolute right-1 -bottom-5 text-red-500 text-sm">{{errorMessage}}</span>
   </div>
 </template>
 
