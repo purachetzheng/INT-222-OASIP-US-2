@@ -33,16 +33,18 @@ const isHover = ref(false)
     <Transition duration="550" name="nested">
       <div v-if="subItems.length !== 0"
         v-show="isHover"
-        class="absolute top-11 p-4 bg-white border-2 duration-300 shadow-md rounded-2xl z-10"
+        class="absolute top-11 p-1.5 bg-white border-2 duration-300 shadow-md rounded-2xl z-10"
       >
         <ul class="flex flex-col w-max max-w-xs">
           <li v-for="item in subItems">
-          <router-link :to="{ name: item.route }" class="flex gap-4 p-4 rounded-2xl hover:bg-gray-200">
-            <component :is="item.icon" class="basis-10 -mt-2 w-10 h-10"></component>
-            <div class="flex flex-col item-center gap-1">
+          <router-link :to="{ name: item.route }" class="flex gap-4 p-4 items-center rounded-2xl hover:bg-gray-200">
+            <!-- <component :is="item.icon" class="basis-10 -mt-2 w-10 h-10"></component> -->
+            <fa-icon :icon="item.icon" class=" fa-xl" />
+            
                 <p class="font-semibold">{{ item.name }}</p>
+            <!-- <div class="flex flex-col item-center gap-1">
                 <p class="font-semibold text-sm">{{ item.desc }}</p>
-            </div>
+            </div> -->
           </router-link>
           </li>
         </ul>

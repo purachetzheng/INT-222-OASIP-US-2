@@ -1,10 +1,8 @@
 <script setup>
-import NavItems from './NavItems.vue'
-import IcArrowDown from '@/assets/icons/arrows-icons/IcArrowDown.vue'
 import { IcCalendarRound } from '@/assets/icons/time-icons'
 import { IcPlusCircleOutline } from '@/assets/icons/editing-icons'
 import { NavIItemDropdown, DarkmodeToggle } from './components'
-
+import navItemList from './navItemList'
 const navItemDropdown = [
   {
     mainItem: {
@@ -66,7 +64,7 @@ const navItemDropdown = [
           class="flex gap-2 justify-center w-fit p-2 border-2 shadow-md rounded-2xl bg-gray-100"
         >
           <NavIItemDropdown
-            v-for="navItem in navItemDropdown"
+            v-for="navItem in navItemList"
             :mainItem="navItem.mainItem"
             :subItems="navItem.subItems"
           />
