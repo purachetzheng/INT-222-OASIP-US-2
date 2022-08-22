@@ -42,7 +42,7 @@ const navItemList = [
   {
     mainItem: {
       name: 'Users',
-      route: 'Schedules',
+      route: 'Users',
     },
   },
   {

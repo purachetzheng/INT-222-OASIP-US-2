@@ -3,54 +3,8 @@ import { IcCalendarRound } from '@/assets/icons/time-icons'
 import { IcPlusCircleOutline } from '@/assets/icons/editing-icons'
 import { NavIItemDropdown, DarkmodeToggle } from './components'
 import navItemList from './navItemList'
-const navItemDropdown = [
-  {
-    mainItem: {
-      name: 'Events',
-      route: 'Schedules',
-    },
-    subItems: [
-      {
-        icon: IcCalendarRound,
-        name: 'Schedules',
-        desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'Schedules',
-      },
-      {
-        icon: IcPlusCircleOutline,
-        name: 'Add Event',
-        desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'AddEvent',
-      },
-    ],
-  },
-  {
-    mainItem: {
-      name: 'Categories',
-      route: 'Schedules',
-    },
-    subItems: [
-      {
-        icon: IcCalendarRound,
-        name: 'Categories',
-        desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'Schedules',
-      },
-      {
-        icon: IcPlusCircleOutline,
-        name: 'Add Category',
-        desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'Home',
-      },
-    ],
-  },
-  {
-    mainItem: {
-      name: 'About',
-      route: 'Schedules',
-    },
-  },
-]
+import SignInSignUp from './components/SignInSignUp.vue';
+
 </script>
 
 <template>
@@ -70,8 +24,9 @@ const navItemDropdown = [
           />
         </ul>
       </nav>
-      <section class="grow basis-1/3 flex justify-end overflow-hidden ">
+      <section class="grow basis-1/3 flex items-center gap-4 justify-end overflow-hidden ">
         <DarkmodeToggle />
+        <SignInSignUp />
       </section>
     </div>
   </header>
