@@ -40,6 +40,17 @@ ON DELETE NO ACTION
 ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- User Table
+CREATE TABLE IF NOT EXISTS users (
+  userID INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(50) NOT NULL,
+  role enum('admin', 'lecturer', 'student') NOT NULL DEFAULT 'student',
+  createdOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (userID))
+ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -56,6 +67,15 @@ INSERT INTO events values
 (1, 'Somchai Jaidee (OR-7)', 'somchai.jai@mail.kmutt.ac.th', 2, 30, '2022-05-23 6:30:00', null),
 (2, 'Somsri Rakdee (SJ-3)', 'somsri.rak@mail.kmutt.ac.th', 1, 30, '2022-04-27 2:30:00', 'ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน'),
 (3, 'สมเกียรติ ขยันเรียน กลุ่ม TT-4', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-05-23 9:30:00', null);
+
+-- User
+INSERT INTO users values
+-- (1, 'OASIP ADMIN', 'oasip.admin@kmutt.ac.th', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+(1, 'OASIP ADMIN', 'oasip.admin@kmutt.ac.th', 'admin', '2022-08-01 00:00:00+07:00', '2022-08-01 00:00:00+07:00'),
+(2, 'Somchai Jaidee', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
+(3, 'Komkrid Rakdee', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
+(4, 'สมเกียรติ ขยันเรียน', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+
 -- Create USER for specific use
 CREATE USER 'OASIPBE'@'%' IDENTIFIED BY 'BEBE';
 GRANT ALL PRIVILEGES ON oasip.* TO 'OASIPBE'@'%';
