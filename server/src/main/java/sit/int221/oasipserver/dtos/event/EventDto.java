@@ -1,4 +1,4 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.dtos.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
