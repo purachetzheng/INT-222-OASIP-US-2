@@ -26,7 +26,7 @@ const selectedCategoryId = ref(0)
 //   return
 // }
 const selectedCategory = computed(() =>
-  categories.value.find((c) => c.eventCategoryID == selectedCategoryId.value)
+  categories.value.find((c) => c.id == selectedCategoryId.value)
 )
 
 provide('selectedCategoryId', selectedCategoryId)
@@ -35,7 +35,8 @@ provide('selectedCategory', selectedCategory)
 const getCategories = async () => {
   try {
     const { data } = await apiEventCategory.get()
-    categories.value = data.content
+    // categories.value = data.content
+    categories.value = data
     console.log(data)
   } catch (error) {
     console.log(error)
@@ -50,7 +51,7 @@ const onSubmit = async({ name, email, datetime, notes }) => {
   const newEvent = {
     bookingName: name,
     bookingEmail: email,
-    eventCategoryID: selectedCategoryId.value,
+    eventCategoryId: selectedCategoryId.value,
     eventDuration: selectedCategory.value.eventDuration,
     eventStartTime: formatDatetime.jsonDatetime(datetime.date, datetime.time),
   }
@@ -69,6 +70,7 @@ const onSubmit = async({ name, email, datetime, notes }) => {
 <template>
   <main class="my-container grow flex flex-col py-4 gap-4 justify-between">
     <ProgressBar :step="addEvent.step" />
+    {{selectedCategoryId}}
     <SelectCategory
       v-if="addEvent.step === 1"
       class="grow"

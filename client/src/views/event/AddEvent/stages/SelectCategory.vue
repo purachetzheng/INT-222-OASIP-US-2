@@ -19,8 +19,8 @@ const selectedId = inject('selectedCategoryId')
       <EventCategoryCard
         v-for="category in categories"
         :category="category"
-        :selected="selectedId === category.eventCategoryID"
-        @click="selectedId = category.eventCategoryID"
+        :selected="selectedId === category.id"
+        @click="selectedId = category.id"
       />
     </ul>
     <div class="flex justify-center">
