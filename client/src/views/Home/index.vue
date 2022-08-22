@@ -23,6 +23,10 @@ const { darkmode } = storeToRefs(myDarkmode)
       <fa-icon :icon="['fas', 'circle']" class="text-red-500" />
       <fa-icon :icon="['fas', 'times']" transform="shrink-8" inverse />
     </fa-layer>
+    <fa-layer class="fa-xl">
+      <fa-icon :icon="['far', 'circle']" class="" />
+      <fa-icon :icon="['fas', 'plus']" transform="shrink-6" />
+    </fa-layer>
     <fa-layer class="fa-4x">
       <fa-icon :icon="['fas', 'tag']" class="text-green-500" />
       <fa-layer-text
