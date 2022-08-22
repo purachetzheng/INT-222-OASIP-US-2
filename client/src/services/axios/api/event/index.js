@@ -14,8 +14,20 @@ const apiEvent = {
   getById(id) {
     return apiClient.get(`/events/${id}`)
   },
+  getAll({eventCategoryID,keyword}){
+    return apiClient.get('/events/all', { params: {
+      eventCategoryID: eventCategoryID,
+      keyword: keyword
+  } })
+  },
+  post(data){
+    return apiClient.post(`/events/`, data)
+  },
   patch(id, data){
     return apiClient.patch(`/events/${id}`, data)
+  },
+  delete(id){
+    return apiClient.delete(`/events/${id}`)
   }
 }
 

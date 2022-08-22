@@ -1,4 +1,4 @@
-import EventCard from './EventCard.vue'
+import EventCard from './EventCard/index.vue'
 
 
 export{
