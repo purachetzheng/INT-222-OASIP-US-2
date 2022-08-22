@@ -5,14 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipserver.dtos.*;
-import sit.int221.oasipserver.dtos.event.EventDto;
-import sit.int221.oasipserver.dtos.event.EventPageDto;
+import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.services.EventService;
 
 import javax.validation.Valid;
-import java.time.Instant;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
@@ -21,12 +17,12 @@ public class EventController {
     @Autowired private ModelMapper modelMapper;
 
 //    @GetMapping("")
-//    public List<EventDto> getAllEvent(){
+//    public List<SimpleEventDto> getAllEvent(){
 //        return eventService.getAll();
 //    }
 
     @GetMapping("")
-    public EventPageDto getAllProducts(
+    public PageEventDto getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
@@ -37,13 +33,13 @@ public class EventController {
         return eventService.getEventPage(page, pageSize, sortBy, eventCategoryID, dateStatus, date);
     }
     @GetMapping("/{id}")
-    public EventDetailDto getEventById( @PathVariable Integer id){
-        return modelMapper.map(eventService.getById(id), EventDetailDto.class);
+    public EventDto getEventById(@PathVariable Integer id){
+        return modelMapper.map(eventService.getById(id), EventDto.class);
     }
 
     @PostMapping("")
-    public EventDto createEvent(
-            @Valid @RequestBody CreateEventDto newEvent,
+    public SimpleEventDto createEvent(
+            @Valid @RequestBody PostEventDto newEvent,
             BindingResult result)
             throws MethodArgumentNotValidException{
         return eventService.create(newEvent, result);
@@ -55,8 +51,8 @@ public class EventController {
     }
 
     @PatchMapping("/{id}")
-    public EventDetailDto updateEvent(
-            @Valid @RequestBody UpdateEventDto updateEventDto,
+    public EventDto updateEvent(
+            @Valid @RequestBody PatchEventDto updateEventDto,
             @PathVariable Integer id,
             BindingResult result)
             throws MethodArgumentNotValidException{

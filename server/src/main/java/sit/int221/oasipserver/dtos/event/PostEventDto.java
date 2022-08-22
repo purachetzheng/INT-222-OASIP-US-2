@@ -1,4 +1,4 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.dtos.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEventDto{
+public class PostEventDto {
     private Integer id;
     @Size(max = 100, message = "size must be between 1 and 100")
     @NotBlank(message = "must not be blank")

@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.Instant;
 
 @Getter
@@ -16,8 +14,10 @@ import java.time.Instant;
 public class EventDto {
     private Integer id;
     private String bookingName;
+    private String bookingEmail;
     private Integer eventDuration;
     private Instant eventStartTime;
+    private String eventNotes;
     private Integer eventCategoryId;
     private String eventCategoryName;
 }

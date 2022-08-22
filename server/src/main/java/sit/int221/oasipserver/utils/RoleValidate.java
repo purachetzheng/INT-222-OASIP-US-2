@@ -1,6 +1,6 @@
 package sit.int221.oasipserver.utils;
 
-import sit.int221.oasipserver.dtos.Role;
+import sit.int221.oasipserver.enums.Role;
 import sit.int221.oasipserver.entities.User;
 
 public class RoleValidate {

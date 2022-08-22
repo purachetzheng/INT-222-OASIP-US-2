@@ -1,9 +1,10 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int221.oasipserver.enums.Role;
 
 import java.time.Instant;
 
@@ -11,8 +12,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private Integer id;
+public class UserDetailDto {
     private String name;
     private String email;
     private Role role;

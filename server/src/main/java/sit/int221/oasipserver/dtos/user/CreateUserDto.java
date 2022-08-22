@@ -1,9 +1,10 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int221.oasipserver.enums.Role;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

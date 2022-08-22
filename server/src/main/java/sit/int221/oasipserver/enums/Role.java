@@ -1,4 +1,4 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

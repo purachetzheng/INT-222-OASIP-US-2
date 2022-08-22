@@ -1,17 +1,16 @@
 package sit.int221.oasipserver.controllers;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import org.apache.catalina.authenticator.Constants;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipserver.dtos.CreateUserDto;
-import sit.int221.oasipserver.dtos.Role;
-import sit.int221.oasipserver.dtos.UserDetailDto;
-import sit.int221.oasipserver.dtos.UserDto;
+import sit.int221.oasipserver.dtos.user.CreateUserDto;
+import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.dtos.user.UserDetailDto;
+import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;

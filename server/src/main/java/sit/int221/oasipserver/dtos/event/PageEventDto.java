@@ -2,14 +2,13 @@ package sit.int221.oasipserver.dtos.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import sit.int221.oasipserver.dtos.event.EventDto;
 
 import java.util.List;
 
 @Getter
 @Setter
-public class EventPageDto {
-    private List<EventDto> content;
+public class PageEventDto {
+    private List<SimpleEventDto> content;
     private int number;
     private int size;
     private int totalPages;

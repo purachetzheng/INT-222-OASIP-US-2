@@ -1,7 +1,6 @@
 package sit.int221.oasipserver;
 
-import sit.int221.oasipserver.dtos.CreateUserDto;
-import sit.int221.oasipserver.dtos.Role;
+import sit.int221.oasipserver.enums.Role;
 
 public class Test {
     public static boolean findByName(String name) {

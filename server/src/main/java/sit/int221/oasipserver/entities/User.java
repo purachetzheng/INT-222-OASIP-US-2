@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import sit.int221.oasipserver.dtos.Role;
+import sit.int221.oasipserver.enums.Role;
 
 import javax.persistence.*;
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package sit.int221.oasipserver.dtos;
+package sit.int221.oasipserver.dtos.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateEventDto {
+public class PatchEventDto {
 
     @Future(message = "must be a future date")
     private Instant eventStartTime;
