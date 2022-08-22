@@ -14,7 +14,7 @@ import IcArrowRightBold from '../../../assets/icons/arrows-icons/IcArrowRightBol
 import BaseModal from '../../../components/base/BaseModal.vue'
 import InputField from '../../../components/base/form/InputField.vue'
 import TextAreaField from '../../../components/base/form/TextAreaField.vue'
-import MyTextInput from '../../testForm/MyTextInput.vue'
+
 // import '../../../services/validation/YupCustomValidations'
 import { apiEvent } from '../../../services/axios/api'
 // import EditEventSchema from '../../../services/validation/schema/EditEventSchema'
