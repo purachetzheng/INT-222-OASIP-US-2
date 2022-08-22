@@ -52,9 +52,6 @@ public class EventService {
         Pageable pageRequest = PageRequest.of(pageNum, pageSize, sort);
         Page page = filterEventPage(pageRequest, eventCategoryID, dateStatus, date);
         EventPageDto pageDto = modelMapper.map(page, EventPageDto.class);
-        System.out.println(dateStatus);
-        System.out.println(eventCategoryID);
-        System.out.println(date);
         return pageDto;
     }
 

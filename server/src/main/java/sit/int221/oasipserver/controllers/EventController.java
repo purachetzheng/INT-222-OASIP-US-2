@@ -20,12 +20,12 @@ public class EventController {
     @Autowired public EventService eventService;
     @Autowired private ModelMapper modelMapper;
 
-    @GetMapping("")
-    public List<EventDto> getAllEvent(){
-        return eventService.getAll();
-    }
+//    @GetMapping("")
+//    public List<EventDto> getAllEvent(){
+//        return eventService.getAll();
+//    }
 
-    @GetMapping("/page")
+    @GetMapping("")
     public EventPageDto getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize,
