@@ -1,9 +1,8 @@
 import axios from 'axios'
 
-const url = import.meta.env.VITE_BASE_URL + 'eventcategories/';
-console.log(url);
+
 const apiClient = axios.create({
-  baseURL: `http://intproj21.sit.kmutt.ac.th/us2/api`,
+  baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
