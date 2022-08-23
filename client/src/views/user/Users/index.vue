@@ -73,7 +73,7 @@ onBeforeMount(() => {
         <p class="col-span-5">
           {{
             user.name
-          }}0001-0002-0003-0004-0005-0006-0007-0008-0009-0010-0011-0012-0013-0014-0015-0016-0017-0018-0019-0020-
+          }}
         </p>
         <p class="col-span-4 break-all">{{ user.email }}</p>
         <p class="col-span-1">{{ user.role }}</p>
