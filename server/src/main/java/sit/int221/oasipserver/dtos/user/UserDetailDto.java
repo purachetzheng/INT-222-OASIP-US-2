@@ -18,4 +18,8 @@ public class UserDetailDto {
     private Role role;
     private Instant createdOn;
     private Instant updatedOn;
+    
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 }
