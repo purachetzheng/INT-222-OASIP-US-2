@@ -53,7 +53,7 @@ public class UserController {
     @ExceptionHandler(InvalidFormatException.class)
     public void handleRole(HttpServletResponse response, InvalidFormatException ex) throws IOException {
         if (ex.getTargetType().isAssignableFrom(Role.class)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "Role must be student or lecturer or admin");
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "Role must be specific as 'student' or 'admin' or 'lecturer'");
         } else {
             response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         }
