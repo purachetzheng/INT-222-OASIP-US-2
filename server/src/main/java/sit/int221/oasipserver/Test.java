@@ -1,10 +1,10 @@
 package sit.int221.oasipserver;
 
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.enums.UserRole;
 
 public class Test {
     public static boolean findByName(String name) {
-        for (Role role : Role.values()) {
+        for (UserRole role : UserRole.values()) {
             if(role.name().equals(name))
                 return true;
         }

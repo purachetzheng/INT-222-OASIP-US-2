@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.enums.UserRole;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -26,7 +26,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 10)
-    private Role role;
+    private UserRole role;
 
 
     @CreationTimestamp

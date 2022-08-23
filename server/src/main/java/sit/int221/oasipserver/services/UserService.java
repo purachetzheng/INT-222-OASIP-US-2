@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import sit.int221.oasipserver.dtos.user.CreateUserDto;
+import sit.int221.oasipserver.dtos.user.PatchUserDto;
+import sit.int221.oasipserver.dtos.user.PostUserDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.entities.User;
+import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.RoleValidate;
@@ -24,14 +26,11 @@ public class UserService {
     @Autowired private RoleValidate roleValidate;
 
     //nameError
-    final private FieldError nameErrorObj = new FieldError("createUserDto",
-            "name", "Role already exist");
+    final private FieldError nameErrorObj =
+            new FieldError("createUserDto", "name", "UserRole already exist");
     //emailError
-    final private FieldError emailErrorObj = new FieldError("createUserDto",
-            "email", "Email already exist");
-    //roleError
-    final private FieldError roleErrorObj = new FieldError("createUserDto",
-            "role", "Role must be 'student' or 'admin'");
+    final private FieldError emailErrorObj =
+            new FieldError("createUserDto", "email", "Email already exist");
 
     //Get All
     public List<UserDto> getAll() {
@@ -49,41 +48,51 @@ public class UserService {
         repository.delete(getById(id));
     }
 
-    //Insert
-    public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+    //Post
+    public UserDto create(PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         newUser.setName(newUser.getName().trim());
-        User user = modelMapper.map(newUser, User.class);
-        if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
-        if (repository.existsByName(newUser.getName())) result.addError(nameErrorObj);
-        if (repository.existsByEmail(newUser.getEmail())) result.addError(emailErrorObj);
-        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
-        return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
-    }
 
-    //Edit
-    public UserDto update(CreateUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
-        User user = mapUser(getById(id), updateUser);
-        if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
+        if (repository.existsByName(newUser.getName()))
             result.addError(nameErrorObj);
-        }
-
-        if(repository.existsByEmailAndIdNot(updateUser.getEmail(), id)){
+        if (repository.existsByEmail(newUser.getEmail()))
             result.addError(emailErrorObj);
-        }
-
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
-        return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
+
+        String role = newUser.getRole();
+        if(role == null || role == "") newUser.setRole("student");
+
+        User user = modelMapper.map(newUser, User.class);
+        User createdUser = repository.saveAndFlush(user);
+        UserDto userDto =  modelMapper.map(createdUser, UserDto.class);
+        return userDto;
+    }
+
+//    Edit
+    public UserDto update(PatchUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
+        String role = updateUser.getRole();
+        if(role == "") updateUser.setRole("student");
+        User user = mapUser(getById(id), updateUser);
+
+        if (repository.existsByNameAndIdNot(updateUser.getName(), id))
+            result.addError(nameErrorObj);
+        if (repository.existsByEmailAndIdNot(updateUser.getEmail(), id))
+            result.addError(emailErrorObj);
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+
+        User updatedUser = repository.saveAndFlush(user);
+        UserDto userDto =  modelMapper.map(updatedUser, UserDto.class);
+        return userDto;
     }
 
 
-    private User mapUser(User existingUser, CreateUserDto updateUser) {
+    private User mapUser(User existingUser, PatchUserDto updateUser) {
         if(updateUser.getName() != null)
             existingUser.setName(updateUser.getName().trim());
         if(updateUser.getEmail() != null)
             existingUser.setEmail(updateUser.getEmail().trim());
         if(updateUser.getRole() != null)
-//            existingUser.setRole(String.valueOf(updateUser.getRole()).trim());
-            existingUser.setRole(updateUser.getRole());
+            existingUser.setRole(UserRole.valueOf(updateUser.getRole()));
         return existingUser;
     }
 }

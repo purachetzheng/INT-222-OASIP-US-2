@@ -1,6 +1,6 @@
 package sit.int221.oasipserver.utils;
 
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.entities.User;
 
 public class RoleValidate {
@@ -10,7 +10,7 @@ public class RoleValidate {
     }
 
     public boolean roleCheck(User newUser) {
-        for (Role role : Role.values()) {
+        for (UserRole role : UserRole.values()) {
             if(role.equals(newUser.getRole()))
                 return false;
         }
