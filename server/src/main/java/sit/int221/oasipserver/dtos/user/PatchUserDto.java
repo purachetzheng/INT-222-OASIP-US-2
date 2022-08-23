@@ -20,7 +20,7 @@ public class PatchUserDto {
 
 //    private Integer id;
 
-    @Size(max = 100, message = "size must be between 1 and 50")
+    @Size(max = 100, message = "size must be between 1 and 100")
     private String name;
 
     @Size(max = 50, message = "size must be between 1 and 50")
