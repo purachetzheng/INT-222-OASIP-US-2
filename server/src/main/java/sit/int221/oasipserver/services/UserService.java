@@ -13,6 +13,7 @@ import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
+import sit.int221.oasipserver.enums.Role;
 
 import java.util.List;
 
