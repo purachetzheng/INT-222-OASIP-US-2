@@ -25,7 +25,7 @@ public class UserService {
 
     //nameError
     final private FieldError nameErrorObj = new FieldError("createUserDto",
-            "name", "Role already exist");
+            "name", "Name already exist");
     //emailError
     final private FieldError emailErrorObj = new FieldError("createUserDto",
             "email", "Email already exist");
