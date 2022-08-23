@@ -52,6 +52,7 @@ public class UserService {
     //Insert
     public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         newUser.setName(newUser.getName().trim());
+        if (newUser.getRole() == null) newUser.setRole(Role.student);
         User user = modelMapper.map(newUser, User.class);
         if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
         if (repository.existsByName(newUser.getName())) result.addError(nameErrorObj);
