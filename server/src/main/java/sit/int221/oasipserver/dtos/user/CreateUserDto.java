@@ -32,5 +32,9 @@ public class CreateUserDto {
     private Instant createdOn;
 
     private Instant updatedOn;
+    
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 }
 
