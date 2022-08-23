@@ -31,7 +31,7 @@ public class UserService {
             "email", "Email already exist");
     //roleError
     final private FieldError roleErrorObj = new FieldError("createUserDto",
-            "role", "Role must be 'student' or 'admin'");
+            "role", "Role must be specific as 'student' or 'admin' or 'lecturer");
 
     //Get All
     public List<UserDto> getAll() {
