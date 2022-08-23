@@ -13,6 +13,7 @@ import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
+import sit.int221.oasipserver.enums.Role;
 
 import java.util.List;
 
@@ -25,13 +26,13 @@ public class UserService {
 
     //nameError
     final private FieldError nameErrorObj = new FieldError("createUserDto",
-            "name", "Role already exist");
+            "name", "Name already exist");
     //emailError
     final private FieldError emailErrorObj = new FieldError("createUserDto",
             "email", "Email already exist");
     //roleError
     final private FieldError roleErrorObj = new FieldError("createUserDto",
-            "role", "Role must be 'student' or 'admin'");
+            "role", "Role must be specific as 'student' or 'admin' or 'lecturer");
 
     //Get All
     public List<UserDto> getAll() {
@@ -52,6 +53,7 @@ public class UserService {
     //Insert
     public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         newUser.setName(newUser.getName().trim());
+        if (newUser.getRole() == null) newUser.setRole(Role.student);
         User user = modelMapper.map(newUser, User.class);
         if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
         if (repository.existsByName(newUser.getName())) result.addError(nameErrorObj);
