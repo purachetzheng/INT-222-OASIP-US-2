@@ -36,4 +36,8 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updatedOn", insertable = false)
     private Instant updatedOn;
+    
+    public void setEmail(String email) {
+        this.email = email.trim();
+    }
 }
