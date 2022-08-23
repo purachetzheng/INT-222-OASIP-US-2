@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.oasipserver.dtos.user.CreateUserDto;
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.services.UserService;
@@ -52,8 +52,8 @@ public class UserController {
 
     @ExceptionHandler(InvalidFormatException.class)
     public void handleRole(HttpServletResponse response, InvalidFormatException ex) throws IOException {
-        if (ex.getTargetType().isAssignableFrom(Role.class)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "Role must be specific as 'student' or 'admin' or 'lecturer");
+        if (ex.getTargetType().isAssignableFrom(UserRole.class)) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "UserRole must be specific as 'student' or 'admin' or 'lecturer");
         } else {
             response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.enums.UserRole;
 
 import java.time.Instant;
 
@@ -16,7 +16,7 @@ public class UserDto {
     private Integer id;
     private String name;
     private String email;
-    private Role role;
+    private UserRole role;
     private Instant createdOn;
     private Instant updatedOn;
 }
