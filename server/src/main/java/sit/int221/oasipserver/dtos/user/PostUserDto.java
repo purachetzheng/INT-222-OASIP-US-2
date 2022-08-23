@@ -15,7 +15,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateUserDto {
+public class PostUserDto {
 
     private Integer id;
 

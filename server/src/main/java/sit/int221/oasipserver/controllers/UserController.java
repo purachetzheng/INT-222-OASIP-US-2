@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipserver.dtos.user.CreateUserDto;
+import sit.int221.oasipserver.dtos.user.PostUserDto;
 import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+    public UserDto createUser(@Valid @RequestBody PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         return userService.create(newUser, result);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUser(
-            @Valid @RequestBody CreateUserDto updateUser,
+            @Valid @RequestBody PostUserDto updateUser,
             @PathVariable Integer id,
             BindingResult result) throws MethodArgumentNotValidException {
         return userService.update(updateUser, id, result);

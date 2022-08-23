@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import sit.int221.oasipserver.dtos.user.CreateUserDto;
+import sit.int221.oasipserver.dtos.user.PostUserDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
@@ -51,7 +51,7 @@ public class UserService {
     }
 
     //Insert
-    public UserDto create(CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+    public UserDto create(PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         newUser.setEmail(newUser.getEmail().trim());
         newUser.setName(newUser.getName().trim());
         if (newUser.getRole() == null) newUser.setRole(UserRole.student);
@@ -64,7 +64,7 @@ public class UserService {
     }
 
     //Edit
-    public UserDto update(CreateUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
+    public UserDto update(PostUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
         User user = mapUser(getById(id), updateUser);
         if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
             result.addError(nameErrorObj);
@@ -79,7 +79,7 @@ public class UserService {
     }
 
 
-    private User mapUser(User existingUser, CreateUserDto updateUser) {
+    private User mapUser(User existingUser, PostUserDto updateUser) {
         if(updateUser.getName() != null)
             existingUser.setName(updateUser.getName().trim());
         if(updateUser.getEmail() != null)
