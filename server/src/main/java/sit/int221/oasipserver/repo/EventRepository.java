@@ -24,11 +24,16 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     public List<Event> findAllByEventCategoryId(Integer eventCategoryId);
     public Page<Event> findAllByEventCategoryId(Pageable pageable, Integer eventCategoryId);
+
     @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%')",nativeQuery=true)
     public Page<Event> findAllByEventStartTimeEquals(Pageable pageable, @Param("date") String date);
+
     @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()",nativeQuery=true)
     public Page<Event> findAllByEventStartTimePast(Pageable pageable);
+
     @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()",nativeQuery=true)
     public Page<Event> findAllByEventStartTimeUpcoming(Pageable pageable);
 
+    @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%') and eventCategoryId = :id",nativeQuery=true)
+    public Page<Event> findAllByEventCategoryIdAndEventStartTime(Pageable pageable, @Param("id") Integer eventCategoryId, @Param("date") String date);
 }

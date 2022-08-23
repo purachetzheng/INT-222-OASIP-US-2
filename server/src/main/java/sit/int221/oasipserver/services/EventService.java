@@ -44,23 +44,23 @@ public class EventService {
         return listMapper.mapList(eventList, SimpleEventDto.class, modelMapper);
     }
 
-    public PageEventDto getEventPage(int pageNum, int pageSize, String sortBy, Integer eventCategoryID, String dateStatus, String date) {
+    public PageEventDto getEventPage(int pageNum, int pageSize, String sortBy, Integer eventCategoryId, String dateStatus, String date) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageRequest = PageRequest.of(pageNum, pageSize, sort);
-        Page page = filterEventPage(pageRequest, eventCategoryID, dateStatus, date);
+        Page page = filterEventPage(pageRequest, eventCategoryId, dateStatus, date);
         PageEventDto pageDto = modelMapper.map(page, PageEventDto.class);
         return pageDto;
     }
 
-    private Page filterEventPage(Pageable pageRequest, Integer eventCategoryID, String dateStatus, String date) {
+    private Page filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
         int x = 0;
-        if(eventCategoryID != null) x += 1;
+        if(eventCategoryId != null) x += 1;
         if(dateStatus != null) x += 2;
         if(date != null) x += 4;
 
         switch(x) {
             case 1:
-                return repository.findAllByEventCategoryId(pageRequest, eventCategoryID);
+                return repository.findAllByEventCategoryId(pageRequest, eventCategoryId);
             case 2:
                 if (dateStatus == "past") return repository.findAllByEventStartTimePast(pageRequest);
                 if (dateStatus == "upcoming") return repository.findAllByEventStartTimeUpcoming(pageRequest);
@@ -69,7 +69,7 @@ public class EventService {
             case 4:
                 return repository.findAllByEventStartTimeEquals(pageRequest, date);
             case 5:
-                // code block
+                return repository.findAllByEventCategoryIdAndEventStartTime(pageRequest, eventCategoryId, date);
             case 6:
                 // code block
             case 7:
