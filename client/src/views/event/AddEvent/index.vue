@@ -35,8 +35,8 @@ provide('selectedCategory', selectedCategory)
 const getCategories = async () => {
   try {
     const { data } = await apiEventCategory.get()
-    // categories.value = data.content
-    categories.value = data
+    categories.value = data.content
+    // categories.value = data
     console.log(data)
   } catch (error) {
     console.log(error)
