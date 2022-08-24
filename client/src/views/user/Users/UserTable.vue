@@ -61,16 +61,16 @@ const roleBadges = {
           <div class="flex gap-1 items-center">
             <fa-icon
               :icon="['far', 'eye']"
-              class="p-2 fa-lg cursor-pointer hover:scale-110 text-gray-700 hover:text-blue-500"
+              class="p-2 fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-blue-500 duration-100"
               @click="$emit('view-detail', user)"
             />
             <fa-icon
               :icon="['far', 'pen-to-square']"
-              class="fa-lg p-2 cursor-pointer hover:scale-110 text-gray-700 hover:text-purple-500"
+              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
             />
             <fa-icon
               :icon="['far', 'trash-can']"
-              class="fa-lg p-2 cursor-pointer hover:scale-110 text-gray-700 hover:text-red-500"
+              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
               @click="$emit('delete-user', user.id)"
             />
           </div>

@@ -18,7 +18,7 @@ const props = defineProps({
 <template>
   <BaseModal :show="show" @close="$emit('closeModal')" :width="'w-160'">
     <template #header>
-      <h1 class="text-2xl font-semibold text-center">Edit Event</h1>
+      <h1 class="text-2xl font-semibold text-center">User</h1>
     </template>
 
     <template #body>
