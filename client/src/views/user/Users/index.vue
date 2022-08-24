@@ -3,6 +3,7 @@ import { computed, onBeforeMount, provide, readonly, ref } from 'vue'
 import { apiUser } from '../../../services/axios/api'
 import UserTable from './UserTable.vue'
 import UserDetailModal from './modal/UserDetailModal.vue'
+import AddUserModal from './modal/AddUserModal.vue';
 
 const users = ref([])
 
@@ -36,7 +37,24 @@ const deleteUsers = async (id) => {
     console.log('error ', error.message)
   }
 }
-
+const onSubmit = async (user) => {
+  try {
+    const { data } = await apiUser.post(user)
+    console.log(data)
+    users.value.push(data)
+    closeAddUserModal()
+    alert('ok')
+  } catch (error) {
+    console.log(error)
+    const { data, status } = error.response
+    const { details } = data
+    let messageError = ''
+    details.forEach(details => {
+        messageError+=`${details.field}: ${details.errorMessage}\n`
+    });
+    alert(messageError)
+  }
+}
 const viewTime = ref(false)
 
 provide('viewTime', readonly(viewTime))
@@ -46,6 +64,12 @@ const [selectedUser, selectUser, resetSelectUser, showDetailModal] = [
   (user) => (selectedUser.value = user),
   () => (selectedUser.value = {}),
   computed(() => Object.keys(selectedUser.value).length !== 0),
+]
+
+const [showAddUserModal, openAddUserModal, closeAddUserModal] = [
+  ref(false),
+  () => (showAddUserModal.value = true),
+  () => (showAddUserModal.value = false),
 ]
 
 onBeforeMount(() => {
@@ -64,59 +88,24 @@ const test = (e) => console.log(e)
           <label for="vt">view detail</label>
         </div>
         <fa-icon :icon="['fas', 'ellipsis']" class="fa-xl" />
-        <button class="p-2 bg-blue-500">Add User</button>
+        <button class="p-2 bg-blue-500" @click="openAddUserModal">Add User</button>
       </div>
     </header>
-    {{ selectedUser }}
-    {{ showDetailModal }}
+
     <UserTable
       :users="users"
       @delete-user="deleteUsers"
       @view-detail="selectUser"
     />
 
-    <ul class="grid grid-cols-12 gap-2 items-center">
-      <li class="col-span-1">Id</li>
-      <li class="col-span-3">Name</li>
-      <li class="col-span-4">Email</li>
-      <li class="col-span-1">Role</li>
-      <li class="col-span-1">
-        <button class="p-2 bg-blue-500" @click="viewTime = !viewTime">
-          View Detail
-        </button>
-      </li>
-    </ul>
-    <ul class="flex flex-col gap-4">
-      <li
-        class="grid grid-cols-11 p-4 items-center gap-2 bg-white rounded-md"
-        v-for="user in users"
-      >
-        <p class="col-span-5">
-          {{ user.name }}
-        </p>
-        <p class="col-span-4 break-all">{{ user.email }}</p>
-        <p class="col-span-1">{{ user.role }}</p>
-        <div
-          class="col-span-1 flex flex-wrap gap-2 items-center justify-center"
-        >
-          <fa-icon
-            :icon="['far', 'pen-to-square']"
-            class="cursor-pointer rounded-md p-2 bg-blue-500 text-white"
-          />
-          <fa-icon
-            :icon="['far', 'trash-can']"
-            class="cursor-pointer rounded-md p-2 bg-red-500 text-white"
-            @click="deleteUsers(user.id)"
-          />
-        </div>
-      </li>
-    </ul>
+    
 
     <UserDetailModal
       :show="showDetailModal"
       :user="selectedUser"
       @close="resetSelectUser"
     />
+    <AddUserModal :show="showAddUserModal" @close="closeAddUserModal" @submit-form="onSubmit" />
   </main>
 </template>
 
