@@ -79,7 +79,7 @@ const test = (e) => console.log(e)
 </script>
 
 <template>
-  <main class="my-container h-full flex flex-col py-4 gap-0 justify-between">
+  <main class="my-container grow flex flex-col py-4 gap-0 justify-between">
     <header class="flex justify-between">
       <h1 class="text-2xl font-bold">User</h1>
       <div class="flex items-center gap-6">
@@ -96,9 +96,10 @@ const test = (e) => console.log(e)
       :users="users"
       @delete-user="deleteUsers"
       @view-detail="selectUser"
+      class="grow overflow-hidden"
     />
 
-    
+    <div class="">Foot</div>
 
     <UserDetailModal
       :show="showDetailModal"

@@ -18,7 +18,8 @@ myDarkmode.init()
 <style>
 
 ::-webkit-scrollbar {
-  width: 10px;
+  /* width: 10px; */
+  width: 0.5rem;
 }
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
@@ -29,7 +30,7 @@ myDarkmode.init()
   background: #2563eb;
 }
 ::-webkit-scrollbar-track {
-  margin: 10px 0;
+  /* margin: 10px 0; */
   background-color: #dbdbdb;
   border-radius: 10px;
 }

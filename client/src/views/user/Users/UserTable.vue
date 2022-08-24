@@ -34,26 +34,81 @@ const disPlayUpdated = (datetime) => {
 </script>
 
 <template>
-  <div class="overflow-x-aut">
-    <table class="table-auto border-separate border-spacing-y-2 -my-2  w-full">
+  <div class="flex flex-col ">
+    <header class=" pl-2 pr-4 " v-show="1">
+      <ul class="flex flex-wrap font-semibold ">
+        <li class="px-4 py-2 basis-80 grow ">User</li>
+        <li class="px-4 py-2 basis-28 hidden md:block">Role</li>
+        <li class="px-4 py-2 basis-28 hidden md:block">updated</li>
+        <li class="px-4 py-2 basis-36 hidden md:block">Actions</li>
+      </ul>
+    </header>
+    <ul class="flex flex-col gap-2 p-2 overflow-y-scroll h-0 grow ">
+
+      <li
+        class="bg-white hover:bg-gray-100 flex items-center rounded-md"
+        v-for="user in users"  v-show="1"
+      >
+        <div class="px-4 py-4 flex items-center gap-4 basis-80 grow">
+          <div
+            class="w-10 h-10 rounded-full flex items-center justify-center"
+            :class="roleColor[user.role].profile"
+          >
+            <p class="font-sans font-semibold">
+              {{ profilePlaceholder(user.name) }}
+            </p>
+          </div>
+          <div class="">
+            <p class="font-semibold">{{ user.name }}</p>
+            <p class="text-sm font-medium">{{ user.email }}</p>
+          </div>
+        </div>
+        <div class="px-4 py-4 basis-28 hidden md:block">
+          <span
+            class="px-2 py-1 rounded-lg"
+            :class="roleColor[user.role].badges"
+            >{{ user.role }}</span
+          >
+        </div>
+        <div class="px-4 py-4 basis-28 hidden md:block font-medium">
+          {{ disPlayUpdated(user.updatedOn) }}
+        </div>
+        <div class="px-4 py-4 basis-36 hidden md:block">
+          <div class="flex gap-1 items-center">
+            <fa-icon
+              :icon="['far', 'eye']"
+              class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-blue-500 duration-100"
+              @click="$emit('view-detail', user)"
+            />
+            <fa-icon
+              :icon="['far', 'pen-to-square']"
+              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
+            />
+            <fa-icon
+              :icon="['far', 'trash-can']"
+              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
+              @click="$emit('delete-user', user.id)"
+            />
+          </div>
+        </div>
+      </li>
+    </ul>
+    <!-- <table class="table-auto border-separate border-spacing-y-2 -my-2 w-full">
       <thead class="">
-        <tr class="text-left ">
+        <tr class="text-left">
           <th scope="col" class="col-head">User</th>
           <th scope="col" class="col-head">Role</th>
-          <!-- <th scope="col" class="col-head" v-show="viewTime">created</th> -->
           <th scope="col" class="col-head">updated</th>
           <th scope="col" class="col-head">Actions</th>
         </tr>
       </thead>
-      <tbody class="overflow-auto h-80 ">
-        <tr class="bg-white hover:bg-gray-100 hover:scale-[100.5%]" v-for="user in users">
+      <tbody class="overflow-auto h-80">
+        <tr
+          class="bg-white hover:bg-gray-100 hover:scale-[100.5%]"
+          v-for="user in users"
+        >
           <td class="col-data">
             <div class="flex items-center gap-4">
-              <!-- <img
-              src="images/default-profile.png"
-              alt=""
-              class="w-10 h-10 rounded-full"
-            /> -->
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center"
                 :class="roleColor[user.role].profile"
@@ -75,9 +130,6 @@ const disPlayUpdated = (datetime) => {
               >{{ user.role }}</span
             >
           </td>
-          <!-- <td class="col-data" v-show="viewTime">
-          {{ formatDatetime.dayMonthYear(user.createdOn) }}
-        </td> -->
           <td class="col-data font-medium">
             {{ disPlayUpdated(user.updatedOn) }}
           </td>
@@ -100,9 +152,11 @@ const disPlayUpdated = (datetime) => {
             </div>
           </td>
         </tr>
-        <tr v-if="users.length === 0">No Users</tr>
+        <tr v-if="users.length === 0">
+          No Users
+        </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 
