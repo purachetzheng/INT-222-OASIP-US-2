@@ -76,6 +76,7 @@ const roleBadges = {
           </div>
         </td>
       </tr>
+      No Users
     </tbody>
   </table>
 </template>
