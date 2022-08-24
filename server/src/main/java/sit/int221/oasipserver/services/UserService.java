@@ -52,30 +52,44 @@ public class UserService {
 
     //Insert
     public UserDto create(PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
-        newUser.setEmail(newUser.getEmail().trim());
-        newUser.setName(newUser.getName().trim());
-        if (newUser.getRole() == null) newUser.setRole(UserRole.student);
-        User user = modelMapper.map(newUser, User.class);
-        if (roleValidate.roleCheck(user)) result.addError(roleErrorObj);
-        if (repository.existsByName(newUser.getName())) result.addError(nameErrorObj);
-        if (repository.existsByEmail(newUser.getEmail())) result.addError(emailErrorObj);
+        String name = newUser.getName();
+        String email = newUser.getEmail();
+        if(name != null)
+            newUser.setName(newUser.getName().trim());
+        if(email != null)
+            newUser.setEmail(newUser.getEmail().trim());
+
+        if (repository.existsByName(newUser.getName()))
+            result.addError(nameErrorObj);
+        if (repository.existsByEmail(newUser.getEmail()))
+            result.addError(emailErrorObj);
+
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
-        return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
+
+        String role = newUser.getRole();
+        if(role == null || role == "") newUser.setRole("student");
+
+        User user = modelMapper.map(newUser, User.class);
+        User createdUser = repository.saveAndFlush(user);
+        UserDto userDto =  modelMapper.map(createdUser, UserDto.class);
+        return userDto;
     }
 
     //Edit
     public UserDto update(PostUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
-        User user = mapUser(getById(id), updateUser);
+        String role = updateUser.getRole();
+        if(role == "") updateUser.setRole("student");
         if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
             result.addError(nameErrorObj);
         }
-
         if(repository.existsByEmailAndIdNot(updateUser.getEmail(), id)){
             result.addError(emailErrorObj);
         }
-
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
-        return modelMapper.map(repository.saveAndFlush(user), UserDto.class);
+        User user = mapUser(getById(id), updateUser);
+        User updatedUser = repository.saveAndFlush(user);
+        UserDto userDto =  modelMapper.map(updatedUser, UserDto.class);
+        return userDto;
     }
 
 
@@ -85,8 +99,7 @@ public class UserService {
         if(updateUser.getEmail() != null)
             existingUser.setEmail(updateUser.getEmail().trim());
         if(updateUser.getRole() != null)
-//            existingUser.setRole(String.valueOf(updateUser.getRole()).trim());
-            existingUser.setRole(updateUser.getRole());
+            existingUser.setRole(UserRole.valueOf(updateUser.getRole()));
         return existingUser;
     }
 }

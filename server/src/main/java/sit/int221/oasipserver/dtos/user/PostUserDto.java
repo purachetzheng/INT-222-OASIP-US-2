@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int221.oasipserver.annotations.ValueOfEnum;
 import sit.int221.oasipserver.enums.UserRole;
 
 import javax.validation.constraints.Email;
@@ -28,7 +29,8 @@ public class PostUserDto {
     @NotBlank(message = "must not be blank")
     private String email;
 
-    private UserRole role;
+    @ValueOfEnum(enumClass = UserRole.class)
+    private String role;
 
     private Instant createdOn;
 
