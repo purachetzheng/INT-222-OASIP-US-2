@@ -83,10 +83,10 @@ const test = (e) => console.log(e)
     <header class="flex justify-between">
       <h1 class="text-2xl font-bold">User</h1>
       <div class="flex items-center gap-6">
-        <div class="">
+        <!-- <div class="">
           <input type="checkbox" name="" v-model="viewTime" id="vt" />
           <label for="vt">view detail</label>
-        </div>
+        </div> -->
         <fa-icon :icon="['fas', 'ellipsis']" class="fa-xl" />
         <button class="p-2 bg-blue-500" @click="openAddUserModal">Add User</button>
       </div>
