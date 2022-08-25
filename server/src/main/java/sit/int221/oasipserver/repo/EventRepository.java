@@ -13,27 +13,47 @@ import java.time.Instant;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
+
+
     public List<Event> findAllByOrderByEventStartTimeDesc();
-//    public List<Event> findAllByEventCategoryIs(Eventcategory eventcategory);
-//    public List<Event> findAllByEventCategoryIsAndEventStartTimeBetween(Eventcategory eventcategory, Instant lower, Integer upper);
+
     public List<Event> findAllByEventCategoryIsAndEventStartTimeBetween(Eventcategory eventcategory, Instant lower, Instant upper);
 
-    public List<Event> findAllByEventCategoryIsAndIdIsNot (Eventcategory eventcategory, Integer id);
     public List<Event> findAllByEventCategoryIsAndIdIsNotAndEventStartTimeBetween (Eventcategory eventcategory, Integer id, Instant lower, Instant upper);
-    public List<Event> findAllByEventCategoryEventCategoryName(String name);
-
-    public List<Event> findAllByEventCategoryId(Integer eventCategoryId);
-    public Page<Event> findAllByEventCategoryId(Pageable pageable, Integer eventCategoryId);
 
     @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%')",nativeQuery=true)
-    public Page<Event> findAllByEventStartTimeEquals(Pageable pageable, @Param("date") String date);
+    Page<Event> findAllByEventStartTimeEquals(Pageable pageable, @Param("date") String date);
 
-    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()",nativeQuery=true)
-    public Page<Event> findAllByEventStartTimePast(Pageable pageable);
+    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()", nativeQuery=true)
+    Page<Event> findAllByEventStartTimePast(Pageable pageable);
 
     @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()",nativeQuery=true)
-    public Page<Event> findAllByEventStartTimeUpcoming(Pageable pageable);
+    Page<Event> findAllByEventStartTimeUpcoming(Pageable pageable);
 
     @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%') and eventCategoryId = :id",nativeQuery=true)
-    public Page<Event> findAllByEventCategoryIdAndEventStartTime(Pageable pageable, @Param("id") Integer eventCategoryId, @Param("date") String date);
+    Page<Event> findAllByEventCategoryIdAndEventStartTime(Pageable pageable, @Param("id") Integer eventCategoryId, @Param("date") String date);
+
+    @Query(value = "select * from events where" +
+            "(:id is null or eventCategoryId = :id)" +
+            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
+            ,nativeQuery=true)
+    public Page<Event> findAll(Pageable pageable,
+                                     @Param("id") Integer eventCategoryId,
+                                     @Param("date") String date);
+
+    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
+            "and (:id is null or eventCategoryId = :id)" +
+            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
+            ,nativeQuery=true)
+    public Page<Event> findAllEventPast(Pageable pageable,
+                                     @Param("id") Integer eventCategoryId,
+                                     @Param("date") String date);
+
+    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
+            "and (:id is null or eventCategoryId = :id)" +
+            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
+            ,nativeQuery=true)
+    public Page<Event> findAllEventUpcoming(Pageable pageable,
+                                         @Param("id") Integer eventCategoryId,
+                                         @Param("date") String date);
 }

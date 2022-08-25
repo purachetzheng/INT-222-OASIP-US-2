@@ -27,7 +27,7 @@ public class EventController {
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
             @RequestParam(required = false) Integer eventCategoryId,
-            @RequestParam(required = false) String dateStatus,
+            @RequestParam(defaultValue = "all") String dateStatus,
             @RequestParam(required = false) String date
     ) {
         return eventService.getEventPage(page, pageSize, sortBy, eventCategoryId, dateStatus, date);

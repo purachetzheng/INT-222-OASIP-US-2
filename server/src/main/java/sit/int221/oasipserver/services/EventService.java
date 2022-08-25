@@ -19,6 +19,7 @@ import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class EventService {
     public EventcategoryService eventcategoryService;
     @Autowired
     private OverlapValidate overlapValidate;
+
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
 
@@ -47,48 +49,18 @@ public class EventService {
     public PageEventDto getEventPage(int pageNum, int pageSize, String sortBy, Integer eventCategoryId, String dateStatus, String date) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageRequest = PageRequest.of(pageNum, pageSize, sort);
-        Page page = filterEventPage(pageRequest, eventCategoryId, dateStatus, date);
+//        return modelMapper.map(repository.findAllByEventStartTimePast(pageRequest), PageEventDto.class);
+        Page<Event>  page = filterEventPage(pageRequest, eventCategoryId, dateStatus, date);
         PageEventDto pageDto = modelMapper.map(page, PageEventDto.class);
         return pageDto;
     }
 
-    private Page filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
-        int x = 0;
-        if(eventCategoryId != null) x += 1;
-        if(dateStatus != null) x += 2;
-        if(date != null) x += 4;
-
-        switch(x) {
-            case 1:
-                return repository.findAllByEventCategoryId(pageRequest, eventCategoryId);
-            case 2:
-                if (dateStatus == "past") return repository.findAllByEventStartTimePast(pageRequest);
-                if (dateStatus == "upcoming") return repository.findAllByEventStartTimeUpcoming(pageRequest);
-            case 3:
-                // code block
-            case 4:
-                return repository.findAllByEventStartTimeEquals(pageRequest, date);
-            case 5:
-                return repository.findAllByEventCategoryIdAndEventStartTime(pageRequest, eventCategoryId, date);
-            case 6:
-                // code block
-            case 7:
-                // code block
-            default:
-                return repository.findAll(pageRequest);
-        }
-
-//        if (eventCategoryID == null && dateStatus == null && date == null)
-//            return repository.findAll(pageRequest);
-//        if (dateStatus == null && date == null)
-//            return repository.findAllByEventCategoryId(pageRequest, eventCategoryID);
-//        if(eventCategoryID == null && date == null && dateStatus == "past")
-//            return repository.findAllByEventStartTimePast(pageRequest);
-//        if(eventCategoryID == null && date == null && dateStatus == "upcoming")
-//            return repository.findAllByEventStartTimeUpcoming(pageRequest);
-//        if(eventCategoryID == null && dateStatus == null)
-//            return repository.findAllByEventStartTimeEquals(pageRequest, date);
-//        return repository.findAll(pageRequest);
+    private Page<Event> filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
+        if(dateStatus.equals("past"))
+            return repository.findAllEventPast(pageRequest, eventCategoryId, date);
+        if(dateStatus.equals("upcoming"))
+            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
+        return repository.findAll(pageRequest, eventCategoryId, date);
     }
 
     public Event getById(Integer id) {

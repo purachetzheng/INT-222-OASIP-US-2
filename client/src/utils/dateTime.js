@@ -30,3 +30,10 @@ export const isFuture = (dateTime) => dayjs(dateTime).isAfter(dayjs())
 export const isFutureOrSameDay = (dateTime) => dayjs(dateTime).isAfter(dayjs(), 'day') || dayjs(dateTime).isSame(dayjs(), 'day')
 export const isBefore = (dateTime) => dayjs(dateTime).isBefore(dayjs())
 
+export const datetimeCheck = {
+    isFuture: (dateTime) => dayjs(dateTime).isAfter(dayjs()),
+    isNow: (dateTime) => dayjs(dateTime).isSame(dayjs()),
+    isBefore: (dateTime) => dayjs(dateTime).isBefore(dayjs()),
+    isToday: (dateTime) => dayjs(dateTime).isSame(dayjs(), 'day'),
+    isYesterday: (dateTime) => dayjs(dateTime).isSame(dayjs().subtract(1, 'day'), 'day'),
+}
