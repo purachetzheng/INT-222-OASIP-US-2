@@ -14,9 +14,13 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: ''
+    default: '',
   },
-  attribute: {
+  max: {
+    type: Number,
+    default: 999,
+  },
+  attr: {
     type: Object,
     default: {},
   },
@@ -50,21 +54,27 @@ const validationListeners = computed(() => {
 
 <template>
   <div class="relative">
-    <label :for="name">{{ label }}</label>
-    <input
-      :id="name"
-      class="form-control"
-      :class="errorMessage && 'bg-red-100 border-red-500'"
-      :name="name"
-      :type="type"
-      :max="attribute.max"
-      v-on="validationListeners"
-      v-model="value"
-    />
-    <span
-      v-show="errorMessage"
-      class="absolute right-1 -bottom-5 text-red-500 text-sm"
-      >{{ errorMessage }}</span>
+    <!-- <label :for="name" class="absolute -top-0.5 left-3 px-1 text-sm leading-3">{{ label }}</label> -->
+    <label :for="name" class="text-sm leading-3">{{ label }}</label>
+    <div class="">
+      <input
+        :id="name"
+        class="form-control"
+        :class="errorMessage && ' border-red-500 focus:ring-red-500 focus:border-red-500 focus:outline-none focus:ring-opacity-50'"
+        :name="name"
+        :type="type"
+        :maxlength="max"
+        v-on="validationListeners"
+        v-model="value"
+        @input="test"
+      />
+    </div>
+    <div class="flex justify-between pt-0.5">
+      <span class="text-red-500 text-sm">{{
+        errorMessage
+      }}</span>
+      <span class="text-gray-500 text-sm">{{ value.length }} / {{ max }}</span>
+    </div>
   </div>
 </template>
 

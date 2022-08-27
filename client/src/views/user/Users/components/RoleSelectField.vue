@@ -31,6 +31,7 @@ const { value, errorMessage, handleChange } = useField(name, () => {}, {
 
 <template>
   <div class="relative flex flex-col">
+    <p class="">Role</p>
     <ul class="grid grid-cols-3 gap-4">
       <li>
         <input

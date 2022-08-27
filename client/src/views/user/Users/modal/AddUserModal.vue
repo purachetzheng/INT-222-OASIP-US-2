@@ -16,6 +16,10 @@ const props = defineProps({
 })
 const { handleSubmit, values, resetForm, meta, setFieldValue } = useForm({
   validationSchema: schema,
+  initialValues: {
+    name: '',
+    email: '',
+  },
 })
 const onSubmit = handleSubmit(({name = '', email = '', role}) => {
   const trimmedUser = {
@@ -40,12 +44,10 @@ onUpdated(() => {
       <h1 class="text-2xl font-semibold text-center">Add User</h1>
     </template>
     <template #body>
-      <div class="flex flex-col">
-        <label for="name">Name</label>
-        <InputField id="name" class="" name="name" type="text" />
-        <label for="email" class="pt-2">Email</label>
-        <InputField id="email" class="" name="email" type="text" />
-        <p class="pt-2">Role</p>
+      <div class="flex flex-col gap-0">
+        <InputField id="name" class="" name="name" type="text" :max="100" label="Name" />
+        <InputField id="email" class="" name="email" type="text" :max="50" label="Email" />
+        <!-- <p class="pt-2">Role</p> -->
         <RoleSelectField />
       </div>
     </template>

@@ -44,7 +44,7 @@ const disPlayUpdated = (datetime) => {
       <ul class="flex flex-wrap font-semibold ">
         <li class="px-4 py-2 basis-80 grow ">User</li>
         <li class="px-4 py-2 basis-32 hidden md:block">Role</li>
-        <li class="px-4 py-2 basis-36 hidden md:block">updated</li>
+        <li class="px-4 py-2 basis-44 hidden md:block">updated</li>
         <li class="px-4 py-2 basis-36 hidden md:block">Actions</li>
       </ul>
     </header>
@@ -77,7 +77,7 @@ const disPlayUpdated = (datetime) => {
           >
         </div>
 
-        <div class="px-4 py-4 basis-36 hidden md:block font-medium">
+        <div class="px-4 py-4 basis-44 hidden md:block font-medium">
           {{ disPlayUpdated(user.updatedOn) }}
         </div>
         
