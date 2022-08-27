@@ -2,26 +2,40 @@
 import BaseModal from '../../../../components/base/BaseModal.vue'
 import { formatDatetime } from '../../../../utils/dateTime'
 import schema from '@/services/validation/schema/SignInUserSchema'
-import InputField from '../../../../components/base/form/InputField.vue';
+import InputField from '../../../../components/base/form/InputField.vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
-import { onUpdated } from 'vue';
-const emits = defineEmits(['close','submit-form'])
+import { onUpdated } from 'vue'
+import RoleSelectField from '../components/RoleSelectField.vue'
+
+const emits = defineEmits(['close', 'submit-form'])
 const props = defineProps({
   show: {
     type: Boolean,
     default: false,
   },
 })
-const { handleSubmit, values, resetForm } = useForm({ validationSchema: schema })
-const onSubmit = handleSubmit((user)=>{
-  console.log('h');
-  emits('submit-form', user)
+const { handleSubmit, values, resetForm, meta, setFieldValue } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    name: '',
+    email: '',
+  },
 })
-onUpdated(()=> {
-  if(props.show === true){
-    setTimeout(resetForm,5)
+const onSubmit = handleSubmit(({name = '', email = '', role}) => {
+  const trimmedUser = {
+    name: name.trim(),
+    email: email.trim(),
+    role: role
+  }
+  emits('submit-form', trimmedUser)
+})
+onUpdated(() => {
+  if (props.show === true) {
+    setTimeout(resetForm, 5)
   }
 })
+
+
 </script>
 
 <template>
@@ -30,36 +44,26 @@ onUpdated(()=> {
       <h1 class="text-2xl font-semibold text-center">Add User</h1>
     </template>
     <template #body>
-      <div class="flex flex-col">
-        <label for="name">Name</label>
-        <InputField id="name" class="" name="name" type="text" />
-        <label for="email">Email</label>
-        <InputField id="email" class="" name="email" type="text" />
-        <ul class="flex gap-4">
-          <span class="">Role</span>
-          <li class="flex gap-1">
-            <Field id="student" name="role" type="radio" value="student" />
-            <label for="student">Student</label>
-          </li>
-          <li class="flex gap-1">
-            <Field id="lecturer" name="role" type="radio" value="lecturer" />
-            <label for="lecturer">Lecturer</label>
-          </li>
-          <li class="flex gap-1">
-            <Field id="admin" name="role" type="radio" value="admin" />
-            <label for="admin">Admin</label>
-          </li>
-        </ul>
+      <div class="flex flex-col gap-0">
+        <InputField id="name" class="" name="name" type="text" :max="100" label="Name" />
+        <InputField id="email" class="" name="email" type="text" :max="50" label="Email" />
+        <!-- <p class="pt-2">Role</p> -->
+        <RoleSelectField />
       </div>
     </template>
 
     <template #footer>
-      <button @click="onSubmit" class="bg-blue-500 p-2">Sign In</button>
-      <button type="button" class="bg-red-500 p-2" @click="$emit('close')">
-        Close
-      </button>
+      <div class="flex gap-4 justify-start">
+        <PrimaryButton type="submit" @click="onSubmit" class="btn btn-indigo duration-300 submit-btn" 
+          :disabled="!meta.valid" >Create</PrimaryButton>
+        <SecondaryButton type="button" class="btn btn-gray duration-300" @click="$emit('close')">
+          Close
+        </SecondaryButton>
+        
+      </div>
     </template>
   </BaseModal>
 </template>
 
-<style></style>
+<style scoped>
+</style>

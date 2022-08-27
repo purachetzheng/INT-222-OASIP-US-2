@@ -22,12 +22,16 @@ const getUsers = async (page) => {
   }
 }
 
+const askForDelete = (id) => {
+  if(confirm('Do you really want to delete?')) deleteUsers(id)
+}
 const deleteUsers = async (id) => {
   try {
     const { data, status } = await apiUser.delete(id)
     // const { content, number, totalPages } = data
     users.value = users.value.filter((u) => u.id != id)
-    alert(`delete user: id`)
+    alert(`successfully deleted`)
+    
     // return data.content
   } catch (error) {
     // console.log(error)
@@ -94,7 +98,7 @@ const test = (e) => console.log(e)
 
     <UserTable
       :users="users"
-      @delete-user="deleteUsers"
+      @delete-user="askForDelete"
       @view-detail="selectUser"
       class="grow overflow-hidden"
     />

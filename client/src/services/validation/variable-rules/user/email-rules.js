@@ -2,7 +2,7 @@ import { isBlank, isEmail, isTrimmed, max } from '../../validator'
 
 const label = 'Email'
 const field = {
-  max: 100,
+  max: 50,
 }
 
 const email = (value) => {

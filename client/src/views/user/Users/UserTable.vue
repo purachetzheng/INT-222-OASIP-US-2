@@ -1,6 +1,7 @@
 <script setup>
 import { inject, ref } from 'vue'
-import { formatDatetime, datetimeCheck } from '../../../utils/dateTime'
+import { date } from 'yup';
+import { formatDatetime, datetimeCheck, datetimeCalculate } from '../../../utils/dateTime'
 import profilePlaceholder from '../../../utils/profilePlaceholder'
 
 defineEmits(['delete-user', 'view-detail'])
@@ -15,19 +16,23 @@ const viewTime = inject('viewTime')
 const roleColor = {
   admin: {
     badges: 'bg-red-200 text-red-500',
-    profile: 'bg-red-600 text-white',
+    // profile: 'bg-red-600 text-white',
+    profile: 'bg-red-100 text-red-600',
   },
   lecturer: {
     badges: 'bg-green-200 text-green-500',
-    profile: 'bg-green-600 text-white',
+    // profile: 'bg-green-600 text-white',
+    profile: 'bg-green-100 text-green-600',
   },
   student: {
     badges: 'bg-blue-200 text-blue-500',
-    profile: 'bg-blue-600 text-white',
+    // profile: 'bg-blue-600 text-white',
+    profile: 'bg-blue-100 text-blue-600',
   },
 }
 const disPlayUpdated = (datetime) => {
-  if (datetimeCheck.isToday(datetime)) return 'Today'
+  // if (datetimeCheck.isHourAgo(datetime)) return datetimeCalculate.timeFromNow(datetime)
+  if (datetimeCheck.isToday(datetime)) return datetimeCalculate.timeFromNow(datetime)
   if (datetimeCheck.isYesterday(datetime)) return 'Yesterday'
   return formatDatetime.dayMonthYear(datetime)
 }
@@ -38,8 +43,8 @@ const disPlayUpdated = (datetime) => {
     <header class=" pl-2 pr-4 " v-show="1">
       <ul class="flex flex-wrap font-semibold ">
         <li class="px-4 py-2 basis-80 grow ">User</li>
-        <li class="px-4 py-2 basis-28 hidden md:block">Role</li>
-        <li class="px-4 py-2 basis-28 hidden md:block">updated</li>
+        <li class="px-4 py-2 basis-32 hidden md:block">Role</li>
+        <li class="px-4 py-2 basis-44 hidden md:block">updated</li>
         <li class="px-4 py-2 basis-36 hidden md:block">Actions</li>
       </ul>
     </header>
@@ -63,18 +68,21 @@ const disPlayUpdated = (datetime) => {
             <p class="text-sm font-medium">{{ user.email }}</p>
           </div>
         </div>
-        <div class="px-4 py-4 basis-28 hidden md:block">
+
+        <div class="px-4 py-4 basis-32 hidden md:block">
           <span
             class="px-2 py-1 rounded-lg"
             :class="roleColor[user.role].badges"
             >{{ user.role }}</span
           >
         </div>
-        <div class="px-4 py-4 basis-28 hidden md:block font-medium">
+
+        <div class="px-4 py-4 basis-44 hidden md:block font-medium">
           {{ disPlayUpdated(user.updatedOn) }}
         </div>
+        
         <div class="px-4 py-4 basis-36 hidden md:block">
-          <div class="flex gap-1 items-center">
+          <div class="flex gap-3 items-center">
             <fa-icon
               :icon="['far', 'eye']"
               class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-blue-500 duration-100"
@@ -82,11 +90,11 @@ const disPlayUpdated = (datetime) => {
             />
             <fa-icon
               :icon="['far', 'pen-to-square']"
-              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
+              class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
             />
             <fa-icon
               :icon="['far', 'trash-can']"
-              class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
+              class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
               @click="$emit('delete-user', user.id)"
             />
           </div>

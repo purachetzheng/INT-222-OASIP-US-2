@@ -70,7 +70,6 @@ const onSubmit = async({ name, email, datetime, notes }) => {
 <template>
   <main class="my-container grow flex flex-col py-4 gap-4 justify-between">
     <ProgressBar :step="addEvent.step" />
-    {{selectedCategoryId}}
     <SelectCategory
       v-if="addEvent.step === 1"
       class="grow"

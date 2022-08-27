@@ -1,9 +1,10 @@
 <script setup>
 import { computed, inject, ref } from 'vue'
-import { useForm, ErrorMessage } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
 import TextAreaField from '../../../../components/base/form/TextAreaField.vue'
 import schema from '@/services/validation/schema/AddEventSchema'
+import InputDatetime from '../components/InputDatetime.vue'
 const emits = defineEmits(['submit-form'])
 const props = defineProps({
   // categories: {
@@ -14,7 +15,14 @@ const props = defineProps({
 const selectedCategoryId = inject('selectedCategoryId')
 const selectedCategory = inject('selectedCategory')
 
-const { handleSubmit } = useForm({ validationSchema: schema })
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+  initialValues: {
+    name: '',
+    email: '',
+    note: ''
+  },
+})
 const onSubmit = handleSubmit((values) => {
   emits('submit-form', values)
 })
@@ -22,7 +30,7 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <section class="flex flex-col justify-between items-center">
-    <div class="flex flex-col max-w-3xl gap-2">
+    <div class="flex flex-col max-w-3xl gap-0">
       <div class="flex flex-col w-160">
         <label for="">Category</label>
         <input
@@ -35,24 +43,13 @@ const onSubmit = handleSubmit((values) => {
       </div>
 
       <div class="flex flex-col w-160">
-        <label for="">Name</label>
-        <InputField class="" name="name" type="text" />
+        <InputField class="" name="name" type="text" :max="100" label="Name" />
       </div>
       <div class="flex flex-col">
-        <label for="">Email</label>
-        <InputField class="" name="email" type="text" />
+        <InputField class="" name="email" type="text" :max="100" label="Email" />
       </div>
       <div class="flex flex-col">
-        <label for="">Datetime</label>
-        <div class="flex justify-between gap-4">
-          <InputField class="w-full" name="datetime.date" type="date" />
-          <InputField class="w-full" name="datetime.time" type="time" />
-        </div>
-        <ErrorMessage
-          name="datetime"
-          class="text-right text-red-500"
-          as="div"
-        />
+        <InputDatetime />
       </div>
       <div class="flex flex-col">
         <label for="">Notes</label>
