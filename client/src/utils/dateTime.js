@@ -51,3 +51,8 @@ export const datetimeCalculate = {
     timeFromNow: (dateTime) => dayjs(dateTime).fromNow() 
 
 }
+
+export const datetimeForInput = {
+    getNow: () => dayjs().format('YYYY-MM-DD'),
+    getMoreMonths: (value) => dayjs().add(value, 'month').format('YYYY-MM-DD'),
+}

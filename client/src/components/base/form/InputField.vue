@@ -73,7 +73,7 @@ const validationListeners = computed(() => {
       <span class="text-red-500 text-sm">{{
         errorMessage
       }}</span>
-      <span class="text-gray-500 text-sm">{{ value.length }} / {{ max }}</span>
+      <span v-if="(typeof value) === 'string'" class="text-gray-500 text-sm">{{ value.length }} / {{ max }}</span>
     </div>
   </div>
 </template>
