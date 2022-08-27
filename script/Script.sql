@@ -44,6 +44,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS users (
   userID INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
   email VARCHAR(50) NOT NULL,
   role enum('admin', 'lecturer', 'student') NOT NULL DEFAULT 'student',
   createdOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -75,6 +76,9 @@ INSERT INTO users values
 (2, 'Somchai Jaidee', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
 (3, 'Komkrid Rakdee', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
 (4, 'สมเกียรติ ขยันเรียน', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+
+INSERT INTO users values
+(1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());
 
 -- Create USER for specific use
 CREATE USER 'OASIPBE'@'%' IDENTIFIED BY 'BEBE';

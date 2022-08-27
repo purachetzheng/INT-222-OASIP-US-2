@@ -1,20 +1,26 @@
 package sit.int221.oasipserver.services;
 
+import com.google.common.hash.Hashing;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.RequestMapping;
+import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.dtos.user.PostUserDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.entities.User;
+import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.enums.UserRole;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.List;
 
 @Service
@@ -33,6 +39,9 @@ public class UserService {
     //roleError
     final private FieldError roleErrorObj = new FieldError("createUserDto",
             "role", "UserRole must be specific as 'student' or 'admin' or 'lecturer");
+    //roleError
+    final private FieldError passwordErrorObj = new FieldError("matchUserDto",
+            "password", "password DOES NOT match");
 
     //Get All
     public List<UserDto> getAll() {
@@ -52,12 +61,19 @@ public class UserService {
 
     //Insert
     public UserDto create(PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+//        String sha256hex = Hashing.sha256()
+//                .hashString(newUser.getPassword(), StandardCharsets.UTF_8)
+//                .toString();
+        String sha256hex = sha256(newUser.getPassword());
         String name = newUser.getName();
         String email = newUser.getEmail();
+        String password = newUser.getPassword();
         if(name != null)
             newUser.setName(newUser.getName().trim());
         if(email != null)
             newUser.setEmail(newUser.getEmail().trim());
+        if(password != null)
+            newUser.setPassword(sha256hex);
 
         if (repository.existsByName(newUser.getName()))
             result.addError(nameErrorObj);
@@ -90,6 +106,42 @@ public class UserService {
         User updatedUser = repository.saveAndFlush(user);
         UserDto userDto =  modelMapper.map(updatedUser, UserDto.class);
         return userDto;
+    }
+
+    //Match
+    public User match(MatchUserDto matchUser) throws PasswordException {
+        User user = new User();
+
+        if(repository.existsByEmail(matchUser.getEmail())){
+            user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา
+        } else {
+            throw new ApiNotFoundException("Email does not exist");
+        }
+        String userShaPassword = user.getPassword(); //เอา Sha password มาจาก Database
+        if(sha256(matchUser.getPassword()).equals(userShaPassword)){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น sha แล้วจะ == sha ใน Database มั้ย
+            System.out.println("MATCHED");
+        } else {
+            throw new PasswordException();
+        }
+        return user;
+    }
+
+    //sha256
+    private String sha256(final String base) {
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            final StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < hash.length; i++) {
+                final String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1)
+                    hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 

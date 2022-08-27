@@ -4,25 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sit.int221.oasipserver.annotations.ValueOfEnum;
-import sit.int221.oasipserver.enums.UserRole;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUserDto {
+public class MatchUserDto {
 
-    private Integer id;
-
-    @NotBlank(message = "must not be blank")
-    @Size(max = 100, message = "size must be between 1 and 100")
-    private String name;
+//    private Integer id;
 
     @NotBlank(message = "must not be blank")
     private String password;
@@ -32,15 +25,7 @@ public class PostUserDto {
     @NotBlank(message = "must not be blank")
     private String email;
 
-    @ValueOfEnum(enumClass = UserRole.class)
-    private String role;
-
-    private Instant createdOn;
-
-    private Instant updatedOn;
-    
     public void setEmail(String email) {
         this.email = email.trim();
     }
 }
-

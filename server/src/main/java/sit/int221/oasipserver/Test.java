@@ -1,6 +1,9 @@
 package sit.int221.oasipserver;
 
+import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.enums.UserRole;
+
+import java.lang.reflect.Field;
 
 public class Test {
     public static boolean findByName(String name) {
@@ -12,6 +15,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        System.out.println(findByName("admin2"));
+//        System.out.println(findByName("admin2"));
     }
 }

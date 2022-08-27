@@ -7,10 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.dtos.user.PostUserDto;
+import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
+import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +52,17 @@ public class UserController {
             BindingResult result) throws MethodArgumentNotValidException {
         return userService.update(updateUser, id, result);
     }
+
+//    @PostMapping("/match")
+//    public User matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+//        return userService.match(matchUser);
+//    }
+
+    @PostMapping("/match")
+    public UserDetailDto matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+        return modelMapper.map(userService.match(matchUser), UserDetailDto.class);
+    }
+
 
     @ExceptionHandler(InvalidFormatException.class)
     public void handleRole(HttpServletResponse response, InvalidFormatException ex) throws IOException {
