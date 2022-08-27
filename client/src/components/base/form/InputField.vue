@@ -63,7 +63,6 @@ const validationListeners = computed(() => {
         :class="errorMessage && ' border-red-500 focus:ring-red-500 focus:border-red-500 focus:outline-none focus:ring-opacity-50'"
         :name="name"
         :type="type"
-        :maxlength="max"
         v-on="validationListeners"
         v-model="value"
         @input="test"
@@ -73,7 +72,7 @@ const validationListeners = computed(() => {
       <span class="text-red-500 text-sm">{{
         errorMessage
       }}</span>
-      <span v-if="(typeof value) === 'string'" class="text-gray-500 text-sm">{{ value.length }} / {{ max }}</span>
+      <span v-if="(typeof value) === 'string'" class="text-gray-500 text-sm">{{ value.trim().length }} / {{ max }}</span>
     </div>
   </div>
 </template>
