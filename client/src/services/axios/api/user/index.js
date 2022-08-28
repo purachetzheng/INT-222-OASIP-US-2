@@ -9,6 +9,9 @@ const apiUser = {
     },
     delete(id){
         return apiClient.delete(`/users/${id}`)
+    },
+    patch(id, data){
+        return apiClient.patch(`/users/${id}`, data)
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {
