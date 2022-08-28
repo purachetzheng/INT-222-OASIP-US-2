@@ -3,7 +3,7 @@ import { inject, ref } from 'vue'
 import { date } from 'yup';
 import { formatDatetime, datetimeCheck, datetimeCalculate } from '../../../utils/dateTime'
 import profilePlaceholder from '../../../utils/profilePlaceholder'
-
+import { roleProfile } from '@/config'
 defineEmits(['delete-user', 'view-detail'])
 const props = defineProps({
   users: {
@@ -11,25 +11,8 @@ const props = defineProps({
     require: true,
   },
 })
-
 const viewTime = inject('viewTime')
-const roleColor = {
-  admin: {
-    badges: 'bg-red-200 text-red-500',
-    // profile: 'bg-red-600 text-white',
-    profile: 'bg-red-100 text-red-600',
-  },
-  lecturer: {
-    badges: 'bg-green-200 text-green-500',
-    // profile: 'bg-green-600 text-white',
-    profile: 'bg-green-100 text-green-600',
-  },
-  student: {
-    badges: 'bg-blue-200 text-blue-500',
-    // profile: 'bg-blue-600 text-white',
-    profile: 'bg-blue-100 text-blue-600',
-  },
-}
+
 const disPlayUpdated = (datetime) => {
   // if (datetimeCheck.isHourAgo(datetime)) return datetimeCalculate.timeFromNow(datetime)
   if (datetimeCheck.isToday(datetime)) return datetimeCalculate.timeFromNow(datetime)
@@ -57,7 +40,7 @@ const disPlayUpdated = (datetime) => {
         <div class="px-4 py-4 flex items-center gap-4 basis-80 grow">
           <div
             class="w-10 h-10 rounded-full flex items-center justify-center"
-            :class="roleColor[user.role].profile"
+            :class="roleProfile[user.role].profile"
           >
             <p class="font-sans font-semibold">
               {{ profilePlaceholder(user.name) }}
@@ -72,7 +55,7 @@ const disPlayUpdated = (datetime) => {
         <div class="px-4 py-4 basis-32 hidden md:block">
           <span
             class="px-2 py-1 rounded-lg"
-            :class="roleColor[user.role].badges"
+            :class="roleProfile[user.role].badges"
             >{{ user.role }}</span
           >
         </div>
@@ -119,7 +102,7 @@ const disPlayUpdated = (datetime) => {
             <div class="flex items-center gap-4">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center"
-                :class="roleColor[user.role].profile"
+                :class="roleProfile[user.role].profile"
               >
                 <p class="font-sans font-semibold">
                   {{ profilePlaceholder(user.name) }}
@@ -134,7 +117,7 @@ const disPlayUpdated = (datetime) => {
           <td class="col-data">
             <span
               class="px-2 py-1 rounded-lg"
-              :class="roleColor[user.role].badges"
+              :class="roleProfile[user.role].badges"
               >{{ user.role }}</span
             >
           </td>
