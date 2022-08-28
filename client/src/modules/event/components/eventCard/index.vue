@@ -29,24 +29,24 @@ const event = computed(() => {
   <li class="card" @click="$emit('clickEventCard')">
     <div
       class="card-header"
-      :class="[event.isFuture ? 'header-upcoming' : 'header-past', 'card-header']"
+      :class="[event.isFuture ? 'header-upcoming' : 'header-past']"
     >
       {{ event.isFuture ? 'Upcoming' : 'Past' }}
     </div>
     <div class="card-body">
-      <p class="card-text date">
+      <p class="text-sm text-blue-500">
         {{ event.startDate }}
       </p>
       <h5 class="card-title">
         {{ event.name }}
       </h5>
-      <p class="text-category">
+      <p class="text-sm text-gray-800">
         {{ event.category.name }}
       </p>
-      <div class="flex items-center gap-2">
-        <fa-icon :icon="['far', 'fa-clock']" class="card-text" />
-        <p class="card-text">
-          {{ event.startTime }} ({{ event.duration }} min)
+      <div class="flex items-center gap-2 text-sm text-gray-700">
+        <fa-icon :icon="['far', 'fa-clock']" class="" />
+        <p class="">
+          {{ event.startTime }} - {{ event.duration }} min
         </p>
       </div>
       <p class="card-footer">

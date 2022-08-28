@@ -7,7 +7,10 @@ const props = defineProps({
     type: String,
     require: true,
   },
-
+  max: {
+    type: Number,
+    default: 999,
+  },
   label: {
     type: String,
     default: ''
@@ -41,8 +44,15 @@ const validationListeners = computed(() => {
 <template>
   <div class="relative">
     <label :for="name">{{label}}</label>
-    <textarea :id="name" class="form-control" :class="errorMessage && 'bg-red-100 border-red-500'" :name="name" v-on="validationListeners" v-model="value" rows="6"></textarea>
-    <span v-show="errorMessage" class="absolute right-1 -bottom-5 text-red-500 text-sm">{{errorMessage}}</span>
+    <div class="">
+      <textarea :id="name" class="form-control" :class="errorMessage && 'bg-red-100 border-red-500'" :name="name" v-on="validationListeners" v-model="value" rows="6"></textarea>
+    </div>
+    <div class="flex justify-between pt-0.5">
+      <span class="text-red-500 text-sm">{{
+        errorMessage
+      }}</span>
+      <span v-if="(typeof value) === 'string'" class="text-gray-500 text-sm">{{ value.trim().length }} / {{ max }}</span>
+    </div>
   </div>
 </template>
 

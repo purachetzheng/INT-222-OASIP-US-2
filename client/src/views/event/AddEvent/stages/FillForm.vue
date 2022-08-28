@@ -52,8 +52,7 @@ const onSubmit = handleSubmit((values) => {
         <InputDatetime />
       </div>
       <div class="flex flex-col">
-        <label for="">Notes</label>
-        <TextAreaField class="" name="notes" />
+        <TextAreaField class="" name="notes" :max="500" label="Notes" />
       </div>
     </div>
     <div class="">
