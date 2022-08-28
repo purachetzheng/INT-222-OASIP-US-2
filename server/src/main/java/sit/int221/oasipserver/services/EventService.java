@@ -60,7 +60,9 @@ public class EventService {
             return repository.findAllEventPast(pageRequest, eventCategoryId, date);
         if(dateStatus.equals("upcoming"))
             return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
-        return repository.findAll(pageRequest, eventCategoryId, date);
+        if(date == null && eventCategoryId == null)
+            return repository.findAll(pageRequest);
+        return repository.findAllFilter(pageRequest, eventCategoryId, date);
     }
 
     public Event getById(Integer id) {
