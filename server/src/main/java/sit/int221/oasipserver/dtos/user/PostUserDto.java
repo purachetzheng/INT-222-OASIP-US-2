@@ -25,6 +25,7 @@ public class PostUserDto {
     private String name;
 
     @NotBlank(message = "must not be blank")
+    @Size(min = 8, max = 14, message = "size must be between 8 and 14")
     private String password;
 
     @Size(max = 50, message = "size must be between 1 and 50")
