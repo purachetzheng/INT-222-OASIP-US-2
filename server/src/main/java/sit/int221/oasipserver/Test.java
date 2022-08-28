@@ -1,5 +1,7 @@
 package sit.int221.oasipserver;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.enums.UserRole;
 
@@ -15,6 +17,15 @@ public class Test {
     }
 
     public static void main(String[] args) {
-//        System.out.println(findByName("admin2"));
+        Argon2 argon2 = Argon2Factory.create();
+        String password = "admin";
+        String hash = argon2.hash(22, 65536, 1, password);
+        System.out.println(hash);
+
+        if(argon2.verify(hash, password)) {
+            System.out.println("Matched");
+        } else {
+            System.out.println("Not Matched");
+        }
     }
 }

@@ -1,6 +1,8 @@
 package sit.int221.oasipserver.services;
 
 import com.google.common.hash.Hashing;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,10 @@ public class UserService {
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
     @Autowired private RoleValidate roleValidate;
+    Argon2 argon2 = Argon2Factory.create(
+            Argon2Factory.Argon2Types.ARGON2id,
+            10,
+            20);
 
     //nameError
     final private FieldError nameErrorObj = new FieldError("createUserDto",
@@ -64,7 +70,8 @@ public class UserService {
 //        String sha256hex = Hashing.sha256()
 //                .hashString(newUser.getPassword(), StandardCharsets.UTF_8)
 //                .toString();
-        String sha256hex = sha256(newUser.getPassword());
+//        String sha256hex = sha256(newUser.getPassword());
+        String hashPassword = argon2.hash(22, 65536, 1, newUser.getPassword());
         String name = newUser.getName();
         String email = newUser.getEmail();
         String password = newUser.getPassword();
@@ -73,7 +80,7 @@ public class UserService {
         if(email != null)
             newUser.setEmail(newUser.getEmail().trim());
         if(password != null)
-            newUser.setPassword(sha256hex);
+            newUser.setPassword(hashPassword);
 
         if (repository.existsByName(newUser.getName()))
             result.addError(nameErrorObj);
@@ -108,7 +115,7 @@ public class UserService {
         return userDto;
     }
 
-    //Match
+    //Match Argon Password
     public User match(MatchUserDto matchUser) throws PasswordException {
         User user = new User();
 
@@ -117,14 +124,16 @@ public class UserService {
         } else {
             throw new ApiNotFoundException("Email does not exist");
         }
-        String userShaPassword = user.getPassword(); //เอา Sha password มาจาก Database
-        if(sha256(matchUser.getPassword()).equals(userShaPassword)){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น sha แล้วจะ == sha ใน Database มั้ย
+        String userArgon2Password = user.getPassword(); //เอา Argon2 password มาจาก Database
+        if(argon2.verify(userArgon2Password, matchUser.getPassword())){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น Argon2 แล้วจะ == Argon2 ใน Database มั้ย
             System.out.println("MATCHED");
         } else {
             throw new PasswordException();
         }
         return user;
     }
+
+
 
     //sha256
     private String sha256(final String base) {
@@ -155,3 +164,21 @@ public class UserService {
         return existingUser;
     }
 }
+
+//    //Match
+//    public User match(MatchUserDto matchUser) throws PasswordException {
+//        User user = new User();
+//
+//        if(repository.existsByEmail(matchUser.getEmail())){
+//            user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา
+//        } else {
+//            throw new ApiNotFoundException("Email does not exist");
+//        }
+//        String userShaPassword = user.getPassword(); //เอา Sha password มาจาก Database
+//        if(sha256(matchUser.getPassword()).equals(userShaPassword)){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น sha แล้วจะ == sha ใน Database มั้ย
+//            System.out.println("MATCHED");
+//        } else {
+//            throw new PasswordException();
+//        }
+//        return user;
+//    }
