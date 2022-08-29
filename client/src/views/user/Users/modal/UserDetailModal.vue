@@ -6,7 +6,7 @@ import profilePlaceholder from '@/utils/profilePlaceholder'
 import { computed, onUpdated, ref } from 'vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
-import schema from '@/services/validation/schema/AddUserSchema'
+import schema from '@/services/validation/schema/EditUserSchema'
 import RoleSelectField from '../components/RoleSelectField.vue'
 import { apiUser } from '../../../../services/axios/api'
 defineEmits(['close'])
@@ -41,17 +41,24 @@ const { handleSubmit, values, resetForm, meta, setFieldValue, setValues } =
     validateOnMount: false,
   })
 const onSubmit = handleSubmit( async({ name = '', email = '', role } = {}) => {
-  try {
-    const editUser = {
-      name: name.trim(),
-      email: email.trim(),
-      role: role,
-    }
-    console.log(editUser);
-    const { data } = await apiUser.patch(user.value.id, editUser)
-    // console.log(data)
+  const editUser = {}
+  name = name.trim()
+  email = email.trim()
+  const isNameChanged = user.value.name !== name
+  const isEmailChanged = user.value.email !== email
+  const isRoleChanged = user.value.role !== role
 
-    // alert('ok')
+  if(isNameChanged) editUser.name = name
+  if(isEmailChanged) editUser.email = email
+  if(isRoleChanged) editUser.role = role
+
+  const isUserChanged = Object.keys(editUser).length !== 0
+  if(!isUserChanged) return alert('ok')
+  try {
+    const { data } = await apiUser.patch(user.value.id, editUser)
+    console.log(data)
+
+    alert('ok')
   } catch (error) {
     console.log(error)
     // const { data, status } = error.response
@@ -177,12 +184,12 @@ onUpdated(() => {
     <template #footer>
       <div class="flex justify-center gap-4">
         <PrimaryButton
-          type="submit"
           class="btn btn-indigo duration-300 submit-btn"
-          :disabled="0"
           @click="onSubmit"
-          >Save</PrimaryButton
+          :disabled="!meta.valid"
         >
+          Save
+        </PrimaryButton>
         <SecondaryButton
           type="button"
           class="btn btn-gray duration-300"
