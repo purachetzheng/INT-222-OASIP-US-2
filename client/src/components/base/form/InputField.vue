@@ -16,6 +16,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  required:{
+    type: Boolean,
+    default: false
+  },
   max: {
     type: Number,
     default: 999,
@@ -55,7 +59,10 @@ const validationListeners = computed(() => {
 <template>
   <div class="relative">
     <!-- <label :for="name" class="absolute -top-0.5 left-3 px-1 text-sm leading-3">{{ label }}</label> -->
-    <label :for="name" class="text-sm leading-3">{{ label }}</label>
+    <div class="flex justify-between">
+      <label :for="name" class="text-sm leading-3">{{ label }}</label>
+      <p v-show="required" class="text-sm text-red-500">*</p>
+    </div>
     <div class="">
       <input
         :id="name"
