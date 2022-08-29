@@ -6,7 +6,7 @@ import profilePlaceholder from '@/utils/profilePlaceholder'
 import { computed, onUpdated, ref } from 'vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
-import schema from '@/services/validation/schema/SignInUserSchema'
+import schema from '@/services/validation/schema/AddUserSchema'
 import RoleSelectField from '../components/RoleSelectField.vue'
 import { apiUser } from '../../../../services/axios/api'
 defineEmits(['close'])

@@ -1,7 +1,7 @@
 <script setup>
 import BaseModal from '../../../../components/base/BaseModal.vue'
 import { formatDatetime } from '../../../../utils/dateTime'
-import schema from '@/services/validation/schema/SignInUserSchema'
+import schema from '@/services/validation/schema/AddUserSchema'
 import InputField from '../../../../components/base/form/InputField.vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import { onUpdated } from 'vue'
