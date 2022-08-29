@@ -1,6 +1,6 @@
 import { isBlank, isTrimmed, max } from '../../validator'
 
-const label = 'Name'
+const label = 'Role'
 
 
 const name = (value) => {
