@@ -12,10 +12,10 @@ const props = defineProps({
   //   type: String,
   //   require: true,
   // },
-  // label: {
-  //   type: String,
-  //   default: ''
-  // },
+  label: {
+    type: String,
+    default: 'Role'
+  },
   // attribute: {
   //   type: Object,
   //   default: {},
@@ -31,7 +31,7 @@ const { value, errorMessage, handleChange } = useField(name, () => {}, {
 
 <template>
   <div class="relative flex flex-col">
-    <p class="">Role</p>
+    <p class="">{{label}}</p>
     <ul class="grid grid-cols-3 gap-4">
       <li>
         <input
