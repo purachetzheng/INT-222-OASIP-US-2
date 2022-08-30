@@ -68,38 +68,6 @@ const [isSignUp, goSignIn, goSignUp] = [
         class="animation bg-blue-500 z-10 w-min"
       >
         <AuthBanner :isSignUp="isSignUp" @go-sign-in="goSignIn()" @go-sign-up="goSignUp()" />
-        <!-- <Transition name="fade"> -->
-          <!-- <div
-            v-if="isSignUp"
-            class="w-80 h-full text-white px-10 flex flex-col justify-center items-center gap-6"
-          >
-            <h5 class="text-lg text-center font-semibold">
-              Already Signed up?
-            </h5>
-            <p class="text-sm text-center">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rem
-              debitis incidunt fuga.
-            </p>
-            <SecondaryButton class="btn btn-border" @click="goSignIn">
-              Sign In
-            </SecondaryButton>
-          </div>
-
-          <div
-          v-else
-            class="w-80 h-full text-white px-10 flex flex-col justify-center items-center gap-6"
-          >
-            <h5 class="text-lg text-center font-semibold">
-                Don't Have an Account Yet?
-            </h5>
-            <p class="text-sm text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, facere!
-            </p>
-            <SecondaryButton class="btn btn-border" @click="goSignUp">
-              Sign Up
-            </SecondaryButton>
-          </div> -->
-        <!-- </Transition> -->
       </section>
       <section
         :key="'login'"
