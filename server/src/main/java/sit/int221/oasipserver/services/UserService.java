@@ -71,7 +71,7 @@ public class UserService {
 //                .hashString(newUser.getPassword(), StandardCharsets.UTF_8)
 //                .toString();
 //        String sha256hex = sha256(newUser.getPassword());
-        String hashPassword = argon2.hash(22, 65536, 1, newUser.getPassword());
+        
         String name = newUser.getName();
         String email = newUser.getEmail();
         String password = newUser.getPassword();
@@ -79,8 +79,10 @@ public class UserService {
             newUser.setName(newUser.getName().trim());
         if(email != null)
             newUser.setEmail(newUser.getEmail().trim());
-        if(password != null)
+        if(password != null){
+            String hashPassword = argon2.hash(22, 65536, 1, newUser.getPassword());
             newUser.setPassword(hashPassword);
+        }
 
         if (repository.existsByName(newUser.getName()))
             result.addError(nameErrorObj);
