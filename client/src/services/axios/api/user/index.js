@@ -1,3 +1,4 @@
+import { faSignIn } from '@fortawesome/free-solid-svg-icons'
 import apiClient from '../../apiClient'
 
 const apiUser = {
@@ -12,6 +13,9 @@ const apiUser = {
     },
     patch(id, data){
         return apiClient.patch(`/users/${id}`, data)
+    },
+    signIn(data){
+        return apiClient.post(`/users/match`, data)
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {
