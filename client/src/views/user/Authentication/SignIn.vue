@@ -3,15 +3,6 @@ import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
 import { apiUser } from '../../../services/axios/api'
-import RoleSelectField from '../Users/components/RoleSelectField.vue'
-
-// defineEmits([])
-// const props = defineProps({
-//   first: {
-//     type: String,
-//     require: true,
-//   },
-// })
 
 const { handleSubmit, values, meta, setFieldError, setErrors, errors } = useForm({
   validationSchema: schema,
@@ -20,13 +11,8 @@ const { handleSubmit, values, meta, setFieldError, setErrors, errors } = useForm
     password: '',
   },
 })
-// {name: 'Test', email: 'test@test.com', password: 'dsadsadasdasd', confirmPassword: 'sadasdasdasdas', role: 'admin'}
+
 const onSubmit = handleSubmit(({ email, password}) => {
-    console.log({ email, password});
-    // const isPasswordConfirm = password === confirmPassword
-    // if (!isPasswordConfirm) {
-    //   setFieldError('confirmPassword', 'Passwords do not match, try again.')
-    // }
     const user = {
       email: email.trim(),
       password: password,
@@ -38,17 +24,13 @@ const onSubmit = handleSubmit(({ email, password}) => {
 const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
-    alert('ok')
+    alert('Password Matched')
   } catch (error) {
-    console.log(error)
-    const res = error.response
     const { data, status } = error.response
     const { details, message } = data
-    // let messageError = ''
-    // details.forEach((details) => {
-    //   messageError += `${details.field}: ${details.errorMessage}\n`
-    // })
-    alert(message)
+
+    if(status === 401) setFieldError('password', message)
+    if(status === 404) setFieldError('email', message)
   }
 }
 </script>
