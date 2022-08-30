@@ -43,8 +43,9 @@ ENGINE = InnoDB;
 -- User Table
 CREATE TABLE IF NOT EXISTS users (
   userID INT NOT NULL AUTO_INCREMENT,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(50) NOT NULL,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  email VARCHAR(50) UNIQUE NOT NULL,
   role enum('admin', 'lecturer', 'student') NOT NULL DEFAULT 'student',
   createdOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -71,10 +72,13 @@ INSERT INTO events values
 -- User
 INSERT INTO users values
 -- (1, 'OASIP ADMIN', 'oasip.admin@kmutt.ac.th', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-(1, 'OASIP ADMIN', 'oasip.admin@kmutt.ac.th', 'admin', '2022-08-01 00:00:00+07:00', '2022-08-01 00:00:00+07:00'),
-(2, 'Somchai Jaidee', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
-(3, 'Komkrid Rakdee', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
-(4, 'สมเกียรติ ขยันเรียน', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+(1, 'OASIP ADMIN', '$argon2id$v=19$m=4096,t=3,p=1$sYXzbUOqBoHY1NfhJ8cjnw$H6+adWySiFPgcUogJK3hEhcF6Y4fusy7tcXYEL+f0cQ', 'oasip.admin@kmutt.ac.th', 'admin', '2022-08-01 00:00:00+07:00', '2022-08-01 00:00:00+07:00'),
+(2, 'Somchai Jaidee', '$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
+(3, 'Komkrid Rakdee', '$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
+(4, 'สมเกียรติ ขยันเรียน', '$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+
+-- INSERT INTO users values
+-- (1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());
 
 -- Create USER for specific use
 CREATE USER 'OASIPBE'@'%' IDENTIFIED BY 'BEBE';

@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(localizedFormat)
-
+dayjs.extend(relativeTime)
 
 export const formatDatetime = {
     full1: (dateTime) => dayjs(dateTime).format('LLLL'),
@@ -30,3 +31,28 @@ export const isFuture = (dateTime) => dayjs(dateTime).isAfter(dayjs())
 export const isFutureOrSameDay = (dateTime) => dayjs(dateTime).isAfter(dayjs(), 'day') || dayjs(dateTime).isSame(dayjs(), 'day')
 export const isBefore = (dateTime) => dayjs(dateTime).isBefore(dayjs())
 
+export const datetimeCheck = {
+    isFuture: (dateTime) => dayjs(dateTime).isAfter(dayjs()),
+
+    isNow: (dateTime) => dayjs(dateTime).isSame(dayjs()),
+
+    isBefore: (dateTime) => dayjs(dateTime).isBefore(dayjs()),
+
+    isHourAgo: (dateTime) => dayjs().diff(dayjs(dateTime), 'minute') <= 60,
+
+    isToday: (dateTime) => dayjs(dateTime).isSame(dayjs(), 'day'),
+
+    isYesterday: (dateTime) => dayjs(dateTime).isSame(dayjs().subtract(1, 'day'), 'day'),
+}
+
+export const datetimeCalculate = {
+    diffMin: (dateTime) => Math.abs(dayjs(dateTime).diff(dayjs(), 'minute')),
+    diffHour: (dateTime) => Math.abs(dayjs(dateTime).diff(dayjs(), 'hour')),
+    timeFromNow: (dateTime) => dayjs(dateTime).fromNow() 
+
+}
+
+export const datetimeForInput = {
+    getNow: () => dayjs().format('YYYY-MM-DD'),
+    getMoreMonths: (value) => dayjs().add(value, 'month').format('YYYY-MM-DD'),
+}

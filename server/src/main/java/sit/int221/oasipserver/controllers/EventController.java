@@ -26,11 +26,11 @@ public class EventController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
-            @RequestParam(required = false) Integer eventCategoryID,
-            @RequestParam(required = false) String dateStatus,
+            @RequestParam(required = false) Integer eventCategoryId,
+            @RequestParam(defaultValue = "all") String dateStatus,
             @RequestParam(required = false) String date
     ) {
-        return eventService.getEventPage(page, pageSize, sortBy, eventCategoryID, dateStatus, date);
+        return eventService.getEventPage(page, pageSize, sortBy, eventCategoryId, dateStatus, date);
     }
     @GetMapping("/{id}")
     public EventDto getEventById(@PathVariable Integer id){

@@ -1,5 +1,6 @@
 package sit.int221.oasipserver.exception;
 
+import org.hibernate.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         );
         // 2. Return response entity
         return new ResponseEntity<>(apiException, notFound);
+    }
+
+    @ExceptionHandler(value = PasswordException.class)
+    public ResponseEntity<Object> exception(PasswordException e) {
+        HttpStatus unAuthorized = HttpStatus.UNAUTHORIZED;
+        ApiException apiException = new ApiException(
+                "password DOES NOT match",
+                HttpStatus.UNAUTHORIZED,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(apiException, unAuthorized);
     }
 
 }

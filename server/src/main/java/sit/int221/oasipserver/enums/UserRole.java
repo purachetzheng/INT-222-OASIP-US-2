@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public enum Role {
+public enum UserRole {
     admin,
     lecturer,
     student

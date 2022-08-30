@@ -37,9 +37,9 @@ export default [
     component: () => import('../views/user/Users/index.vue'),
   },
   {
-    path: '/signIn',
-    name: 'SignIn',
-    component: () => import('../views/user/SignIn/index.vue'),
+    path: '/sign-up',
+    name: 'SignUp',
+    component: () => import('../views/user/SignUp/index.vue'),
   },
 
 ]

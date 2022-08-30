@@ -7,10 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipserver.dtos.user.CreateUserDto;
-import sit.int221.oasipserver.enums.Role;
+import sit.int221.oasipserver.dtos.user.MatchUserDto;
+import sit.int221.oasipserver.dtos.user.PostUserDto;
+import sit.int221.oasipserver.entities.User;
+import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
+import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody CreateUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
+    public UserDto createUser(@Valid @RequestBody PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
         return userService.create(newUser, result);
     }
 
@@ -44,16 +47,27 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUser(
-            @Valid @RequestBody CreateUserDto updateUser,
+            @Valid @RequestBody PostUserDto updateUser,
             @PathVariable Integer id,
             BindingResult result) throws MethodArgumentNotValidException {
         return userService.update(updateUser, id, result);
     }
 
+//    @PostMapping("/match")
+//    public User matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+//        return userService.match(matchUser);
+//    }
+
+    @PostMapping("/match")
+    public UserDetailDto matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+        return modelMapper.map(userService.match(matchUser), UserDetailDto.class);
+    }
+
+
     @ExceptionHandler(InvalidFormatException.class)
     public void handleRole(HttpServletResponse response, InvalidFormatException ex) throws IOException {
-        if (ex.getTargetType().isAssignableFrom(Role.class)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "Role must be specific as 'student' or 'admin' or 'lecturer'");
+        if (ex.getTargetType().isAssignableFrom(UserRole.class)) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "UserRole must be specific as 'student' or 'admin' or 'lecturer");
         } else {
             response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         }
