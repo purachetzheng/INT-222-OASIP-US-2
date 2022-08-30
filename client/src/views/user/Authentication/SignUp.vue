@@ -43,16 +43,14 @@ const createUser = async (user) => {
   try {
     const { data } = await apiUser.post(user)
     console.log(data)
-    alert('ok')
+    alert('Your user has been registered')
   } catch (error) {
     console.log(error)
     const { data, status } = error.response
     const { details } = data
-    let messageError = ''
     details.forEach((details) => {
-      messageError += `${details.field}: ${details.errorMessage}\n`
+      setFieldError(details.field, details.errorMessage)
     })
-    alert(messageError)
   }
 }
 </script>
