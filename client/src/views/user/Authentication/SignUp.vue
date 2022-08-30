@@ -27,7 +27,7 @@ const onSubmit = handleSubmit(
   ({ name, email, password, confirmPassword, role }) => {
     const isPasswordConfirm = password === confirmPassword
     if (!isPasswordConfirm) {
-      setFieldError('confirmPassword', 'Passwords do not match, try again.')
+      return setFieldError('confirmPassword', 'Passwords do not match, try again.')
     }
     const user = {
       name: name.trim(),
