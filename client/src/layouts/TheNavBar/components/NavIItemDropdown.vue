@@ -18,7 +18,7 @@ const isHover = ref(false)
 
 <template>
   <li
-    class="relative group hover:bg-gray-200 rounded-full"
+    class="relative group hover:bg-gray-100 rounded-full"
     @mouseenter="isHover = true"
     @mouseleave="isHover = false"
   >
