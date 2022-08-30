@@ -7,12 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import sit.int221.oasipserver.dtos.user.MatchUserDto;
-import sit.int221.oasipserver.dtos.user.PostUserDto;
+import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.enums.UserRole;
-import sit.int221.oasipserver.dtos.user.UserDetailDto;
-import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.services.UserService;
 
@@ -47,7 +44,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto updateUser(
-            @Valid @RequestBody PostUserDto updateUser,
+            @Valid @RequestBody PatchUserDto updateUser,
             @PathVariable Integer id,
             BindingResult result) throws MethodArgumentNotValidException {
         return userService.update(updateUser, id, result);
@@ -62,16 +59,5 @@ public class UserController {
     public UserDetailDto matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         return modelMapper.map(userService.match(matchUser), UserDetailDto.class);
     }
-
-
-    @ExceptionHandler(InvalidFormatException.class)
-    public void handleRole(HttpServletResponse response, InvalidFormatException ex) throws IOException {
-        if (ex.getTargetType().isAssignableFrom(UserRole.class)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), "UserRole must be specific as 'student' or 'admin' or 'lecturer");
-        } else {
-            response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-        }
-    }
-
 
 }

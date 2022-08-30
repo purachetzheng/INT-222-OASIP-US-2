@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import sit.int221.oasipserver.dtos.user.MatchUserDto;
+import sit.int221.oasipserver.dtos.user.PatchUserDto;
 import sit.int221.oasipserver.dtos.user.PostUserDto;
 import sit.int221.oasipserver.dtos.user.UserDto;
 import sit.int221.oasipserver.entities.User;
@@ -101,7 +102,7 @@ public class UserService {
     }
 
     //Edit
-    public UserDto update(PostUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
+    public UserDto update(PatchUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
         String role = updateUser.getRole();
         if(role == "") updateUser.setRole("student");
         if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
@@ -156,12 +157,12 @@ public class UserService {
     }
 
 
-    private User mapUser(User existingUser, PostUserDto updateUser) {
-        if(updateUser.getName() != null)
+    private User mapUser(User existingUser, PatchUserDto updateUser) {
+        if(updateUser.getName() != null && !updateUser.getName().trim().equals(""))
             existingUser.setName(updateUser.getName().trim());
-        if(updateUser.getEmail() != null)
+        if(updateUser.getEmail() != null && !updateUser.getEmail().trim().equals(""))
             existingUser.setEmail(updateUser.getEmail().trim());
-        if(updateUser.getRole() != null)
+        if(updateUser.getRole() != null && !updateUser.getRole().equals(""))
             existingUser.setRole(UserRole.valueOf(updateUser.getRole()));
         return existingUser;
     }
