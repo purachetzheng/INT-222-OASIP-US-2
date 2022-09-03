@@ -5,7 +5,7 @@ import schema from '@/services/validation/schema/AddUserSchema'
 import InputField from '../../../../components/base/form/InputField.vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import { onUpdated } from 'vue'
-import RoleSelectField from '../components/RoleSelectField.vue'
+import RoleSelectField from '../../../../modules/user/components/RoleSelectField.vue'
 
 const emits = defineEmits(['close', 'submit-form'])
 const props = defineProps({
