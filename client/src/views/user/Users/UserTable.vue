@@ -1,7 +1,7 @@
 <script setup>
 import { formatDatetime, datetimeCheck, datetimeCalculate } from '../../../utils/dateTime'
-import profilePlaceholder from '../../../utils/profilePlaceholder'
-import { roleProfile } from '@/config'
+import RoleBadge from '../../../modules/user/components/RoleBadge.vue';
+import PlaceholderAvatar from '../../../modules/user/components/PlaceholderAvatar.vue';
 defineEmits(['delete-user', 'view-detail'])
 const props = defineProps({
   users: {
@@ -34,14 +34,7 @@ const disPlayUpdated = (datetime) => {
         v-for="user in users"  v-show="1"
       >
         <div class="px-4 py-4 flex items-center gap-4 basis-80 grow">
-          <div
-            class="w-10 h-10 rounded-full flex items-center justify-center"
-            :class="roleProfile[user.role].profile"
-          >
-            <p class="font-sans font-semibold">
-              {{ profilePlaceholder(user.name) }}
-            </p>
-          </div>
+          <PlaceholderAvatar class="avatar-small" :name="user.name" :role="user.role" />
           <div class="">
             <p class="font-semibold">{{ user.name }}</p>
             <p class="text-sm font-medium">{{ user.email }}</p>
@@ -49,11 +42,7 @@ const disPlayUpdated = (datetime) => {
         </div>
 
         <div class="px-4 py-4 basis-32 hidden md:block">
-          <span
-            class="px-2 py-1 rounded-lg"
-            :class="roleProfile[user.role].badges"
-            >{{ user.role }}</span
-          >
+          <RoleBadge :title="user.role" />
         </div>
 
         <div class="px-4 py-4 basis-44 hidden md:block font-medium">

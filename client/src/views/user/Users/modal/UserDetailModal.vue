@@ -8,6 +8,7 @@ import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/EditUserSchema'
 import RoleSelectField from '../../../../modules/user/components/RoleSelectField.vue'
+import PlaceholderAvatar from '../../../../modules/user/components/PlaceholderAvatar.vue'
 const emits = defineEmits(['close', 'update-user'])
 const props = defineProps({
   show: {
@@ -86,17 +87,8 @@ onUpdated(() => {
     <template #body>
       <div class="flex flex-col items-center gap-4">
         <div class="flex gap-8">
-          <div
-            class="w-20 h-20 rounded-full flex items-center justify-center"
-            :class="roleProfile[user.role].profile"
-          >
-            <p class="font-sans font-semibold text-3xl">
-              {{ profilePlaceholder(user.name) }}
-            </p>
-          </div>
-
+          <PlaceholderAvatar class="avatar-medium" :name="user.name" :role="user.role" />
           <div class="flex flex-col items-start justify-center">
-            <!-- <p class="text-xl font-semibold"></p> -->
             <p class="text-sm text-gray-600">{{ user.email }}</p>
             <span
               class="px-2 py-1 rounded-lg mt-2"
