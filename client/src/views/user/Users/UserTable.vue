@@ -1,6 +1,4 @@
 <script setup>
-import { inject, ref } from 'vue'
-import { date } from 'yup';
 import { formatDatetime, datetimeCheck, datetimeCalculate } from '../../../utils/dateTime'
 import profilePlaceholder from '../../../utils/profilePlaceholder'
 import { roleProfile } from '@/config'
@@ -11,8 +9,6 @@ const props = defineProps({
     require: true,
   },
 })
-const viewTime = inject('viewTime')
-
 const disPlayUpdated = (datetime) => {
   // if (datetimeCheck.isHourAgo(datetime)) return datetimeCalculate.timeFromNow(datetime)
   if (datetimeCheck.isToday(datetime)) return datetimeCalculate.timeFromNow(datetime)
@@ -84,70 +80,6 @@ const disPlayUpdated = (datetime) => {
         </div>
       </li>
     </ul>
-    <!-- <table class="table-auto border-separate border-spacing-y-2 -my-2 w-full">
-      <thead class="">
-        <tr class="text-left">
-          <th scope="col" class="col-head">User</th>
-          <th scope="col" class="col-head">Role</th>
-          <th scope="col" class="col-head">updated</th>
-          <th scope="col" class="col-head">Actions</th>
-        </tr>
-      </thead>
-      <tbody class="overflow-auto h-80">
-        <tr
-          class="bg-white hover:bg-gray-100 hover:scale-[100.5%]"
-          v-for="user in users"
-        >
-          <td class="col-data">
-            <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 rounded-full flex items-center justify-center"
-                :class="roleProfile[user.role].profile"
-              >
-                <p class="font-sans font-semibold">
-                  {{ profilePlaceholder(user.name) }}
-                </p>
-              </div>
-              <div class="">
-                <p class="font-semibold">{{ user.name }}</p>
-                <p class="text-sm font-medium">{{ user.email }}</p>
-              </div>
-            </div>
-          </td>
-          <td class="col-data">
-            <span
-              class="px-2 py-1 rounded-lg"
-              :class="roleProfile[user.role].badges"
-              >{{ user.role }}</span
-            >
-          </td>
-          <td class="col-data font-medium">
-            {{ disPlayUpdated(user.updatedOn) }}
-          </td>
-          <td class="col-data">
-            <div class="flex gap-1 items-center">
-              <fa-icon
-                :icon="['far', 'eye']"
-                class="p-2 fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-blue-500 duration-100"
-                @click="$emit('view-detail', user)"
-              />
-              <fa-icon
-                :icon="['far', 'pen-to-square']"
-                class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
-              />
-              <fa-icon
-                :icon="['far', 'trash-can']"
-                class="fa-lg p-2 cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
-                @click="$emit('delete-user', user.id)"
-              />
-            </div>
-          </td>
-        </tr>
-        <tr v-if="users.length === 0">
-          No Users
-        </tr>
-      </tbody>
-    </table> -->
   </div>
 </template>
 
