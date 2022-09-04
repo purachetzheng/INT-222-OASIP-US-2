@@ -25,6 +25,7 @@ import sit.int221.oasipserver.enums.UserRole;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -81,7 +82,7 @@ public class UserService {
         if(email != null)
             newUser.setEmail(newUser.getEmail().trim());
         if(password != null){
-            String hashPassword = argon2.hash(22, 65536, 1, newUser.getPassword());
+            String hashPassword = argon2.hash(2, 150, 1, newUser.getPassword());
             newUser.setPassword(hashPassword);
         }
 
@@ -120,7 +121,7 @@ public class UserService {
 
     //Match Argon Password
     public User match(MatchUserDto matchUser) throws PasswordException {
-        User user = new User();
+        User user;
 
         if(repository.existsByEmail(matchUser.getEmail())){
             user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา

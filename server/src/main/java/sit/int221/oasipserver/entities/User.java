@@ -8,6 +8,8 @@ import sit.int221.oasipserver.enums.UserRole;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.*;
+
 @Setter
 @Getter
 @Entity
@@ -27,10 +29,14 @@ public class User {
     @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
+//    @ElementCollection
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "role", nullable = false, length = 10)
+//    private Set<UserRole> role = new HashSet<>();
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 10)
     private UserRole role;
-
 
     @CreationTimestamp
     @Column(name = "createdOn", insertable = false)
