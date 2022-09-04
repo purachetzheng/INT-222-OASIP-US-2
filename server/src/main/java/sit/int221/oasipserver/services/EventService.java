@@ -1,0 +1,137 @@
+package sit.int221.oasipserver.services;
+
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import sit.int221.oasipserver.dtos.event.*;
+import sit.int221.oasipserver.entities.Event;
+import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.exception.type.ApiNotFoundException;
+import sit.int221.oasipserver.repo.EventRepository;
+import sit.int221.oasipserver.utils.ListMapper;
+import sit.int221.oasipserver.utils.OverlapValidate;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+@Service
+public class EventService {
+    @Autowired
+    private EventRepository repository;
+    @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
+    private ListMapper listMapper;
+    @Autowired
+    public EventcategoryService eventcategoryService;
+    @Autowired
+    private OverlapValidate overlapValidate;
+
+    final private FieldError overlapErrorObj = new FieldError("newEventDto",
+            "eventStartTime", "overlapped with other events");
+
+    public List<SimpleEventDto> getAll() {
+        List<Event> eventList = repository.findAllByOrderByEventStartTimeDesc();
+//        List<Event> eventList = repository.findAllByEventCategoryId(1);
+//        List<Event> eventList = repository.findAllByEventCategoryEventCategoryName("Project Management Clinic");
+        return listMapper.mapList(eventList, SimpleEventDto.class, modelMapper);
+    }
+
+    public PageEventDto getEventPage(int pageNum, int pageSize, String sortBy, Integer eventCategoryId, String dateStatus, String date) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        Pageable pageRequest = PageRequest.of(pageNum, pageSize, sort);
+//        return modelMapper.map(repository.findAllByEventStartTimePast(pageRequest), PageEventDto.class);
+        Page<Event>  page = filterEventPage(pageRequest, eventCategoryId, dateStatus, date);
+        PageEventDto pageDto = modelMapper.map(page, PageEventDto.class);
+        return pageDto;
+    }
+
+    private Page<Event> filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
+        if(dateStatus.equals("past"))
+            return repository.findAllEventPast(pageRequest, eventCategoryId, date);
+        if(dateStatus.equals("upcoming"))
+            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
+        if(date == null && eventCategoryId == null)
+            return repository.findAll(pageRequest);
+        return repository.findAllFilter(pageRequest, eventCategoryId, date);
+    }
+
+    public Event getById(Integer id) {
+        Event event = repository.findById(id).orElseThrow
+                (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        return event;
+    }
+
+    public void delete(Integer id) {
+        repository.delete(getById(id));
+    }
+
+    public SimpleEventDto create(PostEventDto newEvent, BindingResult result)
+            throws MethodArgumentNotValidException {
+
+        if (result.hasErrors()
+                && newEvent.getEventCategoryId() == null
+                || newEvent.getEventStartTime() == null)
+            throw new MethodArgumentNotValidException(null, result);
+
+        Integer categoryId = newEvent.getEventCategoryId();
+        Eventcategory category = eventcategoryService.getById(categoryId);
+        newEvent.setEventDuration(category.getEventDuration());
+        newEvent.setEventCategoryName(category.getEventCategoryName());
+
+        Event event = modelMapper.map(newEvent, Event.class);
+        ChronoUnit minutes = ChronoUnit.MINUTES;
+        Integer duration = event.getEventDuration();
+
+        List<Event> eventList = repository.findAllByEventCategoryIsAndEventStartTimeBetween
+                (event.getEventCategory(), event.getEventStartTime().minus(480, minutes),
+                        event.getEventStartTime().plus((480 + duration), minutes));
+
+        if (overlapValidate.overlapCheck(event, eventList))
+            result.addError(overlapErrorObj);
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+        return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
+    }
+
+    public EventDto update(PatchEventDto updateEventDto, Integer id, BindingResult result)
+            throws MethodArgumentNotValidException {
+        Event event = mapEvent(getById(id), updateEventDto);
+
+        Eventcategory eventcategory = event.getEventCategory();
+        ChronoUnit minutes = ChronoUnit.MINUTES;
+        Integer duration = event.getEventDuration();
+        //        List<Event> eventList = repository.
+//                findAllByEventCategoryIsAndIdIsNot(eventcategory, id);
+        List<Event> eventList = repository.
+                findAllByEventCategoryIsAndIdIsNotAndEventStartTimeBetween(eventcategory, id,
+                        event.getEventStartTime().minus(480, minutes),
+                        event.getEventStartTime().plus((480 + duration), minutes));
+
+        if (overlapValidate.overlapCheck(event, eventList))
+            result.addError(overlapErrorObj);
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+        return modelMapper.map(repository.saveAndFlush(event), EventDto.class);
+    }
+
+    private Event mapEvent(Event existingEvent, PatchEventDto updateEvent) {
+        if (updateEvent.getEventStartTime() != null)
+            existingEvent.setEventStartTime(updateEvent.getEventStartTime());
+        if (updateEvent.getEventNotes() != null)
+            existingEvent.setEventNotes(updateEvent.getEventNotes());
+        return existingEvent;
+    }
+
+}
