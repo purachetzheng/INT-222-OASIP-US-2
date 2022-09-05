@@ -3,19 +3,19 @@ import apiClient from '../../apiClient'
 
 const apiUser = {
     get(){
-        return apiClient.get(`/users`)
+        return apiClient.get(`/api/users`)
     },
     post(data){
-        return apiClient.post(`/users/`, data)
+        return apiClient.post(`/api/users/`, data)
     },
     delete(id){
-        return apiClient.delete(`/users/${id}`)
+        return apiClient.delete(`/api/users/${id}`)
     },
     patch(id, data){
-        return apiClient.patch(`/users/${id}`, data)
+        return apiClient.patch(`/api/users/${id}`, data)
     },
     signIn(data){
-        return apiClient.post(`/users/match`, data)
+        return apiClient.post(`/login`, data)
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {

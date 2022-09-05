@@ -2,7 +2,7 @@ import apiClient from '../../apiClient'
 
 const apiEventCategory = {
     get(){
-        return apiClient.get('/eventcategories')
+        return apiClient.get('/api/eventcategories')
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {
