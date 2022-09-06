@@ -2,7 +2,11 @@ import apiClient from '../../apiClient'
 
 const apiEventCategory = {
     get(){
-        return apiClient.get('/api/eventcategories')
+        return apiClient.get('/api/eventcategories',{
+            headers: {
+              auth: `Bearer ${localStorage.getItem('jwt')}`,
+            },
+          })
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {
