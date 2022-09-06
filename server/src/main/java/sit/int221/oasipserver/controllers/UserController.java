@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -55,9 +56,10 @@ public class UserController {
 //        return userService.match(matchUser);
 //    }
 
-    @PostMapping("/match")
-    public UserDetailDto matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
-        return modelMapper.map(userService.match(matchUser), UserDetailDto.class);
+//    @PostMapping("/match")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+        return userService.match(matchUser);
     }
 
 }

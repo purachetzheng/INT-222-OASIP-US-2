@@ -46,7 +46,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authenticate", "/login", "/signup").permitAll()
+                .antMatchers("/authenticate", "/api/users/login", "/signup").permitAll()
+                .antMatchers("/api/events").hasRole("lecturer")
                 .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
@@ -54,7 +55,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web)
             throws Exception {
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/users");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/users")
+                .antMatchers(HttpMethod.POST, "/us2/api/users");
     }
 
     @Bean

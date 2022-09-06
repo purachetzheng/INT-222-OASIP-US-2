@@ -5,23 +5,32 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import sit.int221.oasipserver.dtos.user.MatchUserDto;
-import sit.int221.oasipserver.dtos.user.PatchUserDto;
-import sit.int221.oasipserver.dtos.user.PostUserDto;
-import sit.int221.oasipserver.dtos.user.UserDto;
+import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
+import sit.int221.oasipserver.token.AuthenticationResponse;
+import sit.int221.oasipserver.token.CustomUserDetailsService;
+import sit.int221.oasipserver.token.JwtUtil;
 import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.enums.UserRole;
 
+import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
@@ -33,6 +42,17 @@ public class UserService {
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
     @Autowired private RoleValidate roleValidate;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    JwtUtil jwtUtil;
     Argon2 argon2 = Argon2Factory.create(
             Argon2Factory.Argon2Types.ARGON2id,
             10,
@@ -119,8 +139,26 @@ public class UserService {
         return userDto;
     }
 
+//    //Match Argon Password
+//    public User match(MatchUserDto matchUser) throws PasswordException {
+//        User user;
+//
+//        if(repository.existsByEmail(matchUser.getEmail())){
+//            user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา
+//        } else {
+//            throw new ApiNotFoundException("Email does not exist");
+//        }
+//        String userArgon2Password = user.getPassword(); //เอา Argon2 password มาจาก Database
+//        if(argon2.verify(userArgon2Password, matchUser.getPassword())){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น Argon2 แล้วจะ == Argon2 ใน Database มั้ย
+//            System.out.println("MATCHED");
+//        } else {
+//            throw new PasswordException();
+//        }
+//        return user;
+//    }
+
     //Match Argon Password
-    public User match(MatchUserDto matchUser) throws PasswordException {
+    public ResponseEntity<signInDto> match(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         User user;
 
         if(repository.existsByEmail(matchUser.getEmail())){
@@ -134,7 +172,19 @@ public class UserService {
         } else {
             throw new PasswordException();
         }
-        return user;
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        matchUser.getEmail(),
+                        matchUser.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(matchUser.getEmail());
+
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new signInDto(jwt));
     }
 
 
