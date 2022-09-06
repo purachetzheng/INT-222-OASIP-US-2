@@ -24,15 +24,16 @@ const onSubmit = handleSubmit(({ email, password}) => {
 const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
-    localStorage.setItem('jwt', data.jwt);
+    localStorage.setItem('jwt', data.token);
     
-    console.log(data);
+    console.log(localStorage.getItem('jwt'));
     alert('Password Matched')
   } catch (error) {
     const { data, status } = error.response
-    const { details, message } = data
-    if(status === 401) setFieldError('password', message)
-    if(status === 404) setFieldError('email', message)
+    console.log(data);
+    // const { details, message } = data
+    // if(status === 401) setFieldError('password', message)
+    // if(status === 404) setFieldError('email', message)
   }
 }
 </script>

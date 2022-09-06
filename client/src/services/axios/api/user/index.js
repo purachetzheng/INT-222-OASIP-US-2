@@ -3,7 +3,11 @@ import apiClient from '../../apiClient'
 
 const apiUser = {
     get(){
-        return apiClient.get(`/api/users`)
+        return apiClient.get(`/api/users`,{
+            headers: {
+                auth: `Bearer ${localStorage.getItem('jwt')}`,
+            },
+          })
     },
     post(data){
         return apiClient.post(`/api/users`, data)
