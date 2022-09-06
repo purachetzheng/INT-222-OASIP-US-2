@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: process.env.VITE_BASE_URL,
+          target: 'https://intproj21.sit.kmutt.ac.th/us2/',
           changeOrigin: true,
         },
       },
