@@ -83,29 +83,27 @@ public class AuthController {
         return ResponseEntity.ok("successfully created");
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody MatchUserDto loginRequest) throws PasswordException {
-        User user = repository.findByEmail(loginRequest.getEmail());
-        String userArgon2Password = user.getPassword();
-        if(argon2.verify(userArgon2Password, loginRequest.getPassword())){
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getEmail(),
-                            loginRequest.getPassword()
-                    )
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
-
-            final String jwt = jwtUtil.generateToken(userDetails);
-
-            return ResponseEntity.ok(new AuthenticationResponse(jwt));
-        } else {
-            throw new PasswordException();
-        }
-
-
-
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> authenticateUser(@Valid @RequestBody MatchUserDto loginRequest) throws PasswordException {
+//        User user = repository.findByEmail(loginRequest.getEmail());
+//        String userArgon2Password = user.getPassword();
+//
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(
+//                            loginRequest.getEmail(),
+//                            loginRequest.getPassword()
+//                    )
+//            );
+//
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
+//
+//            final String jwt = jwtUtil.generateToken(userDetails);
+//
+//            return ResponseEntity.ok(new AuthenticationResponse(jwt));
+//
+//
+//
+//
+//    }
 }
