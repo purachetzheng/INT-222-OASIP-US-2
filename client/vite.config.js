@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   return defineConfig({
     plugins: [vue()],
-    base: '/us2/',
+    base: mode+'/us2/',
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
