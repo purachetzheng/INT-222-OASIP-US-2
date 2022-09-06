@@ -24,11 +24,13 @@ const onSubmit = handleSubmit(({ email, password}) => {
 const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
+    localStorage.setItem('jwt', data.jwt);
+    
+    console.log(data);
     alert('Password Matched')
   } catch (error) {
     const { data, status } = error.response
     const { details, message } = data
-
     if(status === 401) setFieldError('password', message)
     if(status === 404) setFieldError('email', message)
   }
@@ -61,7 +63,7 @@ const signInUser = async (user) => {
       @click="onSubmit"
       class="btn btn-indigo duration-300 submit-btn"
       :disabled="!meta.valid"
-      >Create</PrimaryButton
+      >Sign In</PrimaryButton
     >
   </div>
 </template>
