@@ -6,7 +6,6 @@ const apiClient = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    auth: `Bearer ${localStorage.getItem('jwt')}`
   },
 })
 // apiClient.interceptors.response.use(

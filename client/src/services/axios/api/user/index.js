@@ -6,7 +6,7 @@ const apiUser = {
         return apiClient.get(`/api/users`)
     },
     post(data){
-        return apiClient.post(`/api/users/`, data)
+        return apiClient.post(`/api/users`, data)
     },
     delete(id){
         return apiClient.delete(`/api/users/${id}`)
@@ -15,7 +15,7 @@ const apiUser = {
         return apiClient.patch(`/api/users/${id}`, data)
     },
     signIn(data){
-        return apiClient.post(`/login`, data)
+        return apiClient.post(`/api/users/login`, data)
     }
 //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
 //     return apiClient.get('/events', { params: {
