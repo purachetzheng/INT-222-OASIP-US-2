@@ -39,7 +39,7 @@ services:
                 depends_on:
                         - backapp
         reverse:
-                image: nginx:1.21.6-alpine
+                image: nginx:alpine
                 container_name: reverse
                 depends_on:
                         - frontapp
