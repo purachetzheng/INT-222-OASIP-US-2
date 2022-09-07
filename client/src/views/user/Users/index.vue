@@ -50,6 +50,7 @@ const updateUsers = async (id, modifyUser, setFieldError) => {
   } catch (error) {
     const { data, status } = error.response
     const { details } = data
+    if(!details) return alert(status + ' error')
     details.forEach((details) => {
       setFieldError(details.field, details.errorMessage)
     })
