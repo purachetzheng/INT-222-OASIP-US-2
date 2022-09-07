@@ -48,7 +48,7 @@ const createUser = async (user) => {
   }
 }
 const [isSignUp, goSignIn, goSignUp] = [
-  ref(true),
+  ref(false),
   () => (isSignUp.value = false),
   () => (isSignUp.value = true),
 ]

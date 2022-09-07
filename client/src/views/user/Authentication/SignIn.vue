@@ -20,7 +20,7 @@ const onSubmit = handleSubmit(({ email, password}) => {
     signInUser(user)
   }
 )
-
+console.log(localStorage.getItem('jwt'));
 const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
@@ -30,10 +30,9 @@ const signInUser = async (user) => {
     alert('Password Matched')
   } catch (error) {
     const { data, status } = error.response
-    console.log(data);
-    // const { details, message } = data
-    // if(status === 401) setFieldError('password', message)
-    // if(status === 404) setFieldError('email', message)
+    const { details, message } = data
+    if(status === 401) setFieldError('password', message)
+    if(status === 404) setFieldError('email', message)
   }
 }
 </script>
