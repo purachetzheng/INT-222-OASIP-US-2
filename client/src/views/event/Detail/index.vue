@@ -1,7 +1,7 @@
 <script setup>
 import { defineAsyncComponent, onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { apiEvent } from '../../../services/axios/api'
+import { apiEvent } from '../../../services/api/lib'
 import { isFuture, formatDatetime } from '../../../utils/dateTime'
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue';
 

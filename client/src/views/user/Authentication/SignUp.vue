@@ -2,7 +2,7 @@
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/AddUserSchema'
-import { apiUser } from '../../../services/axios/api'
+import { apiUser } from '../../../services/api/lib'
 import RoleSelectField from '../../../modules/user/components/RoleSelectField.vue'
 
 // defineEmits([])

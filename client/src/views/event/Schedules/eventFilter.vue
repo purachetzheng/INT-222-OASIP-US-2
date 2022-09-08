@@ -1,7 +1,7 @@
 <script setup>
 import { BaseDropdown, BaseInputDate } from '../../../components/base';
 import { IcSortRound } from '../../../assets/icons/editing-icons';
-import { apiEventCategory } from '../../../services/axios/api';
+import { apiEventCategory } from '../../../services/api/lib';
 import { computed, onBeforeMount, ref } from 'vue';
 defineEmits([])
 const props = defineProps({

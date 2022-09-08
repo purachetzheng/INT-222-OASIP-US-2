@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeMount, provide, readonly, ref } from 'vue'
-import { apiUser } from '../../../services/axios/api'
+import { apiUser } from '../../../services/api/lib'
 import UserTable from './UserTable.vue'
 import UserDetailModal from './modal/UserDetailModal.vue'
 import AddUserModal from './modal/AddUserModal.vue';

@@ -1,7 +1,7 @@
 <script setup>
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import schema from '@/services/validation/schema/AddUserSchema'
-import { apiUser } from '../../../services/axios/api'
+import { apiUser } from '../../../services/api/lib'
 import { ref } from 'vue'
 import SignUp from './SignUp.vue'
 import SignIn from './SignIn.vue'

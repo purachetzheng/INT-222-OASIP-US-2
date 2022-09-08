@@ -4,12 +4,10 @@ const defaultOptions = {
   baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
     Accept: 'application/json',
-    // Accept: '*',
     'Content-Type': 'application/json',
-    // 'Access-Control-Allow-Headers':'Content-Type, Authorisation',
-    // Authorization: `Bearer ${localStorage.getItem('jwt')}`
   },
 }
+
 const apiClient = axios.create(defaultOptions)
 // apiClient.interceptors.request.use(function (config) {
 //   const token = localStorage.getItem('jwt');
