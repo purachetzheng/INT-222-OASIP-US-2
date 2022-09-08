@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
 myDarkmode.init()
 
-console.log(import.meta.env.VITE_TEST);
 </script>
  
 <template>
