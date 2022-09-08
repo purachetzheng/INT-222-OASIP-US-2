@@ -1,5 +1,5 @@
 <script setup>
-import profilePlaceholder from '../../../utils/profilePlaceholder'
+import profilePlaceholder from '@/utils/profilePlaceholder'
 import { roleProfile } from '@/config'
 defineEmits([])
 const props = defineProps({

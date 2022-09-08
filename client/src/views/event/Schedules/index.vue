@@ -1,7 +1,7 @@
 <script setup>
 import { apiEvent } from '@/services/api/lib'
 // import { EventCard } from '@/modules/event/components/'
-import EventCard from '@/modules/event/components/eventCard/index.vue'
+import EventCard from '../../../components/event/eventCard/index.vue'
 import Loading from './Loading.vue'
 import {
   onBeforeMount,

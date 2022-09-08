@@ -1,7 +1,7 @@
 <script setup>
 import { formatDatetime, datetimeCheck, datetimeCalculate } from '../../../utils/dateTime'
-import RoleBadge from '../../../modules/user/components/RoleBadge.vue';
-import PlaceholderAvatar from '../../../modules/user/components/PlaceholderAvatar.vue';
+import RoleBadge from '../../../components/user/RoleBadge.vue';
+import PlaceholderAvatar from '../../../components/user/PlaceholderAvatar.vue';
 defineEmits(['delete-user', 'view-detail'])
 const props = defineProps({
   users: {

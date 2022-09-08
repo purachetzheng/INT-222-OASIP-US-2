@@ -7,8 +7,8 @@ import { computed, onUpdated, ref } from 'vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/EditUserSchema'
-import RoleSelectField from '../../../../modules/user/components/RoleSelectField.vue'
-import PlaceholderAvatar from '../../../../modules/user/components/PlaceholderAvatar.vue'
+import RoleSelectField from '../../../../components/user/RoleSelectField.vue'
+import PlaceholderAvatar from '../../../../components/user/PlaceholderAvatar.vue'
 const emits = defineEmits(['close', 'update-user'])
 const props = defineProps({
   show: {
