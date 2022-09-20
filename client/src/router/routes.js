@@ -51,4 +51,9 @@ export default [
         name: 'About',
         component: () => import('../views/About/index.vue'),
     },
+    {
+        path: '/event-category-list',
+        name: 'EventCategoryList',
+        component: () => import('../views/eventCategory/eventCategoryList/index.vue'),
+    },
 ];
