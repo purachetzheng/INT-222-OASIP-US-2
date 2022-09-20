@@ -46,4 +46,9 @@ export default [
         name: 'Authentication',
         component: () => import('../views/user/Authentication/index.vue'),
     },
+    {
+        path: '/about',
+        name: 'About',
+        component: () => import('../views/About/index.vue'),
+    },
 ];
