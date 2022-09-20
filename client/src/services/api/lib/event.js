@@ -10,50 +10,28 @@ const apiEvent = {
         filter: filter,
         eventCategoryID: eventCategoryID,
         keyword: keyword,
-      },
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
+      }
     })
   },
   getById(id) {
-    return apiClient.get(`/api/events/${id}`, {
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
-    })
+    return apiClient.get(`/api/events/${id}`)
   },
   getAll({ eventCategoryID, keyword }) {
     return apiClient.get('/events/all', {
       params: {
         eventCategoryID: eventCategoryID,
         keyword: keyword,
-      },
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
+      }
     })
   },
   post(data) {
-    return apiClient.post(`/api/events/`, data, {
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
-    })
+    return apiClient.post(`/api/events/`, data)
   },
   patch(id, data) {
-    return apiClient.patch(`/api/events/${id}`, data, {
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
-    })
+    return apiClient.patch(`/api/events/${id}`, data)
   },
   delete(id) {
-    return apiClient.delete(`/api/events/${id}`, {
-      headers: {
-        auth: `Bearer ${localStorage.getItem('jwt')}`,
-      },
-    })
+    return apiClient.delete(`/api/events/${id}`)
   },
 }
 
