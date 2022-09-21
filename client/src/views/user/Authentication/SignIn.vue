@@ -3,7 +3,8 @@ import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
 import { apiUser } from '../../../services/api/lib'
-
+import { useUser } from '../../../stores/user/user';
+const myUser = useUser()
 const { handleSubmit, values, meta, setFieldError, setErrors, errors } = useForm({
   validationSchema: schema,
   initialValues: {
@@ -26,11 +27,22 @@ const signInUser = async (user) => {
     const { data } = await apiUser.signIn(user)
     localStorage.setItem('jwt', data.token);
     alert('Password Matched')
+    // myUser.loginUser()
   } catch (error) {
     const { data, status } = error.response
     const { details, message } = data
     if(status === 401) setFieldError('password', message)
     if(status === 404) setFieldError('email', message)
+  }
+}
+
+const getUser = async(id) => {
+  try{
+    const {data} = await apiUser.getById(id)
+    console.log(data);
+  }catch(error){
+    const { data, status } = error.response
+    console.log(data);
   }
 }
 </script>

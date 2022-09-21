@@ -8,6 +8,9 @@ const apiUser = {
             },
           })
     },
+    getById(){
+        return apiClient.get(`/api/users/${id}`)
+    },
     post(data){
         return apiClient.post(`/api/users`, data,{
             headers: {
