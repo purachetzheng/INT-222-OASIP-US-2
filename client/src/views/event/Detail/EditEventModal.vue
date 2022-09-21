@@ -16,7 +16,7 @@ import InputField from '../../../components/base/form/InputField.vue'
 import TextAreaField from '../../../components/base/form/TextAreaField.vue'
 
 // import '../../../services/validation/YupCustomValidations'
-import { apiEvent } from '../../../services/axios/api'
+import { apiEvent } from '@/services/api/lib'
 // import EditEventSchema from '../../../services/validation/schema/EditEventSchema'
 const { params } = useRoute()
 const { eventId } = params
