@@ -1,8 +1,9 @@
 <script setup>
 import { Navbar } from './layouts'
-import { useDarkmode } from '@/stores'
+import { useDarkmode, useUserStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
+const userStore = useUserStore()
 myDarkmode.init()
 
 </script>

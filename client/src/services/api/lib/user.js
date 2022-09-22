@@ -8,7 +8,7 @@ const apiUser = {
             },
           })
     },
-    getById(){
+    getById(id){
         return apiClient.get(`/api/users/${id}`)
     },
     post(data){
