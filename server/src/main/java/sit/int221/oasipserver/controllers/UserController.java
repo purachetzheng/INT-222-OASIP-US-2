@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,11 @@ import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.services.UserService;
+import sit.int221.oasipserver.token.AuthenticationResponse;
+import sit.int221.oasipserver.token.CustomUserDetailsService;
+import sit.int221.oasipserver.token.JwtUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -24,6 +29,8 @@ import java.util.List;
 public class UserController {
     @Autowired UserService userService;
     @Autowired private ModelMapper modelMapper;
+    @Autowired CustomUserDetailsService userDetailsService;
+    @Autowired JwtUtil jwtUtil;
 
     @GetMapping("")
     public List<UserDto> getAllUser() {
@@ -60,6 +67,22 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         return userService.match(matchUser);
+    }
+
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
+        String authToken = request.getHeader("auth");
+        final String token = authToken.substring(7);
+        String username = jwtUtil.getUsernameFromToken(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(token));
+
+        if (jwtUtil.canTokenBeRefreshed(token)) {
+            String accessToken = jwtUtil.generateToken(userDetails);
+            String refreshedToken = jwtUtil.refreshToken(token);
+            return ResponseEntity.ok(new signInDto(accessToken, refreshedToken));
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
 }

@@ -33,6 +33,7 @@ import sit.int221.oasipserver.enums.UserRole;
 import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -183,8 +184,14 @@ public class UserService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(matchUser.getEmail());
 
         final String jwt = jwtUtil.generateToken(userDetails);
+        final String jwtRefresh = jwtUtil.refreshToken(jwt);
 
-        return ResponseEntity.ok(new signInDto(jwt));
+        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Collection currentPrincipalName = getCurrentAuthentication.getAuthorities();
+        String currentPrincipalName = getCurrentAuthentication.getUsername();
+        System.out.println(currentPrincipalName);
+
+        return ResponseEntity.ok(new signInDto(jwt, jwtRefresh));
     }
 
 

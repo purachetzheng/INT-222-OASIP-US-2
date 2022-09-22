@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class signInDto {
     private String token;
+    private String refreshToken;
 }

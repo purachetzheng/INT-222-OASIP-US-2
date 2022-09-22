@@ -19,7 +19,17 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        final String expired = (String) request.getAttribute("expired");
+        if(expired!=null) {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getOutputStream().println("{ \"error\": \"" + expired + "\" }");
+        } else {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getOutputStream().println("{ \"error\": \"" + authException.getMessage() + "\" }");
+        }
     }
 
 }
