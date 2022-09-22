@@ -12,13 +12,14 @@ const apiClient = axios.create(defaultOptions)
 apiClient.interceptors.request.use(function (config) {
   const token = localStorage.getItem('jwt');
   // config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  if(isAuthRequired()) 
+  if(isAuthRequired(config.url)) 
     config.headers.auth = token ? `Bearer ${token}` : '';
   return config;
 });
 
 const isAuthRequired = (url) => {
-  if(url === '/api/users/login') return false
+  if(url === '/api/users/login') 
+    return false
   return true
 }
 // apiClient.interceptors.response.use(
