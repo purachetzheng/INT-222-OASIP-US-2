@@ -58,15 +58,14 @@ public class UserController {
         return userService.update(updateUser, id, result);
     }
 
-//    @PostMapping("/match")
-//    public User matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
-//        return userService.match(matchUser);
-//    }
-
-//    @PostMapping("/match")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         return userService.match(matchUser);
+    }
+
+    @PostMapping("/match")
+    public UserDetailDto checkPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+        return modelMapper.map(userService.checkPassword(matchUser), UserDetailDto.class);
     }
 
     @GetMapping("/refresh")

@@ -158,7 +158,7 @@ public class UserService {
 //        return user;
 //    }
 
-    //Match Argon Password
+    //Login
     public ResponseEntity<signInDto> match(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         User user;
 
@@ -194,6 +194,23 @@ public class UserService {
         return ResponseEntity.ok(new signInDto(jwt, jwtRefresh));
     }
 
+    //Check Password
+    public User checkPassword(MatchUserDto matchUser) throws PasswordException {
+        User user;
+
+        if(repository.existsByEmail(matchUser.getEmail())){
+            user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา
+        } else {
+            throw new ApiNotFoundException("Email does not exist");
+        }
+        String userArgon2Password = user.getPassword(); //เอา Argon2 password มาจาก Database
+        if(argon2.verify(userArgon2Password, matchUser.getPassword())){ //Match raw password จาก DTO ว่าหากเปลี่ยนเป็น Argon2 แล้วจะ == Argon2 ใน Database มั้ย
+            System.out.println("MATCHED");
+        } else {
+            throw new PasswordException();
+        }
+        return user;
+    }
 
 
     //sha256
