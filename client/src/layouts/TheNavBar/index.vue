@@ -4,7 +4,9 @@ import { IcPlusCircleOutline } from '@/assets/icons/editing-icons'
 import { NavIItemDropdown, DarkmodeToggle } from './components'
 import navItemList from './navItemList'
 import SignInSignUp from './components/SignInSignUp.vue';
-
+import { useUserStore } from '../../stores';
+import UserMenu from './components/UserMenu.vue';
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -25,9 +27,10 @@ import SignInSignUp from './components/SignInSignUp.vue';
           />
         </ul>
       </nav>
-      <section class="grow basis-1/3 flex items-center gap-4 justify-end overflow-hidden ">
+      <section class="grow basis-1/3 flex items-center gap-4 justify-end ">
         <DarkmodeToggle />
-        <SignInSignUp />
+        <UserMenu v-if="userStore.isAuth" />
+        <SignInSignUp v-else />
       </section>
     </div>
   </header>

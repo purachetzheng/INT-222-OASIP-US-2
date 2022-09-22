@@ -18,8 +18,12 @@ export const useUserStore = defineStore('user', () => {
       console.log(data);
     }
   }
+  const signOut = () => {
+    localStorage.removeItem("jwt")
+    user.value = null
+  }
   const loginUser = (user) => (user.value = user)
-  return { user, isAuth, loginUser, getUserInfo }
+  return { user, isAuth, loginUser, getUserInfo, signOut }
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

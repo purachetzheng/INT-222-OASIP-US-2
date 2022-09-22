@@ -61,18 +61,19 @@ const [isSignUp, goSignIn, goSignUp] = [
       class="max-w-7xl h-160 mx-auto bg-white rounded-lg flex overflow-hidden"
       :class="isSignUp ? 'sign-up' : 'sign-in'"
     >
-      <section
-        :key="'banner'"
-        class="animation bg-blue-500 z-10 w-min"
-      >
-        <AuthBanner :isSignUp="isSignUp" @go-sign-in="goSignIn()" @go-sign-up="goSignUp()" />
-      </section>
+      
       <section
         :key="'login'"
         class="animation bg-white overflow-auto w-160 p-10"
       >
         <SignUp v-if="isSignUp" />
         <SignIn v-else />
+      </section>
+      <section
+        :key="'banner'"
+        class="animation bg-blue-500 w-min"
+      >
+        <AuthBanner :isSignUp="isSignUp" @go-sign-in="goSignIn()" @go-sign-up="goSignUp()" />
       </section>
     </TransitionGroup>
   </main>
