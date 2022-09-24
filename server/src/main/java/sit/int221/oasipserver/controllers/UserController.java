@@ -71,14 +71,14 @@ public class UserController {
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader("auth");
-        final String token = authToken.substring(7);
-        String username = jwtUtil.getUsernameFromToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(token));
+        final String refreshToken = authToken.substring(7);
+        String username = jwtUtil.getUsernameFromToken(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(refreshToken));
 
-        if (jwtUtil.canTokenBeRefreshed(token)) {
+        if (jwtUtil.canTokenBeRefreshed(refreshToken)) {
             String accessToken = jwtUtil.generateToken(userDetails);
-            String refreshedToken = jwtUtil.refreshToken(token);
-            return ResponseEntity.ok(new signInDto(accessToken, refreshedToken));
+//            String refreshedToken = jwtUtil.refreshToken(token);
+            return ResponseEntity.ok(new refreshDto(accessToken, refreshToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }
