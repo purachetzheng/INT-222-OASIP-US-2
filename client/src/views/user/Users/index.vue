@@ -13,11 +13,11 @@ const getUsers = async (page) => {
     users.value = data
     // return data.content
   } catch (error) {
-    // console.log(error)
+    console.log(error)
     // console.log(error.response)
-    const res = error.response
-    console.log(res.status)
-    console.log('error ', error.message)
+    // const res = error.response
+    // console.log(res.status)
+    // console.log('error ', error.message)
   }
 }
 

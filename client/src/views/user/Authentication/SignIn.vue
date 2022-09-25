@@ -26,6 +26,7 @@ const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
     localStorage.setItem('jwt', data.token);
+    localStorage.setItem('refreshToken', data.refreshToken);
     alert('Password Matched')
     // myUser.loginUser()
     userStore.getUserInfo()
