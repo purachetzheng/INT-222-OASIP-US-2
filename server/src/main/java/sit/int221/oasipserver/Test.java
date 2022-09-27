@@ -2,10 +2,14 @@ package sit.int221.oasipserver;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
+import org.springframework.beans.factory.annotation.Autowired;
 import sit.int221.oasipserver.dtos.user.MatchUserDto;
+import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.enums.UserRole;
+import sit.int221.oasipserver.repo.EventRepository;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class Test {
     public static boolean findByName(String name) {
@@ -17,15 +21,16 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        Argon2 argon2 = Argon2Factory.create();
-        String password = "admin";
-        String hash = argon2.hash(22, 65536, 1, password);
-        System.out.println(hash);
+//        Argon2 argon2 = Argon2Factory.create();
+//        String password = "admin";
+//        String hash = argon2.hash(22, 65536, 1, password);
+//        System.out.println(hash);
+//
+//        if(argon2.verify(hash, password)) {
+//            System.out.println("Matched");
+//        } else {
+//            System.out.println("Not Matched");
+//        }
 
-        if(argon2.verify(hash, password)) {
-            System.out.println("Matched");
-        } else {
-            System.out.println("Not Matched");
-        }
     }
 }

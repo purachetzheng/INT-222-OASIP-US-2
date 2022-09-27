@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.exception.type.ApiRequestException;
 import sit.int221.oasipserver.repo.EventRepository;
@@ -30,7 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EventService {
@@ -64,6 +68,8 @@ public class EventService {
 //        return modelMapper.map(repository.findAllByEventStartTimePast(pageRequest), PageEventDto.class);
         Page<Event>  page = filterEventPage(pageRequest, eventCategoryId, dateStatus, date);
         PageEventDto pageDto = modelMapper.map(page, PageEventDto.class);
+        System.out.println(getCurrentAuthority());
+        System.out.println(getCurrentAuthorityCollection());
         return pageDto;
     }
 
@@ -74,31 +80,49 @@ public class EventService {
             return repository.findAllEventPast(pageRequest, eventCategoryId, date);
         if(dateStatus.equals("upcoming"))
             return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
-        if(date == null && eventCategoryId == null)
-//            return repository.findAll(pageRequest);
+        if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_student]")){
+            //            return repository.findAll(pageRequest);
+            System.out.println("student paging");
             return repository.findByBookingEmail(pageRequest, currentPrincipalEmail);
+        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_admin]")) {
+            System.out.println("admin paging");
+            return repository.findAll(pageRequest);
+        }
+
+
         return repository.findAllFilter(pageRequest, eventCategoryId, date);
     }
 
-    public Event getById(Integer id, HttpServletResponse response) {
+    public Event getById(Integer id, HttpServletResponse response) throws ForbiddenException {
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
-        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return null;
+
+//        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+//            response.setStatus(HttpStatus.FORBIDDEN.value());
+//            return null;
+//        }
+
+        if(getCurrentAuthority().equals("[ROLE_student]")){
+            if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+//                response.setStatus(HttpStatus.FORBIDDEN.value());
+//                System.out.println("403");
+                throw new ForbiddenException();
+            }
         }
 
         return event;
     }
 
-    public void delete(Integer id, HttpServletResponse response) {
+    public void delete(Integer id, HttpServletResponse response) throws ForbiddenException {
 
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
-        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return;
+        if(getCurrentAuthority().equals("[ROLE_student]")){
+            if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+                throw new ForbiddenException();
+            }
         }
+
         repository.delete(getById(id, response));
     }
 
@@ -126,8 +150,10 @@ public class EventService {
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
-        if(!newEvent.getBookingEmail().equals(getCurrentUserPrincipalEmail())){
-            result.addError(bookingEmailNotMatchObj);
+        if(getCurrentAuthority().equals("[ROLE_student]")){
+            if(!newEvent.getBookingEmail().equals(getCurrentUserPrincipalEmail())){
+                result.addError(bookingEmailNotMatchObj);
+            }
         }
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
@@ -136,13 +162,15 @@ public class EventService {
     }
 
     public EventDto update(PatchEventDto updateEventDto, Integer id, BindingResult result, HttpServletResponse response)
-            throws MethodArgumentNotValidException {
+            throws MethodArgumentNotValidException, ForbiddenException {
         Event eventForEmailCheck = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
-        if(!getCurrentUserPrincipalEmail().equals(eventForEmailCheck.getBookingEmail())){
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            return null;
+        if(getCurrentAuthority().equals("[ROLE_student]")){
+            if(!getCurrentUserPrincipalEmail().equals(eventForEmailCheck.getBookingEmail())){
+                throw new ForbiddenException();
+            }
         }
+
         Event event = mapEvent(getById(id, response), updateEventDto);
 
         Eventcategory eventcategory = event.getEventCategory();
@@ -174,6 +202,16 @@ public class EventService {
     private String getCurrentUserPrincipalEmail(){
         UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getCurrentAuthentication.getUsername();
+    }
+
+    private String getCurrentAuthority(){
+        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return  getCurrentAuthentication.getAuthorities().toString();
+    }
+
+    private Collection<?> getCurrentAuthorityCollection(){
+        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return  getCurrentAuthentication.getAuthorities();
     }
 
 }

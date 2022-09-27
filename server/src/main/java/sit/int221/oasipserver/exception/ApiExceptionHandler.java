@@ -77,5 +77,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiException, unAuthorized);
     }
 
+    @ExceptionHandler(value = ForbiddenException.class)
+    public ResponseEntity<Object> forbidden(ForbiddenException e) {
+        HttpStatus forbidden = HttpStatus.FORBIDDEN;
+        ApiException apiException = new ApiException(
+                "FORBIDDEN",
+                HttpStatus.FORBIDDEN,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(apiException, forbidden);
+    }
+
 }
 //https://www.youtube.com/watch?v=PzK4ZXa2Tbc

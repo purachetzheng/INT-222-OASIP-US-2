@@ -21,6 +21,10 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     public List<Event> findAllByEventCategoryIsAndIdIsNotAndEventStartTimeBetween (Eventcategory eventcategory, Integer id, Instant lower, Instant upper);
 
+    public boolean existsByBookingEmail(String email);
+
+    public List<Event> findAllByBookingEmail(String email);
+
     @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%')",nativeQuery=true)
     Page<Event> findAllByEventStartTimeEquals(Pageable pageable, @Param("date") String date);
 
