@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class signInDto {
-    private String username;
+public class refreshDto {
     private String token;
     private String refreshToken;
 }

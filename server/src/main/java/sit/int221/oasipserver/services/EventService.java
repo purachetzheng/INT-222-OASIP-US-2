@@ -7,18 +7,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
+import sit.int221.oasipserver.exception.type.ApiRequestException;
 import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -39,6 +48,9 @@ public class EventService {
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
 
+    final private FieldError bookingEmailNotMatchObj = new FieldError("newEventDto",
+            "bookingEmail", "The booking email must be the same as the student's email");
+
     public List<SimpleEventDto> getAll() {
         List<Event> eventList = repository.findAllByOrderByEventStartTimeDesc();
 //        List<Event> eventList = repository.findAllByEventCategoryId(1);
@@ -56,27 +68,42 @@ public class EventService {
     }
 
     private Page<Event> filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
+        UserDetails currentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentPrincipalEmail = currentAuthentication.getUsername();
         if(dateStatus.equals("past"))
             return repository.findAllEventPast(pageRequest, eventCategoryId, date);
         if(dateStatus.equals("upcoming"))
             return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
         if(date == null && eventCategoryId == null)
-            return repository.findAll(pageRequest);
+//            return repository.findAll(pageRequest);
+            return repository.findByBookingEmail(pageRequest, currentPrincipalEmail);
         return repository.findAllFilter(pageRequest, eventCategoryId, date);
     }
 
-    public Event getById(Integer id) {
+    public Event getById(Integer id, HttpServletResponse response) {
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
+
         return event;
     }
 
-    public void delete(Integer id) {
-        repository.delete(getById(id));
+    public void delete(Integer id, HttpServletResponse response) {
+
+        Event event = repository.findById(id).orElseThrow
+                (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return;
+        }
+        repository.delete(getById(id, response));
     }
 
     public SimpleEventDto create(PostEventDto newEvent, BindingResult result)
-            throws MethodArgumentNotValidException {
+            throws MethodArgumentNotValidException, ApiRequestException {
 
         if (result.hasErrors()
                 && newEvent.getEventCategoryId() == null
@@ -99,14 +126,24 @@ public class EventService {
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
+        if(!newEvent.getBookingEmail().equals(getCurrentUserPrincipalEmail())){
+            result.addError(bookingEmailNotMatchObj);
+        }
+
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
         return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
     }
 
-    public EventDto update(PatchEventDto updateEventDto, Integer id, BindingResult result)
+    public EventDto update(PatchEventDto updateEventDto, Integer id, BindingResult result, HttpServletResponse response)
             throws MethodArgumentNotValidException {
-        Event event = mapEvent(getById(id), updateEventDto);
+        Event eventForEmailCheck = repository.findById(id).orElseThrow
+                (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        if(!getCurrentUserPrincipalEmail().equals(eventForEmailCheck.getBookingEmail())){
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            return null;
+        }
+        Event event = mapEvent(getById(id, response), updateEventDto);
 
         Eventcategory eventcategory = event.getEventCategory();
         ChronoUnit minutes = ChronoUnit.MINUTES;
@@ -132,6 +169,11 @@ public class EventService {
         if (updateEvent.getEventNotes() != null)
             existingEvent.setEventNotes(updateEvent.getEventNotes());
         return existingEvent;
+    }
+
+    private String getCurrentUserPrincipalEmail(){
+        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getCurrentAuthentication.getUsername();
     }
 
 }

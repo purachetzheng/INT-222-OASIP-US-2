@@ -55,6 +55,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
                                      @Param("id") Integer eventCategoryId,
                                      @Param("date") String date);
 
+    Page<Event> findByBookingEmail(Pageable pageable, String email);
+
     @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
             "and (:id is null or eventCategoryId = :id)" +
             "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"

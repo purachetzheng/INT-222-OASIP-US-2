@@ -58,28 +58,27 @@ public class UserController {
         return userService.update(updateUser, id, result);
     }
 
-//    @PostMapping("/match")
-//    public User matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
-//        return userService.match(matchUser);
-//    }
-
-//    @PostMapping("/match")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
         return userService.match(matchUser);
+    }
+
+    @PostMapping("/match")
+    public UserDetailDto checkPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+        return modelMapper.map(userService.checkPassword(matchUser), UserDetailDto.class);
     }
 
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader("auth");
-        final String token = authToken.substring(7);
-        String username = jwtUtil.getUsernameFromToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(token));
+        final String refreshToken = authToken.substring(7);
+        String username = jwtUtil.getUsernameFromToken(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(refreshToken));
 
-        if (jwtUtil.canTokenBeRefreshed(token)) {
+        if (jwtUtil.canTokenBeRefreshed(refreshToken)) {
             String accessToken = jwtUtil.generateToken(userDetails);
-            String refreshedToken = jwtUtil.refreshToken(token);
-            return ResponseEntity.ok(new signInDto(accessToken, refreshedToken));
+//            String refreshedToken = jwtUtil.refreshToken(token);
+            return ResponseEntity.ok(new refreshDto(accessToken, refreshToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }
