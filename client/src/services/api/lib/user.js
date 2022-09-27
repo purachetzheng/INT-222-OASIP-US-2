@@ -2,35 +2,19 @@ import apiClient from '../apiClient'
 
 const apiUser = {
     get(){
-        return apiClient.get(`/api/users`,{
-            headers: {
-                auth: `Bearer ${localStorage.getItem('jwt')}`,
-            },
-          })
+        return apiClient.get(`/api/users`,)
     },
     getById(id){
         return apiClient.get(`/api/users/${id}`)
     },
     post(data){
-        return apiClient.post(`/api/users`, data,{
-            headers: {
-                auth: `Bearer ${localStorage.getItem('jwt')}`,
-            },
-          })
+        return apiClient.post(`/api/users`, data,)
     },
     delete(id){
-        return apiClient.delete(`/api/users/${id}`,{
-            headers: {
-                auth: `Bearer ${localStorage.getItem('jwt')}`,
-            },
-          })
+        return apiClient.delete(`/api/users/${id}`,)
     },
     patch(id, data){
-        return apiClient.patch(`/api/users/${id}`, data,{
-            headers: {
-                auth: `Bearer ${localStorage.getItem('jwt')}`,
-            },
-          })
+        return apiClient.patch(`/api/users/${id}`, data,)
     },
     signIn(data){
         return apiClient.post(`/api/users/login`, data)

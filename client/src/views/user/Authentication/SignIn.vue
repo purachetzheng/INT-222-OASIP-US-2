@@ -4,6 +4,9 @@ import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
 import { apiUser } from '../../../services/api/lib'
 import { useUserStore } from '../../../stores/';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const userStore = useUserStore()
 const { handleSubmit, values, meta, setFieldError, setErrors, errors } = useForm({
   validationSchema: schema,
@@ -25,11 +28,12 @@ const onSubmit = handleSubmit(({ email, password}) => {
 const signInUser = async (user) => {
   try {
     const { data } = await apiUser.signIn(user)
-    localStorage.setItem('jwt', data.token);
+    localStorage.setItem('accessToken', data.token);
     localStorage.setItem('refreshToken', data.refreshToken);
     alert('Password Matched')
     // myUser.loginUser()
     userStore.getUserInfo()
+    router.push({ name: 'Home'})
   } catch (error) {
     const { data, status } = error.response
     const { details, message } = data
