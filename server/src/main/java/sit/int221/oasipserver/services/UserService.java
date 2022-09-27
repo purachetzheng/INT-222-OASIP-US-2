@@ -18,10 +18,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sit.int221.oasipserver.dtos.event.EventDto;
 import sit.int221.oasipserver.dtos.user.*;
+import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
+import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.token.AuthenticationResponse;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
@@ -40,6 +43,7 @@ import java.util.Set;
 @Service
 public class UserService {
     @Autowired private UserRepository repository;
+    @Autowired private EventRepository eventRepository;
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
     @Autowired private RoleValidate roleValidate;
@@ -127,6 +131,19 @@ public class UserService {
     public UserDto update(PatchUserDto updateUser, Integer id, BindingResult result) throws MethodArgumentNotValidException{
         String role = updateUser.getRole();
         if(role == "") updateUser.setRole("student");
+        User findUser = getById(id);
+        if(eventRepository.existsByBookingEmail(findUser.getEmail())){
+            System.out.println("Found email among events");
+            List<Event> events = eventRepository.findAllByBookingEmail(findUser.getEmail());
+            for(Event eventLoop: events){
+                System.out.println("Starting Map");
+                Event event = mapEmailEvent(eventLoop, updateUser);
+                System.out.println("Starting SaveAndFlush");
+                Event eventUpdated = eventRepository.saveAndFlush(event);
+                System.out.println("Starting ModelMapper");
+                modelMapper.map(eventUpdated, EventDto.class);
+            }
+        }
         if(repository.existsByNameAndIdNot(updateUser.getName(), id)){
             result.addError(nameErrorObj);
         }
@@ -241,6 +258,14 @@ public class UserService {
         if(updateUser.getRole() != null && !updateUser.getRole().equals(""))
             existingUser.setRole(UserRole.valueOf(updateUser.getRole()));
         return existingUser;
+    }
+
+    private Event mapEmailEvent(Event existingEvent, PatchUserDto updateUser){
+        if(updateUser.getEmail() != null && !updateUser.getEmail().trim().equals("")){
+            System.out.println("Starting Change Email");
+            existingEvent.setBookingEmail(updateUser.getEmail().trim());
+        }
+        return existingEvent;
     }
 }
 

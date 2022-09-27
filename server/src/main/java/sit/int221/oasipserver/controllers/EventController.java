@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.oasipserver.dtos.event.*;
+import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.services.EventService;
 
@@ -43,7 +44,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventDto getEventById(@PathVariable Integer id, HttpServletResponse response) {
+    public EventDto getEventById(@PathVariable Integer id, HttpServletResponse response) throws ForbiddenException {
         return modelMapper.map(eventService.getById(id, response), EventDto.class);
     }
 
@@ -74,7 +75,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable Integer id, HttpServletResponse response) {
+    public void deleteEvent(@PathVariable Integer id, HttpServletResponse response) throws ForbiddenException {
         eventService.delete(id, response);
     }
 
@@ -84,7 +85,7 @@ public class EventController {
             @PathVariable Integer id,
             BindingResult result,
             HttpServletResponse response)
-            throws MethodArgumentNotValidException{
+            throws MethodArgumentNotValidException, ForbiddenException{
         return eventService.update(updateEventDto, id, result, response);
     }
 
