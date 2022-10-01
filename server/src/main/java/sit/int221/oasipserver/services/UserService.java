@@ -212,6 +212,7 @@ public class UserService {
         Cookie refreshJwtCookie = new Cookie("refreshToken", jwtRefresh);
         refreshJwtCookie.setSecure(true);
         refreshJwtCookie.setHttpOnly(true);
+        refreshJwtCookie.setPath("/");
         response.addCookie(refreshJwtCookie);
 
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefresh)
