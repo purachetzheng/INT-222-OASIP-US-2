@@ -14,9 +14,12 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.UUID;
+
 
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
+
 
     @Autowired
     private RestAuthenticationEntryPoint unauthorizedHandler;
@@ -42,17 +45,23 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity security) throws Exception {
+        MyUserDetails anonymousUser = new MyUserDetails();
+        anonymousUser.setUsername("anonymousUser");
+        security.anonymous().authenticationFilter(new MyAnonymousAuthenticationFilter(UUID.randomUUID().toString()));
         security.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authenticate", "/api/users/login", "/signup", "/api/events/emailSender").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/{id}/**").access("@guard.checkUserId(authentication, #id)")
+                .antMatchers("/authenticate", "/api/users/login", "/signup", "/api/events/emailSender",
+                        "/api/users/logout").permitAll()
                 .antMatchers("/api/events/**", "/api/users/**").hasAnyRole("admin")
-                .antMatchers("/api/events/**").hasAnyRole("student", "admin")
+                .antMatchers("/api/events/**").hasAnyRole("student", "admin", "student")
 //                .antMatchers("/api/events").hasRole("lecturer")
                 // .antMatchers(HttpMethod.POST, "/api/users")
                 // .antMatchers(HttpMethod.POST, "/us2/api/users").permitAll()
                 .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

@@ -81,12 +81,14 @@ public class EventService {
         if(dateStatus.equals("upcoming"))
             return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
         if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_student]")){
-            //            return repository.findAll(pageRequest);
             System.out.println("student paging");
             return repository.findByBookingEmail(pageRequest, currentPrincipalEmail);
         } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_admin]")) {
             System.out.println("admin paging");
             return repository.findAll(pageRequest);
+        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_lecturer]")) {
+            System.out.println("lecturer paging");
+//            return repository.findByEventCategory(eventcategoryownerRepository.findById(pageRequest, 1));
         }
 
 

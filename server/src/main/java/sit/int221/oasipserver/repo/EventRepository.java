@@ -71,4 +71,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Page<Event> findAllEventUpcoming(Pageable pageable,
                                          @Param("id") Integer eventCategoryId,
                                          @Param("date") String date);
+
 }
