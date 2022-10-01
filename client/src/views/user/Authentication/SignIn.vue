@@ -27,12 +27,9 @@ const onSubmit = handleSubmit(({ email, password}) => {
 
 const signInUser = async (user) => {
   try {
-    const { data } = await apiUser.signIn(user)
-    localStorage.setItem('accessToken', data.token);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    await userStore.signIn(user)
+    console.log('ok');
     alert('Password Matched')
-    // myUser.loginUser()
-    userStore.getUserInfo()
     router.push({ name: 'Home'})
   } catch (error) {
     const { data, status } = error.response
