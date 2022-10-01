@@ -10,15 +10,24 @@ export const useUserStore = defineStore('user', () => {
     
   // }
   const getUserInfo = async () => {
-    const refreshToken = localStorage.getItem('refreshToken')
-    if(!refreshToken) return
+    // const refreshToken = localStorage.getItem('refreshToken')
+    // if(!refreshToken) return
+    // try{
+    //   const {data} = await apiUser.getById(1)
+    //   user.value = data
+    // }
+    // catch(error){
+    //   const { data, status } = error.response
+    //   console.log(data);
+    // }
+  }
+  const signIn = async (user) => {
     try{
-      const {data} = await apiUser.getById(1)
-      user.value = data
+      const { data } = await apiUser.signIn(user)
+      localStorage.setItem('accessToken', data.accessToken);
     }
     catch(error){
-      const { data, status } = error.response
-      console.log(data);
+      return Promise.reject(error)
     }
   }
   const signOut = () => {
@@ -29,7 +38,7 @@ export const useUserStore = defineStore('user', () => {
     return router.push({ name: 'Authentication'})
   }
   const loginUser = (user) => (user.value = user)
-  return { user, isAuth, loginUser, getUserInfo, signOut }
+  return { user, isAuth, loginUser, getUserInfo, signOut, signIn }
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

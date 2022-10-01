@@ -5,6 +5,8 @@ import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +35,8 @@ import sit.int221.oasipserver.utils.RoleValidate;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.enums.UserRole;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -55,6 +59,8 @@ public class UserService {
 
     @Autowired
     CustomUserDetailsService userDetailsService;
+
+    @Autowired signInDto signInDto;
 
     @Autowired
     JwtUtil jwtUtil;
@@ -176,7 +182,7 @@ public class UserService {
 //    }
 
     //Login
-    public ResponseEntity<signInDto> match(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
+    public ResponseEntity<?> match(@Valid @RequestBody MatchUserDto matchUser, HttpServletResponse response) throws PasswordException {
         User user;
 
         if(repository.existsByEmail(matchUser.getEmail())){
@@ -191,25 +197,36 @@ public class UserService {
         } else {
             throw new PasswordException();
         }
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        matchUser.getEmail(),
-                        matchUser.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        matchUser.getEmail(),
+//                        matchUser.getPassword()
+//                )
+//        );
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = userDetailsService.loadUserByUsername(matchUser.getEmail());
 
         final String jwt = jwtUtil.generateToken(userDetails);
         final String jwtRefresh = jwtUtil.refreshToken(jwt);
+        Cookie refreshJwtCookie = new Cookie("refreshToken", jwtRefresh);
+        refreshJwtCookie.setSecure(true);
+        refreshJwtCookie.setHttpOnly(true);
+        refreshJwtCookie.setPath("/");
+        refreshJwtCookie.setMaxAge(86400);
+        response.addCookie(refreshJwtCookie);
 
-        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefresh)
+//                .httpOnly(true).secure(true).path("/").maxAge(2).build();
+
+
+//        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        Collection currentPrincipalName = getCurrentAuthentication.getAuthorities();
-        String currentPrincipalName = getCurrentAuthentication.getUsername();
-        System.out.println(currentPrincipalName);
+//        String currentPrincipalName = getCurrentAuthentication.getUsername();
+        System.out.println(userDetails.getAuthorities());
 
-        return ResponseEntity.ok(new signInDto(user.getName(), jwt, jwtRefresh));
+        return ResponseEntity.ok(new signInDto(user.getName(), jwt));
+//        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).build();
     }
 
     //Check Password

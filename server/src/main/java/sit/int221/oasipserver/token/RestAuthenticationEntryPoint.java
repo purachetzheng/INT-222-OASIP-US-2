@@ -28,6 +28,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         } else {
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getOutputStream().println("{ \"error\": \"" + "Invalid or No Token" + "\" }");
 //            response.getOutputStream().println("{ \"error\": \"" + authException.getMessage() + "\" }");
         }
     }

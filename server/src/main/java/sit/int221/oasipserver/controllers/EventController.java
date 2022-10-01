@@ -3,6 +3,7 @@ package sit.int221.oasipserver.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import sit.int221.oasipserver.dtos.event.*;
+import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.services.EventService;
@@ -25,6 +27,8 @@ import java.io.IOException;
 public class EventController {
     @Autowired public EventService eventService;
     @Autowired private ModelMapper modelMapper;
+
+    @Autowired private EmailServiceImpl emailService;
 
 //    @GetMapping("")
 //    public List<SimpleEventDto> getAllEvent(){
@@ -88,6 +92,12 @@ public class EventController {
             throws MethodArgumentNotValidException, ForbiddenException{
         return eventService.update(updateEventDto, id, result, response);
     }
+
+    @PostMapping("/emailSender")
+    public EventDto sendEmail(@RequestBody EventDto eventDto){
+        return emailService.sendSimpleMessage(eventDto);
+    }
+
 
     private String getCurrentUserPrincipalEmail(){
         UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

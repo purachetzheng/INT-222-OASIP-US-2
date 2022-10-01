@@ -5,8 +5,9 @@ const defaultOptions = {
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
   headers: {
-    Accept: 'application/json',
+    Accept: '*/*',
     'Content-Type': 'application/json',
+    withCredentials: true
   },
 }
 
@@ -21,14 +22,14 @@ const defaultOptions = {
 const apiClient = axios.create(defaultOptions)
 apiClient.interceptors.request.use(async (config) => {
   const token = localStorage.getItem('accessToken')
-  const refreshToken = localStorage.getItem('refreshToken')
+  // const refreshToken = localStorage.getItem('refreshToken')
   
-  console.log(config.method);
-  console.log(config.url);
-  console.log(config.headers);
+  // console.log(config.method);
+  // console.log(config.url);
+  // console.log(config.headers);
   // config.headers.Authorization =  token ? `Bearer ${token}` : '';
   if (isAuthRequired(config.url, config.method)){
-    console.log(config.url + ' is auth');
+    // console.log(config.url + ' is auth');
     config.headers.auth = token ? `Bearer ${token}` : ''
   }
   return config
@@ -37,6 +38,7 @@ apiClient.interceptors.request.use(async (config) => {
 const isAuthRequired = (url, method) => {
   if (url === '/api/users/login') return false
   if (url === '/api/users/refresh') return false
+  if (url === '/api/auth/login') return false
   if (url === '/api/users' && method === 'post') console.log('ok it is');
   if (url === '/api/users' && method === 'post') return false
   return true
@@ -44,9 +46,9 @@ const isAuthRequired = (url, method) => {
 
 apiClient.interceptors.response.use(response => response, async (error) => {
   const { config, response, message } = error;
-  console.log(config);
-  console.log(config.retry);
-  console.log(response);
+  // console.log(config);
+  // console.log(config.retry);
+  // console.log(response);
   if (!config || config.retry ) {
     console.log('err: 1');
     return Promise.reject(error);
@@ -68,20 +70,20 @@ apiClient.interceptors.response.use(response => response, async (error) => {
 })
 
 const refreshToken = async () => {
-  const refreshToken = localStorage.getItem('refreshToken')
+  // const refreshToken = localStorage.getItem('refreshToken')
   try {
     const {data} = await apiClient.get(`/api/users/refresh`, {
-      headers: { auth: `Bearer ${refreshToken}` },
+      // headers: { auth: `Bearer ${refreshToken}` },
     })
-    console.log(data);
+    // console.log(data);
     localStorage.setItem('accessToken', data.token);
-    console.log('suc: refresh');
+    // console.log('suc: refresh');
   }
   catch(error){
-    console.log('ref err:');
-    console.log(error);
+    // console.log('ref err:');
+    // console.log(error);
     const { data, status } = error.response
-    console.log(status);
+    // console.log(status);
     if(status === 401) {
     //   console.log('refresh exp');
     localStorage.removeItem("accessToken");

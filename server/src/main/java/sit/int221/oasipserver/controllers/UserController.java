@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.enums.UserRole;
@@ -18,6 +19,7 @@ import sit.int221.oasipserver.token.AuthenticationResponse;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
 import sit.int221.oasipserver.token.JwtUtil;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -59,8 +61,19 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
-        return userService.match(matchUser);
+    public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser, HttpServletResponse response) throws PasswordException {
+        return userService.match(matchUser, response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
+//        Cookie refreshJwtCookie = WebUtils.getCookie(request, "refreshToken");
+//        refreshJwtCookie.setMaxAge(0);
+        Cookie deleteRefreshCookie = new Cookie("refreshToken", null);
+        deleteRefreshCookie.setPath("/");
+        deleteRefreshCookie.setMaxAge(0);
+        response.addCookie(deleteRefreshCookie);
+        return ResponseEntity.ok("Logout");
     }
 
     @PostMapping("/match")
