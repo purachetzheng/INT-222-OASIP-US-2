@@ -19,13 +19,20 @@ const { handleSubmit, values, resetForm, meta, setFieldValue } = useForm({
   initialValues: {
     name: '',
     email: '',
+    password: '',
+    confirmPassword: '',
   },
 })
-const onSubmit = handleSubmit(({name = '', email = '', role}) => {
+const onSubmit = handleSubmit(({name = '', email = '', role, password, confirmPassword}) => {
+  const isPasswordConfirm = password === confirmPassword
+  if (!isPasswordConfirm) 
+    return setFieldError('confirmPassword', 'Passwords do not match, try again.')
+  
   const trimmedUser = {
     name: name.trim(),
     email: email.trim(),
-    role: role
+    role: role,
+    password: password,
   }
   emits('submit-form', trimmedUser)
 })
@@ -45,10 +52,12 @@ onUpdated(() => {
     </template>
     <template #body>
       <div class="flex flex-col gap-0">
-        <InputField id="name" class="" name="name" type="text" :max="100" label="Name" />
-        <InputField id="email" class="" name="email" type="text" :max="50" label="Email" />
+        <InputField id="name" class="" name="name" type="text" :max="100" label="Name" :required="true" />
+        <InputField id="email" class="" name="email" type="text" :max="50" label="Email" :required="true" />
         <!-- <p class="pt-2">Role</p> -->
         <RoleSelectField />
+        <InputField class="" name="password" type="password" label="Password" :max="14" :required="true" />
+        <InputField class="" name="confirmPassword" type="password" label="Confirm Password" :max="14" :required="true" />
       </div>
     </template>
 
