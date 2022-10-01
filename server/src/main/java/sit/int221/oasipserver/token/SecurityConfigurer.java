@@ -45,9 +45,6 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity security) throws Exception {
-        MyUserDetails anonymousUser = new MyUserDetails();
-        anonymousUser.setUsername("anonymousUser");
-        security.anonymous().authenticationFilter(new MyAnonymousAuthenticationFilter(UUID.randomUUID().toString()));
         security.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler)
                 .and()

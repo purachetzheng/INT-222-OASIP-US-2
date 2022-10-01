@@ -213,10 +213,11 @@ public class UserService {
         refreshJwtCookie.setSecure(true);
         refreshJwtCookie.setHttpOnly(true);
         refreshJwtCookie.setPath("/");
+        refreshJwtCookie.setMaxAge(86400);
         response.addCookie(refreshJwtCookie);
 
-        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefresh)
-                .httpOnly(true).secure(true).path("/").maxAge(2).build();
+//        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefresh)
+//                .httpOnly(true).secure(true).path("/").maxAge(2).build();
 
 
 //        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
