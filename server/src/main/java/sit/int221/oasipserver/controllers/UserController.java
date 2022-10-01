@@ -70,6 +70,7 @@ public class UserController {
 //        Cookie refreshJwtCookie = WebUtils.getCookie(request, "refreshToken");
 //        refreshJwtCookie.setMaxAge(0);
         Cookie deleteRefreshCookie = new Cookie("refreshToken", null);
+        deleteRefreshCookie.setPath("/");
         deleteRefreshCookie.setMaxAge(0);
         response.addCookie(deleteRefreshCookie);
         return ResponseEntity.ok("Logout");
