@@ -7,7 +7,7 @@ const defaultOptions = {
   headers: {
     Accept: '*/*',
     'Content-Type': 'application/json',
-    withCredentials: true
+    withCredentials: true,
   },
 }
 
@@ -23,75 +23,71 @@ const apiClient = axios.create(defaultOptions)
 apiClient.interceptors.request.use(async (config) => {
   const token = localStorage.getItem('accessToken')
   // const refreshToken = localStorage.getItem('refreshToken')
-  
+
   // console.log(config.method);
   // console.log(config.url);
   // console.log(config.headers);
   // config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  if (isAuthRequired(config.url, config.method)){
+  if (isAuthRequired(config)) {
     // console.log(config.url + ' is auth');
     config.headers.auth = token ? `Bearer ${token}` : ''
   }
   return config
 })
-
-const isAuthRequired = (url, method) => {
-  if (url === '/api/auth/refresh') return false
-  if (url === '/api/auth/login') return false
-  if (url === '/api/users' && method === 'post') console.log('ok it is');
-  if (url === '/api/users' && method === 'post') return false
+const noAuthRequired = [
+  { url: '/api/auth/refresh' },
+  { url: '/api/auth/login' },
+  { url: '/api/users', method: ['post'] },
+]
+const isAuthRequired = ({ url, method } = {}) => {
+  if (
+    noAuthRequired.some(
+      (noAuthItem) =>
+        noAuthItem.url === url &&
+        (!noAuthItem.method ||
+          noAuthItem.method.some((noAuthMethod) => noAuthMethod === method))
+    )
+  )
+    return false
   return true
 }
 
-apiClient.interceptors.response.use(response => response, async (error) => {
-  const { config, response, message } = error;
-  // console.log(config);
-  // console.log(config.retry);
-  // console.log(response);
-  if (!config || config.retry ) {
-    console.log('err: 1');
-    return Promise.reject(error);
-  }
-  if(config.url == '/api/users/refresh') {
-    console.log(config.url == '/api/users/refresh');
-    return Promise.reject(error);
-  }
-  
-  // config && response && response.status === 401
-  if (response && response.status === 401) {
-    await refreshToken()
-    config.retry = 1;
-    console.log('retry');
-    return apiClient.request(config);
-  }
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const { config, response, message } = error
+    if (!config || config.retry) {
+      return Promise.reject(error)
+    }
+    if (config.url == '/api/users/refresh') {
+      console.log(config.url == '/api/users/refresh')
+      return Promise.reject(error)
+    }
 
-  return Promise.reject(error)
-})
+    // config && response && response.status === 401
+    if (response && response.status === 401) {
+      await refreshToken()
+      config.retry = 1
+      console.log('retry')
+      return apiClient.request(config)
+    }
+
+    return Promise.reject(error)
+  }
+)
 
 const refreshToken = async () => {
-  // const refreshToken = localStorage.getItem('refreshToken')
   try {
-    const {data} = await apiClient.get(`/api/auth/refresh`, {
-      // headers: { auth: `Bearer ${refreshToken}` },
-    })
-    console.log(data);
-    localStorage.setItem('accessToken', data.token);
-    // console.log('suc: refresh');
-  }
-  catch(error){
-    // console.log('ref err:');
-    // console.log(error);
-    const { data, status } = error.response
-    // console.log(status);
-    if(status === 401) {
-    //   console.log('refresh exp');
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    alert('Session Expired\nPlease sign in again.')
-    return router.push({ name: 'Authentication'})
+    const { data } = await apiClient.get(`/api/auth/refresh`, { retry: 1 })
+    localStorage.setItem('accessToken', data.accessToken)
+  } catch (error) {
+    const res = error.response
+    const { status } = res
+    if (status === 401) {
+      localStorage.removeItem('accessToken')
+      alert('Session Expired\nPlease sign in again.')
+      return router.push({ name: 'Authentication' })
     }
-    // router
-    console.log(error);
     return Promise.reject(error)
   }
 }
