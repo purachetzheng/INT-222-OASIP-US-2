@@ -10,6 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class refreshDto {
-    private String token;
-    private String refreshToken;
+    private String accessToken;
 }
