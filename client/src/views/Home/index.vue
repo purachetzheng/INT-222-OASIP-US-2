@@ -36,6 +36,10 @@ const { darkmode } = storeToRefs(myDarkmode)
         inverse
       />
     </fa-layer>
+    <fa-layer class="fa-2xl">
+      <fa-icon :icon="['fas', 'filter']" class="text-red-500" />
+      <fa-icon :icon="['fas', 'filter']" class="fa-2xs"  inverse />
+    </fa-layer>
     <h1>1</h1>
     <h1>1</h1>
     <h1>1</h1>
