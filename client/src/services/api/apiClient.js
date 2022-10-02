@@ -36,8 +36,7 @@ apiClient.interceptors.request.use(async (config) => {
 })
 
 const isAuthRequired = (url, method) => {
-  if (url === '/api/users/login') return false
-  if (url === '/api/users/refresh') return false
+  if (url === '/api/auth/refresh') return false
   if (url === '/api/auth/login') return false
   if (url === '/api/users' && method === 'post') console.log('ok it is');
   if (url === '/api/users' && method === 'post') return false
@@ -72,10 +71,10 @@ apiClient.interceptors.response.use(response => response, async (error) => {
 const refreshToken = async () => {
   // const refreshToken = localStorage.getItem('refreshToken')
   try {
-    const {data} = await apiClient.get(`/api/users/refresh`, {
+    const {data} = await apiClient.get(`/api/auth/refresh`, {
       // headers: { auth: `Bearer ${refreshToken}` },
     })
-    // console.log(data);
+    console.log(data);
     localStorage.setItem('accessToken', data.token);
     // console.log('suc: refresh');
   }
