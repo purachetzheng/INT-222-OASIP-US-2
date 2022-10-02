@@ -61,16 +61,18 @@ public class AuthenController {
 
         Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
         String refreshToken = "";
+
         if(refreshCookie != null){
             refreshToken = refreshCookie.getValue();
         }
+        System.out.println(refreshToken);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(refreshToken));
 
         if (jwtUtil.canTokenBeRefreshed(refreshToken)) {
             String accessToken = jwtUtil.generateToken(userDetails);
 //            String refreshedToken = jwtUtil.refreshToken(token);
-            return ResponseEntity.ok(new refreshDto(accessToken, refreshToken));
+            return ResponseEntity.ok(new refreshDto(accessToken));
         } else {
             return ResponseEntity.badRequest().body(null);
         }
