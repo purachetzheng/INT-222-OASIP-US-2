@@ -35,8 +35,8 @@ public class UserController {
     @Autowired JwtUtil jwtUtil;
 
     @GetMapping("")
-    public List<UserDto> getAllUser() {
-        return userService.getAll();
+    public List<UserDto> getAllUser(HttpServletRequest request) {
+        return userService.getAll(request);
     }
 
     @GetMapping("/{id}")

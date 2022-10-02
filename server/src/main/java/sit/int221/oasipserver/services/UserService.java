@@ -20,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.event.EventDto;
 import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.Event;
@@ -36,6 +37,7 @@ import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.enums.UserRole;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
@@ -83,8 +85,14 @@ public class UserService {
             "password", "password DOES NOT match");
 
     //Get All
-    public List<UserDto> getAll() {
+    public List<UserDto> getAll(HttpServletRequest request) {
         List<User> userList = repository.findAllByOrderByNameAsc();
+        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+        String refreshToken = "Test";
+        if(refreshCookie != null){
+            refreshToken = refreshCookie.getValue();
+        }
+        System.out.println(refreshToken);
         return listMapper.mapList(userList, UserDto.class, modelMapper);
     }
 

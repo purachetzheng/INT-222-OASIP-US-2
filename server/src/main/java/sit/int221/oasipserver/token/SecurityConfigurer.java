@@ -2,6 +2,7 @@ package sit.int221.oasipserver.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.util.UUID;
 
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
@@ -50,8 +52,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/users/{id}/**").access("@guard.checkUserId(authentication, #id)")
-                .antMatchers("/authenticate", "/api/users/login", "/signup", "/api/events/emailSender",
-                        "/api/users/logout").permitAll()
+                .antMatchers("/authenticate", "/api/auth/login", "/signup", "/api/events/emailSender",
+                        "/api/auth/logout").permitAll()
                 .antMatchers("/api/events/**", "/api/users/**").hasAnyRole("admin")
                 .antMatchers("/api/events/**").hasAnyRole("student", "admin", "student")
 //                .antMatchers("/api/events").hasRole("lecturer")
