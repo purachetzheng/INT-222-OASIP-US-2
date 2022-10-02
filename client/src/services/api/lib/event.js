@@ -1,16 +1,17 @@
 import apiClient from '../apiClient'
 
 const apiEvent = {
-  get({ page, pageSize, sortBy, filter, eventCategoryID, keyword } = {}) {
-    return apiClient.get('/api/events', {
-      params: {
+  get({ page, pageSize, sortBy, dateStatus, eventCategoryId, date } = {}) {
+    const params = {
         page: page,
         pageSize: pageSize,
         sortBy: sortBy,
-        filter: filter,
-        eventCategoryID: eventCategoryID,
-        keyword: keyword,
-      }
+        dateStatus: dateStatus,
+        eventCategoryId: eventCategoryId,
+        date: date,
+    }
+    return apiClient.get('/api/events', {
+      params: params
     })
   },
   getById(id) {

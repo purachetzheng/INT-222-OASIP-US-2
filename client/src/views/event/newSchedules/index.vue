@@ -1,26 +1,29 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import BaseDropdown from '../../../components/base/BaseDropdown/index.vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 const events = ref([])
+
 const getEvents = async ({
   page,
   sortBy,
-  eventCategoryID,
+  eventCategoryId,
   dateStatus,
   date,
 } = {}) => {
+  console.log(eventCategoryId);
+  const params = {
+    page,
+    sortBy,
+    eventCategoryId: eventCategoryId,
+    dateStatus,
+    date
+  }
+  console.log(params);
   try {
-    const { data, status } = await apiEvent.get({
-      page: page,
-      pageSize: 5,
-      sortBy,
-      eventCategoryID,
-      dateStatus,
-      date,
-    })
+    const { data, status } = await apiEvent.get(params)
     const { content, number, totalPages } = data
     events.value = content
   } catch (error) {
@@ -31,6 +34,11 @@ const getEvents = async ({
     console.log('error ', error.message)
   }
 }
+const getEventsWithFilter = async (filters) => {
+  console.log(filters);
+  getEvents(filters)
+}
+
 // await getEvents()
 onBeforeMount(async () => {
   // await getEvents()
@@ -43,7 +51,7 @@ onBeforeMount(async () => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   >
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
-    <FilterBar />
+    <FilterBar @filter-event="getEventsWithFilter" />
     <TransitionGroup
       name="event-list"
       tag="ul"
