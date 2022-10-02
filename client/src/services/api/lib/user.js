@@ -17,7 +17,7 @@ const apiUser = {
         return apiClient.patch(`/api/users/${id}`, data,)
     },
     signIn(data){
-        return apiClient.post(`/api/users/login`, data)
+        return apiClient.post(`/api/auth/login`, data)
     }
 }
 
