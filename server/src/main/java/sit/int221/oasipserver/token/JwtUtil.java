@@ -4,9 +4,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import sit.int221.oasipserver.repo.UserRepository;
+import sit.int221.oasipserver.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -23,6 +26,9 @@ public class JwtUtil {
 
     @Value("${jwt.token.expiration.in.seconds}")
     private Long expiration;
+
+    @Autowired
+    UserRepository userRepository;
 
 //    private String SECRET_KEY = "secret";
 
@@ -43,6 +49,11 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
+    public Claims getClaim(String token){
+        Claims claim = extractAllClaims(token);
+        return claim;
+    }
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
@@ -53,6 +64,9 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        Integer userId = userRepository.findByEmail(userDetails.getUsername()).getId();
+        claims.put("userId", userId);
+        System.out.println(claims);
         return createToken(claims, userDetails.getUsername());
     }
 
