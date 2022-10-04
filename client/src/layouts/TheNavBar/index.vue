@@ -31,6 +31,7 @@ const userStore = useUserStore()
         <DarkmodeToggle />
         <UserMenu v-if="userStore.isAuth" />
         <SignInSignUp v-else />
+        <button @click="userStore.logout">logout</button>
       </section>
     </div>
   </header>
