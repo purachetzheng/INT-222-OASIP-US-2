@@ -17,7 +17,7 @@ const props = defineProps({
 <template>
   <div
     class="rounded-full flex items-center justify-center"
-    :class="roleProfile[role].profile"
+    :class="!role || roleProfile[role].profile"
   >
     <p class="font-sans font-semibold">
       {{ profilePlaceholder(name) }}
