@@ -1,13 +1,18 @@
 package sit.int221.oasipserver.controllers;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.user.MatchUserDto;
+import sit.int221.oasipserver.dtos.user.UserDetailDto;
+import sit.int221.oasipserver.dtos.user.UserDetailDtoImpl;
 import sit.int221.oasipserver.dtos.user.refreshDto;
+import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.PasswordException;
+import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.UserService;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
 import sit.int221.oasipserver.token.JwtUtil;
@@ -76,5 +81,23 @@ public class AuthenController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserId(HttpServletRequest request) {
+        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+        String refreshToken = "";
+
+        if(refreshCookie != null){
+            refreshToken = refreshCookie.getValue();
+        }
+
+        Claims claims = jwtUtil.getClaim(refreshToken);
+
+        Integer userId = Integer.parseInt(claims.get("userId").toString());
+
+        User user = userService.getById(userId);
+
+        return ResponseEntity.ok(new UserDetailDtoImpl(user.getName(), user.getEmail(), user.getRole()));
     }
 }
