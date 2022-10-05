@@ -2,10 +2,10 @@ import apiClient from '../apiClient'
 
 const endpoint = '/api/events'
 
-const getEvent = (params = { page, pageSize, sortBy, eventCategoryId }) => 
+export const getEvent = (params = { page, pageSize, sortBy, eventCategoryId }) => 
   apiClient.get(endpoint, { params })
 
-const getEventById = (id) => 
+export const getEventById = (id) => 
   apiClient.get(`${endpoint}/${id}`)
 
 // const getEventNonPage = (params = {eventCategoryId, date}) => apiClient.get('/events/all', params)

@@ -2,47 +2,29 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import BaseDropdown from '../../../components/base/BaseDropdown/index.vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
+import { getEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 const events = ref([])
 
-const getEvents = async ({
-  page,
-  sortBy,
-  eventCategoryId,
-  dateStatus,
-  date,
-} = {}) => {
-  console.log(eventCategoryId);
-  const params = {
-    page,
-    sortBy,
-    eventCategoryId: eventCategoryId,
-    dateStatus,
-    date
-  }
-  console.log(params);
+const getEvents = async (params) => {
   try {
-    const { data, status } = await apiEvent.get(params)
+    const { data, status } = await getEvent(params)
     const { content, number, totalPages } = data
     events.value = content
   } catch (error) {
-    // console.log(error)
-    // console.log(error.response)
     const res = error.response
     // console.log(res.status)
     console.log('error ', error.message)
   }
 }
 const getEventsWithFilter = async (filters) => {
-  console.log(filters);
+  // console.log(filters);
   getEvents(filters)
 }
 
-// await getEvents()
 onBeforeMount(async () => {
-  // await getEvents()
-  getEvents()
+  getEvents({})
 })
 </script>
 
