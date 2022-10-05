@@ -27,9 +27,10 @@ const onSubmit = handleSubmit(({ email, password}) => {
 
 const signInUser = async (user) => {
   try {
-    await userStore.signIn(user)
+    await userStore.login(user)
     console.log('ok');
     alert('Password Matched')
+    userStore.getUserInfo()
     router.push({ name: 'Home'})
   } catch (error) {
     const { data, status } = error.response

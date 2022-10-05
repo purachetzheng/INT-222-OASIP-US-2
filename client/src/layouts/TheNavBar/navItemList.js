@@ -23,6 +23,7 @@ const navItemList = [
     mainItem: {
       name: 'Categories',
       route: 'EventCategoryList',
+      allowed: ['lecturer', 'admin'],
     },
     subItems: [
       {
@@ -43,6 +44,7 @@ const navItemList = [
     mainItem: {
       name: 'Users',
       route: 'Users',
+      allowed: ['admin'],
     },
   },
   {

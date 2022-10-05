@@ -1,21 +1,19 @@
 package sit.int221.oasipserver.controllers;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import org.modelmapper.ModelMapper;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
-import sit.int221.oasipserver.dtos.user.*;
+import sit.int221.oasipserver.dtos.user.MatchUserDto;
+import sit.int221.oasipserver.dtos.user.UserDetailDto;
+import sit.int221.oasipserver.dtos.user.UserDetailDtoImpl;
+import sit.int221.oasipserver.dtos.user.refreshDto;
 import sit.int221.oasipserver.entities.User;
-import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.exception.PasswordException;
+import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.UserService;
-import sit.int221.oasipserver.token.AuthenticationResponse;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
 import sit.int221.oasipserver.token.JwtUtil;
 
@@ -23,42 +21,24 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
-    @Autowired UserService userService;
-    @Autowired private ModelMapper modelMapper;
-    @Autowired CustomUserDetailsService userDetailsService;
-    @Autowired JwtUtil jwtUtil;
+@RequestMapping("/api/auth")
+public class AuthenController {
 
-    @GetMapping("")
-    public List<UserDto> getAllUser(HttpServletRequest request) {
-        return userService.getAll(request);
-    }
+    @Autowired
+    UserService userService;
 
-    @GetMapping("/{id}")
-    public UserDetailDto getUserById(@PathVariable Integer id) {
-        return modelMapper.map(userService.getById(id), UserDetailDto.class);
-    }
+    @Autowired
+    JwtUtil jwtUtil;
 
-    @PostMapping("")
-    public UserDto createUser(@Valid @RequestBody PostUserDto newUser, BindingResult result) throws MethodArgumentNotValidException {
-        return userService.create(newUser, result);
-    }
+    @Autowired
+    CustomUserDetailsService userDetailsService;
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {userService.delete(id);}
 
-    @PatchMapping("/{id}")
-    public UserDto updateUser(
-            @Valid @RequestBody PatchUserDto updateUser,
-            @PathVariable Integer id,
-            BindingResult result) throws MethodArgumentNotValidException {
-        return userService.update(updateUser, id, result);
-    }
+//    private Cookie[] cookie;
 
     @PostMapping("/login")
     public ResponseEntity<?> matchUserPassword(@Valid @RequestBody MatchUserDto matchUser, HttpServletResponse response) throws PasswordException {
@@ -76,16 +56,22 @@ public class UserController {
         return ResponseEntity.ok("Logout");
     }
 
-    @PostMapping("/match")
-    public UserDetailDto checkPassword(@Valid @RequestBody MatchUserDto matchUser) throws PasswordException {
-        return modelMapper.map(userService.checkPassword(matchUser), UserDetailDto.class);
-    }
-
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
-        String authToken = request.getHeader("auth");
-        final String refreshToken = authToken.substring(7);
-        String username = jwtUtil.getUsernameFromToken(refreshToken);
+//        String authToken = request.getHeader("auth");
+//        final String refreshToken = authToken.substring(7);
+//        cookie = request.getCookies();
+//        String refreshToken = Arrays.stream(cookie).map(cookie1 -> cookie1.getValue()).toString();
+//        String username = jwtUtil.getUsernameFromToken(refreshToken);
+
+        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+        String refreshToken = "";
+
+        if(refreshCookie != null){
+            refreshToken = refreshCookie.getValue();
+        }
+        System.out.println(refreshToken);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtUtil.getUsernameFromToken(refreshToken));
 
         if (jwtUtil.canTokenBeRefreshed(refreshToken)) {
@@ -97,4 +83,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserId(HttpServletRequest request) {
+        Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+        String refreshToken = "";
+
+        if(refreshCookie != null){
+            refreshToken = refreshCookie.getValue();
+        }
+
+        Claims claims = jwtUtil.getClaim(refreshToken);
+
+        Integer userId = Integer.parseInt(claims.get("userId").toString());
+
+        User user = userService.getById(userId);
+
+        return ResponseEntity.ok(new UserDetailDtoImpl(user.getName(), user.getEmail(), user.getRole()));
+    }
 }

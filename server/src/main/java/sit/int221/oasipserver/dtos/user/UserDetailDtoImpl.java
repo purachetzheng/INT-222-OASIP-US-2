@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sit.int221.oasipserver.enums.UserRole;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class refreshDto {
-    private String accessToken;
+public class UserDetailDtoImpl {
+    private String name;
+    private String email;
+    private UserRole role;
 }

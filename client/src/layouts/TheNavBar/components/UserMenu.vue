@@ -21,11 +21,11 @@ const { user, isAuth } = storeToRefs(userStore)
     </div>
     <ul
       id="user-menu"
-      class="absolute hidden group-hover:flex bg-white py-4 top-11 rounded-md shadow-md"
+      class="absolute hidden group-hover:flex bg-white py-2 top-11 rounded-md shadow-md"
     >
       <li class="">
-        <button class="hover:bg-gray-100 px-4 py-2" @click="userStore.signOut">
-            <p class="">Sign Out</p>
+        <button class="hover:bg-gray-100 px-4 py-2" @click="userStore.logout">
+            <p class="whitespace-nowrap">Sign Out</p>
         </button>
       </li>
     </ul>
