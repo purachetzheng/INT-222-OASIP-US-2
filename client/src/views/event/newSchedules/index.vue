@@ -1,15 +1,35 @@
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, reactive, ref } from 'vue'
 import BaseDropdown from '../../../components/base/BaseDropdown/index.vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { getEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
+
+const isLoading = ref(true)
 const events = ref([])
+
+const filterSetting = reactive({
+  eventCategoryId: null,
+  dateStatus: 'all',
+  date: null,
+})
+const filterSettingHandler = {
+  set: (obj, prop, value) => {
+    if (prop === 'eventCategoryId' && value === obj.eventCategoryId) {
+      obj[prop] = null
+    } else {
+      obj[prop] = value
+    }
+    getEvents()
+    return true
+  }
+}
+const filterSettingProxy = new Proxy(filterSetting, filterSettingHandler)
 
 const getEvents = async (params) => {
   try {
-    const { data, status } = await getEvent(params)
+    const { data, status } = await getEvent({...params, pageSize: 16, ...filterSetting})
     const { content, number, totalPages } = data
     events.value = content
   } catch (error) {
@@ -18,6 +38,11 @@ const getEvents = async (params) => {
     console.log('error ', error.message)
   }
 }
+
+const getMoreEvent = async () => {
+
+}
+
 const getEventsWithFilter = async (filters) => {
   // console.log(filters);
   getEvents(filters)
@@ -33,7 +58,7 @@ onBeforeMount(async () => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   >
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
-    <FilterBar @filter-event="getEventsWithFilter" />
+    <FilterBar @filter-event="getEventsWithFilter" :filter-setting="filterSettingProxy" />
     <TransitionGroup
       name="event-list"
       tag="ul"
@@ -46,6 +71,14 @@ onBeforeMount(async () => {
         :event="event"
       />
     </TransitionGroup>
+    <div class="flex justify-center">
+      <button class="font-semibold ">
+        <p class="">
+          See More
+        </p>
+        <fa-icon :icon="['fas', 'chevron-down']" class="fa-lg"  />
+      </button>
+    </div>
   </main>
 </template>
 

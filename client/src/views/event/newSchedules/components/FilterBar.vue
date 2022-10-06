@@ -4,46 +4,29 @@ import { apiEventCategory } from '../../../../services/api/lib'
 import BaseInputDate from '../../../../components/base/BaseInput/BaseInputDate.vue'
 import BaseDropDown from './BaseDropDown.vue'
 const emits = defineEmits(['filter-event'])
-// const prop = defineProps({
-//         first:{
-//         type:String,
-//         require:true,
-//    },
-
-// })
-
-const filterSetting = reactive({
-  eventCategoryId: null,
-  dateStatus: 'all',
-  date: null,
+const props = defineProps({
+  filterSetting: {
+    type: Object,
+    require: true,
+  },
 })
+const {filterSetting} = props
 
-const setFilter = (value, field) => {
-  filterProxy[field] = value
-}
 
 //ในอนาคต ใช้ v-model แทน
 const setCategoryId = (id) => {
-  filterProxy.eventCategoryId = id
+  filterSetting.eventCategoryId = id
+  // filterProxy.eventCategoryId = id
 }
 const setDateStatus = (status) => {
-  filterProxy.dateStatus = status
+  filterSetting.dateStatus = status
+  // filterProxy.dateStatus = status
 }
 const setDate = (date) => {
-  filterProxy.date = date
+  filterSetting.date = date
+  // filterProxy.date = date
 }
 
-const filterProxy = new Proxy(filterSetting, {
-  set: (obj, prop, value) => {
-    if (prop === 'eventCategoryId' && value === obj.eventCategoryId) {
-      obj[prop] = null
-    } else {
-      obj[prop] = value
-    }
-    emits('filter-event', filterSetting)
-    return true
-  },
-})
 
 const categories = ref([])
 const getCategories = async () => {
@@ -59,19 +42,6 @@ const test = ref(null)
 onBeforeMount(() => {
   getCategories()
 })
-
-
-
-
-
-const selectedCategoryId = ref(null)
-const setSelectedCategoryId = (id) => {
-  // const isSameCategory = selectedCategoryId.value === id
-  // selectedCategoryId.value = isSameCategory ? null : id
-  // filterSetting.setCategoryId(selectedCategoryId)
-  filterSetting.setCategoryId(id)
-  // select(selectedCategoryId, 'eventCategoryId')
-}
 
 const subFilterBar = reactive({
   state: false,
@@ -114,13 +84,12 @@ const subFilterBar = reactive({
         <ul class="flex gap-2 whitespace-nowrap">
           <li
             class="rounded-md duration-100 hover:bg-gray-50"
-            :class="[filterSetting.eventCategoryId === category.id && 'bg-gray-50' ]"
+            :class="[
+              filterSetting.eventCategoryId === category.id && 'bg-gray-50',
+            ]"
             v-for="category in categories"
           >
-            <button
-              class="h-10 px-3"
-              @click="setCategoryId(category.id)"
-            >
+            <button class="h-10 px-3" @click="setCategoryId(category.id)">
               {{ category.eventCategoryName }}
             </button>
           </li>
