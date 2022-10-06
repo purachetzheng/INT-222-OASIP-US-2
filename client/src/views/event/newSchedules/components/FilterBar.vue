@@ -36,10 +36,22 @@ const select = (value, field) => {
   filterSetting[field] = value
   emits('filter-event', filterSetting)
 }
+
+const subFilterBar = reactive({
+  state: false,
+  isOnDone: false,
+  show: () => (subFilterBar.state = true),
+  close: () => (subFilterBar.state = false),
+  toggle: () => {
+    subFilterBar.state = !subFilterBar.state
+    subFilterBar.isOnDone = true
+    setTimeout(() => (subFilterBar.isOnDone = false), 300)
+  },
+})
 </script>
 
 <template>
-  <div class="">
+  <div class=" ">
     <div class="flex gap-2 justify-between">
       <!-- <button :id="id" class="block w-full px-2 h-9 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500">
         All
@@ -55,6 +67,7 @@ const select = (value, field) => {
       </button> -->
       <button
         class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
+        @click="subFilterBar.toggle"
       >
         <span class="flex gap-2 items-center px-3">
           <fa-icon :icon="['fas', 'sliders']" class="fa-" />
@@ -75,18 +88,28 @@ const select = (value, field) => {
       </div>
       <div class="">d</div>
     </div>
-    <div class="pt-4 flex gap-4">
+    <div
+      class="flex gap-4 subFilter"
+      :class="[
+        subFilterBar.state ? 'subFilterOn' : 'subFilterOff',
+        !subFilterBar.state || subFilterBar.isOnDone ? 'overflow-hidden' : '',
+      ]"
+    >
       <BaseDropDown
         class="box-s w-40"
         field="dateStatus"
         default="All Events"
-        :options="[{name:'All Events', value: 'all'}, {name:'Past', value: 'past'}, {name:'Upcoming', value: 'upcoming'}]"
+        :options="[
+          { name: 'All Events', value: 'all' },
+          { name: 'Past', value: 'past' },
+          { name: 'Upcoming', value: 'upcoming' },
+        ]"
         @select="select"
       />
       <!-- <input
-        type="date"
-        class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
-      /> -->
+          type="date"
+          class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
+        /> -->
       <input
         type="date"
         class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
@@ -97,4 +120,21 @@ const select = (value, field) => {
   </div>
 </template>
 
-<style></style>
+<style scoped>
+.subFilter {
+  @apply duration-200 ease-in-out;
+}
+.subFilterOn {
+  @apply mt-4 h-10;
+}
+.subFilterOff {
+  @apply h-0;
+}
+.animation {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: max-width 0.2s ease-in-out;
+  transition: max-width 0.2s ease-in-out;
+}
+</style>
