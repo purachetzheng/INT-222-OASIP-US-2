@@ -17,6 +17,34 @@ const filterSetting = reactive({
   dateStatus: 'all',
   date: null,
 })
+
+const setFilter = (value, field) => {
+  filterProxy[field] = value
+}
+
+//ในอนาคต ใช้ v-model แทน
+const setCategoryId = (id) => {
+  filterProxy.eventCategoryId = id
+}
+const setDateStatus = (status) => {
+  filterProxy.dateStatus = status
+}
+const setDate = (date) => {
+  filterProxy.date = date
+}
+
+const filterProxy = new Proxy(filterSetting, {
+  set: (obj, prop, value) => {
+    if (prop === 'eventCategoryId' && value === obj.eventCategoryId) {
+      obj[prop] = null
+    } else {
+      obj[prop] = value
+    }
+    emits('filter-event', filterSetting)
+    return true
+  },
+})
+
 const categories = ref([])
 const getCategories = async () => {
   try {
@@ -32,9 +60,17 @@ onBeforeMount(() => {
   getCategories()
 })
 
-const select = (value, field) => {
-  filterSetting[field] = value
-  emits('filter-event', filterSetting)
+
+
+
+
+const selectedCategoryId = ref(null)
+const setSelectedCategoryId = (id) => {
+  // const isSameCategory = selectedCategoryId.value === id
+  // selectedCategoryId.value = isSameCategory ? null : id
+  // filterSetting.setCategoryId(selectedCategoryId)
+  filterSetting.setCategoryId(id)
+  // select(selectedCategoryId, 'eventCategoryId')
 }
 
 const subFilterBar = reactive({
@@ -54,17 +90,17 @@ const subFilterBar = reactive({
   <div class=" ">
     <div class="flex gap-2 justify-between">
       <!-- <button :id="id" class="block w-full px-2 h-9 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500">
-        All
-      
-        </button> -->
+          All
+        
+          </button> -->
       <!-- <button
-        class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
-      >
-        <span class="flex gap-4 items-center px-3">
-          <span class="">All</span>
-          <fa-icon :icon="['fas', 'chevron-down']" class="fa-2xs" />
-        </span>
-      </button> -->
+          class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
+        >
+          <span class="flex gap-4 items-center px-3">
+            <span class="">All</span>
+            <fa-icon :icon="['fas', 'chevron-down']" class="fa-2xs" />
+          </span>
+        </button> -->
       <button
         class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
         @click="subFilterBar.toggle"
@@ -76,10 +112,14 @@ const subFilterBar = reactive({
       </button>
       <div ref="test" class="overflow-x-hidden">
         <ul class="flex gap-2 whitespace-nowrap">
-          <li class="bg-gray-100 rounded-md" v-for="category in categories">
+          <li
+            class="rounded-md duration-100 hover:bg-gray-50"
+            :class="[filterSetting.eventCategoryId === category.id && 'bg-gray-50' ]"
+            v-for="category in categories"
+          >
             <button
               class="h-10 px-3"
-              @click="select(category.id, 'eventCategoryId')"
+              @click="setCategoryId(category.id)"
             >
               {{ category.eventCategoryName }}
             </button>
@@ -104,16 +144,16 @@ const subFilterBar = reactive({
           { name: 'Past', value: 'past' },
           { name: 'Upcoming', value: 'upcoming' },
         ]"
-        @select="select"
+        @select="setDateStatus"
       />
       <!-- <input
-          type="date"
-          class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
-        /> -->
+            type="date"
+            class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
+          /> -->
       <input
         type="date"
         class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
-        @change="select($event.target.value, 'date')"
+        @change="setDate($event.target.value)"
       />
       {{ filterSetting }}
     </div>

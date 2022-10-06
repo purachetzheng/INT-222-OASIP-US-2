@@ -4,10 +4,10 @@ import { number } from 'yup';
 import useDetectOutsideClick from './useDetectOutsideClick'
 const emits = defineEmits(['select'])
 const props = defineProps({
-  field: {
-    type: String,
-    require: true
-  },
+  // field: {
+  //   type: String,
+  //   require: true
+  // },
   default: {
     type: String,
     require: false
@@ -30,7 +30,7 @@ useDetectOutsideClick(box, () => {
 
 const select = (option) => {
   selected.value = option
-  emits('select', option.value, props.field)
+  emits('select', option.value)
 }
 </script>
 
