@@ -33,7 +33,7 @@ const event = computed(() => {
     >
       {{ event.isFuture ? 'Upcoming' : 'Past' }}
     </div> -->
-    <div class="card-body">
+    <div class="">
       <p class="text-sm text-blue-500">
         {{ event.startDate }}
       </p>
@@ -55,4 +55,39 @@ const event = computed(() => {
  
 <style scoped>
 
+.card {
+  @apply p-4 flex flex-col overflow-hidden shadow-md bg-white bg-opacity-40 font-semibold rounded-md cursor-pointer duration-150;
+}
+
+.card:hover{
+  @apply bg-opacity-80
+}
+
+.card-header {
+  @apply h-8 w-full flex items-center justify-center gap-1 text-white duration-300 ease-in-out;
+}
+
+.card:hover .card-header {
+  @apply -mt-8;
+}
+
+.header-upcoming {
+  @apply bg-blue-500;
+}
+
+.header-past {
+  @apply bg-gray-400;
+}
+
+.card-body {
+  @apply relative h-32 bg-white p-4 flex flex-col gap-0.5;
+}
+
+.card-footer {
+  @apply absolute w-full -bottom-8 left-0 h-8 flex items-center justify-center gap-1 text-white bg-gradient-to-r from-green-400 to-blue-500;
+}
+
+.card-title {
+  @apply text-lg font-bold truncate;
+}
 </style>
