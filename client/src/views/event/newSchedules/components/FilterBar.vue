@@ -3,7 +3,7 @@ import { computed, onBeforeMount, reactive, ref } from 'vue'
 import { apiEventCategory } from '../../../../services/api/lib'
 import BaseInputDate from '../../../../components/base/BaseInput/BaseInputDate.vue'
 import BaseDropDown from './BaseDropDown.vue'
-const emits = defineEmits(['filter-event'])
+// const emits = defineEmits(['filter-event'])
 const props = defineProps({
   filterSetting: {
     type: Object,

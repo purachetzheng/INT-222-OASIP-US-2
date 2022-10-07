@@ -9,10 +9,18 @@ import EventCard from './components/EventCard.vue';
 const isLoading = ref(true)
 const events = ref([])
 
-const filterSetting = reactive({
+const pageInfoTemplate = {
+  last: '',
+  number: 0
+}
+
+const pageInfo = ref({...pageInfoTemplate})
+
+const pageParams = reactive({
   eventCategoryId: null,
   dateStatus: 'all',
   date: null,
+  page: 0
 })
 const filterSettingHandler = {
   set: (obj, prop, value) => {
@@ -25,27 +33,20 @@ const filterSettingHandler = {
     return true
   }
 }
-const filterSettingProxy = new Proxy(filterSetting, filterSettingHandler)
+const filterSettingProxy = new Proxy(pageParams, filterSettingHandler)
 
 const getEvents = async (params) => {
   try {
-    const { data, status } = await getEvent({...params, pageSize: 16, ...filterSetting})
-    const { content, number, totalPages } = data
-    events.value = content
+    const { data, status } = await getEvent({...params, pageSize: 2, ...pageParams})
+    const { content, ...other } = data
+    pageInfo.value = other
+    // events.value = content
+    events.value.push(...content)
   } catch (error) {
     const res = error.response
     // console.log(res.status)
     console.log('error ', error.message)
   }
-}
-
-const getMoreEvent = async () => {
-
-}
-
-const getEventsWithFilter = async (filters) => {
-  // console.log(filters);
-  getEvents(filters)
 }
 
 onBeforeMount(async () => {
@@ -58,7 +59,7 @@ onBeforeMount(async () => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   >
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
-    <FilterBar @filter-event="getEventsWithFilter" :filter-setting="filterSettingProxy" />
+    <FilterBar :filter-setting="filterSettingProxy" />
     <TransitionGroup
       name="event-list"
       tag="ul"
@@ -71,8 +72,8 @@ onBeforeMount(async () => {
         :event="event"
       />
     </TransitionGroup>
-    <div class="flex justify-center">
-      <button class="font-semibold ">
+    <div class="flex justify-center" v-if="!pageInfo.last">
+      <button class="font-semibold " @click="filterSettingProxy.page++">
         <p class="">
           See More
         </p>
