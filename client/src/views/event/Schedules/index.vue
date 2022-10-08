@@ -1,76 +1,63 @@
 <script setup>
-import { apiEvent } from '@/services/api/lib'
-// import { EventCard } from '@/modules/event/components/'
-import EventCard from '../../../components/event/eventCard/index.vue'
-import Loading from './Loading.vue'
-import {
-  onBeforeMount,
-  ref,
-  reactive,
-  onMounted,
-  defineAsyncComponent,
-} from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import EventFilter from './eventFilter.vue'
-import Pagination from './Pagination.vue'
+import { computed, onBeforeMount, reactive, ref } from 'vue'
+import BaseDropdown from '../../../components/base/BaseDropdown/index.vue'
+import { apiEvent, apiEventCategory } from '../../../services/api/lib'
+import { getEvent } from '../../../services/api/lib/event'
+import FilterBar from './components/FilterBar.vue'
+import EventCard from './components/EventCard.vue';
+import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 
-const router = useRouter()
+const isLoading = ref(false)
 const events = ref([])
-const pageInfo = reactive({
-  number: 0,
-  totalPages: 2,
-  toPage(number) {
-    // console.log(number)
-    events.value = []
-    getEvents(number)
-    window.scrollTo(0, 0)
-  },
-  nextPage() {
-    getEvents({ page: pageInfo.number + 1 })
-  },
-  prevPage() {
-    getEvents({ page: pageInfo.number - 1 })
-  },
+
+const pageInfoTemplate = reactive({
+  last: '',
+  number: 0
 })
-const filterSetting = {
-  category: 'all',
-  status: 'all',
-  day: '',
-}
-const getEvents = async ({
-  page,
-  sortBy,
-  eventCategoryID,
-  dateStatus,
-  date,
-} = {}) => {
-  try {
-    const { data, status } = await apiEvent.get({
-      page: page,
-      pageSize: 5,
-      sortBy,
-      eventCategoryID,
-      dateStatus,
-      date,
-    })
-    const { content, number, totalPages } = data
-    events.value = content
-    pageInfo.number = number
-    pageInfo.totalPages = totalPages
-    return data.content
-  } catch (error) {
-    // console.log(error)
-    // console.log(error.response)
-    const res = error.response
-    console.log(res.status)
-    console.log('error ', error.message)
+
+const pageInfo = ref({...pageInfoTemplate})
+
+const pageParams = reactive({
+  eventCategoryId: null,
+  dateStatus: 'all',
+  date: null,
+  page: 0
+})
+const filterSettingHandler = {
+  set: (obj, prop, value) => {
+    if (prop === 'eventCategoryId' && value === obj.eventCategoryId) {
+      obj[prop] = null
+    } else {
+      obj[prop] = value
+    }
+    getEvents()
+    return true
   }
 }
-// await getEvents()
+const filterSettingProxy = new Proxy(pageParams, filterSettingHandler)
+
+const getEvents = async (params) => {
+  try {
+    isLoading.value = true;
+    const { data, status } = await getEvent({...params, pageSize: 200, ...pageParams})
+    const { content, ...other } = data
+    pageInfo.value = other
+    events.value = content
+    // events.value.push(...content)
+  } catch (error) {
+    const res = error.response
+    // console.log(res.status)
+    console.log('error ', error.message)
+  }
+  finally{
+    isLoading.value = false;
+  }
+}
+
 onBeforeMount(async () => {
-  // await getEvents()
   getEvents()
 })
+
 // const AsyncEventCard = defineAsyncComponent({
 //   // loader: async () => import("@/modules/event/components/eventCard/index.vue" /* webpackChunkName: "event" */ ),
 //   loader: () => new Promise((resolve) => {
@@ -85,10 +72,11 @@ onBeforeMount(async () => {
 
 <template>
   <main
-    class="my-container h-full flex flex-col py-4 gap-4 justify-between test"
+    class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   >
-    <h1 class="text-center text-2xl font-bold">Schedules</h1>
-    <EventFilter />
+    <PageLoader v-if="isLoading" />
+    <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
+    <FilterBar :filter-setting="filterSettingProxy" />
     <TransitionGroup
       name="event-list"
       tag="ul"
@@ -99,22 +87,19 @@ onBeforeMount(async () => {
         v-for="event in events"
         :key="event.id"
         :event="event"
-        @click-event-card="
-          router.push({ name: 'EventDetail', params: { eventId: event.id } })
-        "
       />
-      <!-- <component :is="AsyncEventCard" v-for="event in events" :key="event.id" :event="event" /> -->
     </TransitionGroup>
-
-    <h2 v-show="events.length === 0">No Scheduled Events</h2>
-    <Pagination
-      :page="pageInfo.number"
-      :total="pageInfo.totalPages"
-      @emit-to-page="pageInfo.toPage"
-      @emit-next-page="pageInfo.nextPage"
-      @emit-prev-page="pageInfo.prevPage"
-    />
+    <div class="flex justify-center" v-if="!pageInfo.last">
+      <button class="font-semibold " @click="filterSettingProxy.page++">
+        <p class="">
+          See More
+        </p>
+        <fa-icon :icon="['fas', 'chevron-down']" class="fa-lg"  />
+      </button>
+    </div>
+    
   </main>
 </template>
 
-<style></style>
+<style scoped>
+</style>
