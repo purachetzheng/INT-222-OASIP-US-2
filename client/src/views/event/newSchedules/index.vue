@@ -5,14 +5,15 @@ import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { getEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
+import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 
-const isLoading = ref(true)
+const isLoading = ref(false)
 const events = ref([])
 
-const pageInfoTemplate = {
+const pageInfoTemplate = reactive({
   last: '',
   number: 0
-}
+})
 
 const pageInfo = ref({...pageInfoTemplate})
 
@@ -37,20 +38,24 @@ const filterSettingProxy = new Proxy(pageParams, filterSettingHandler)
 
 const getEvents = async (params) => {
   try {
-    const { data, status } = await getEvent({...params, pageSize: 2, ...pageParams})
+    isLoading.value = true;
+    const { data, status } = await getEvent({...params, pageSize: 200, ...pageParams})
     const { content, ...other } = data
     pageInfo.value = other
-    // events.value = content
-    events.value.push(...content)
+    events.value = content
+    // events.value.push(...content)
   } catch (error) {
     const res = error.response
     // console.log(res.status)
     console.log('error ', error.message)
   }
+  finally{
+    isLoading.value = false;
+  }
 }
 
 onBeforeMount(async () => {
-  getEvents({})
+  getEvents()
 })
 </script>
 
@@ -58,6 +63,7 @@ onBeforeMount(async () => {
   <main
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   >
+    <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />
     <TransitionGroup
@@ -80,6 +86,7 @@ onBeforeMount(async () => {
         <fa-icon :icon="['fas', 'chevron-down']" class="fa-lg"  />
       </button>
     </div>
+    
   </main>
 </template>
 

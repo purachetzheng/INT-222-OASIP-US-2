@@ -2,12 +2,14 @@
 </script>
 
 <template>
+  <Teleport to="body">
   <div 
     class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-40 z-50" >
     <div class="flex justify-center items-center h-full">
       <div class="lds-ellipsis child:bg-blue-500"><div></div><div></div><div></div><div></div></div>
     </div>
   </div>
+</Teleport>
 </template>
 
 <style >
