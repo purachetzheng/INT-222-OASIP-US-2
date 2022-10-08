@@ -1,11 +1,12 @@
 <script setup>
 import { computed, onBeforeMount, reactive, ref } from 'vue'
-import BaseDropdown from '../../../components/base/BaseDropdown/index.vue'
-import { apiEvent, apiEventCategory } from '../../../services/api/lib'
+import { useRoute, useRouter } from 'vue-router'
+
 import { getEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
+const router = useRouter()
 
 const isLoading = ref(false)
 const events = ref([])
@@ -87,6 +88,7 @@ onBeforeMount(async () => {
         v-for="event in events"
         :key="event.id"
         :event="event"
+        @click-event-card="router.push({ name: 'EventDetail', params: { eventId: event.id } })"
       />
     </TransitionGroup>
     <div class="flex justify-center" v-if="!pageInfo.last">
