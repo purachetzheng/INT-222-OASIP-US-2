@@ -71,15 +71,7 @@ const subFilterBar = reactive({
             <fa-icon :icon="['fas', 'chevron-down']" class="fa-2xs" />
           </span>
         </button> -->
-      <button
-        class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
-        @click="subFilterBar.toggle"
-      >
-        <span class="flex gap-2 items-center px-3">
-          <fa-icon :icon="['fas', 'sliders']" class="fa-" />
-          <span class="">Filters</span>
-        </span>
-      </button>
+      
       <div ref="test" class="overflow-x-hidden">
         <ul class="flex gap-2 whitespace-nowrap">
           <li
@@ -95,7 +87,15 @@ const subFilterBar = reactive({
           </li>
         </ul>
       </div>
-      <div class="">d</div>
+      <button
+        class="block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
+        @click="subFilterBar.toggle"
+      >
+        <span class="flex gap-2 items-center px-3">
+          <fa-icon :icon="['fas', 'sliders']" class="fa-" />
+          <span class="">Filters</span>
+        </span>
+      </button>
     </div>
     <div
       class="flex gap-4 subFilter"

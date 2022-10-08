@@ -24,16 +24,16 @@ const event = computed(() => {
   }
 })
 </script>
-
+ 
 <template>
-  <li class="card" @click="$emit('clickEventCard')">
-    <div
+    <li class="card" @click="$emit('clickEventCard')">
+    <!-- <div
       class="card-header"
       :class="[event.isFuture ? 'header-upcoming' : 'header-past']"
     >
       {{ event.isFuture ? 'Upcoming' : 'Past' }}
-    </div>
-    <div class="card-body">
+    </div> -->
+    <div class="">
       <p class="text-sm text-blue-500">
         {{ event.startDate }}
       </p>
@@ -49,17 +49,18 @@ const event = computed(() => {
           {{ event.startTime }} - {{ event.duration }} min
         </p>
       </div>
-      <p class="card-footer">
-        View Detail
-        <fa-icon :icon="['fas', 'arrow-right']" class="" />
-      </p>
     </div>
   </li>
 </template>
-
+ 
 <style scoped>
+
 .card {
-  @apply h-40 flex flex-col overflow-hidden shadow-md bg-white font-semibold rounded-md cursor-pointer;
+  @apply p-4 flex flex-col overflow-hidden shadow-md bg-white bg-opacity-40 font-semibold rounded-md cursor-pointer duration-150;
+}
+
+.card:hover{
+  @apply bg-opacity-80
 }
 
 .card-header {
