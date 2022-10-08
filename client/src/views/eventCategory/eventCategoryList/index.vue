@@ -1,7 +1,9 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
 import { apiEventCategory } from '../../../services/api/lib'
+import CategoryTable from './components/CategoryTable.vue';
 
+const isLoading = ref(false)
 const eventCategories = ref([])
 const getEventCategory = async ({} = {}) => {
   try {
@@ -25,11 +27,12 @@ onBeforeMount(async () => {
 
 <template>
   <main
-    class="my-container h-full flex flex-col py-4 gap-4 justify-between test"
+    class="my-container grow flex flex-col py-4 gap-0 justify-between"
   >
-    <div class="bg-white p-2" v-for="category in eventCategories">
+    <CategoryTable class="grow overflow-hidden" :categories="eventCategories" />
+    <!-- <div class="bg-white p-2" v-for="category in eventCategories">
       {{ category }}
-    </div>
+    </div> -->
   </main>
 </template>
 
