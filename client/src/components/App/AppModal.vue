@@ -27,10 +27,10 @@ const props = defineProps({
             <slot name="body">default body</slot>
           </div>
 
-          <div class="modal-footer" v-if="modalType === 'info'">
+          <div class="modal-footer" v-if="type === 'info'">
 
           </div>
-          <div class="modal-footer" v-if="modalType === 'confirm'">
+          <div class="modal-footer" v-if="type === 'confirm'">
             
           </div>
 
