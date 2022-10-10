@@ -7,7 +7,7 @@ import { useForm, ErrorMessage, Field } from 'vee-validate'
 import { computed, onBeforeMount, onUpdated, ref } from 'vue'
 import RoleSelectField from '../../../../components/user/RoleSelectField.vue'
 
-const emits = defineEmits(['close', 'submit-form'])
+const emits = defineEmits(['close', 'submit-edit-form'])
 const props = defineProps({
   modalState: {
     type: Object,
@@ -36,6 +36,7 @@ const formConfig = ref({
 })
 
 const formTemplate = {
+  id: null,
   name: '',
   duration: 1,
   description: '',
@@ -66,16 +67,24 @@ const { handleSubmit, values, resetForm, meta, setFieldValue, setValues } =
 //   emits('submit-form', trimmedUser)
 // })
 
-const onSubmit = handleSubmit((values) => {
-  console.log(values)
+const onSubmit = handleSubmit(({id , name, duration, description}) => {
+  // console.log(values);
+  const category = {
+    id,
+    eventCategoryName: name.trim(),
+    eventDuration: duration,
+    eventCategoryDescription: description.trim()
+  }
+  emits('submit-edit-form', category)
 })
 onUpdated(async () => {
   if (props.modalState.visible) {
     const category = props.modalState.category
     setValues({
+      id: category.id,
       name: category.eventCategoryName,
-      duration: category.eventCategoryDescription,
       duration: category.eventDuration,
+      description: category.eventCategoryDescription,
     })
     return
   }

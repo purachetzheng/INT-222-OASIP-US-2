@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
-import { apiEventCategory } from '../../../services/api/lib'
+import { apiGetEventCategory, apiPatchEventCategory } from '../../../services/api/lib/eventCategory'
 import CategoryTable from './components/CategoryTable.vue'
 import EditCategoryModal from './components/EditCategoryModal.vue'
 const isLoading = ref(false)
@@ -25,9 +25,21 @@ const editModal = ref({
   },
 })
 
-const getEventCategory = async ({} = {}) => {
+const patchCategory = async (submitCategory) =>{
+  const {id, ...category} = submitCategory
+  try{
+    const { data, status } = await apiPatchEventCategory({id, data: category})
+    eventCategories.value = eventCategories.value.map((c) => c.id === data.id ? data: c)
+    console.log(data);
+  }catch(error){
+    const res = error.response
+    console.log('error ', error.message)
+  }
+}
+
+const getEventCategory = async () => {
   try {
-    const { data, status } = await apiEventCategory.get()
+    const { data, status } = await apiGetEventCategory()
     console.log(data)
     const { content, number, totalPages } = data
     eventCategories.value = content
@@ -43,12 +55,11 @@ const getEventCategory = async ({} = {}) => {
 onBeforeMount(async () => {
   getEventCategory()
 })
-const test = (e) => console.log(e);
 </script>
 
 <template>
   <main class="my-container grow flex flex-col py-4 gap-0 justify-between">
-    <EditCategoryModal :modal-state="editModal" />
+    <EditCategoryModal :modal-state="editModal" @submit-edit-form="patchCategory" />
     <CategoryTable class="grow overflow-hidden" :categories="eventCategories" @edit-category="editModal.show" />
     <!-- <div class="bg-white p-2" v-for="category in eventCategories">
       {{ category }}
