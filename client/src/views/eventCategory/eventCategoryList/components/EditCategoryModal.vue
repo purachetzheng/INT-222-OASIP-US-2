@@ -1,78 +1,128 @@
 <script setup>
 import BaseModal from '../../../../components/base/BaseModal.vue'
 import { formatDatetime } from '../../../../utils/dateTime'
-import schema from '@/services/validation/schema/AddUserSchema'
-import InputField from '../../../../components/base/form/InputField.vue'
+import schema from '../../../../services/validation/schema/EditCategorySchema'
+import InputField from '../../../../components/App/AppVeeInput.vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
-import { onUpdated } from 'vue'
+import { computed, onBeforeMount, onUpdated, ref } from 'vue'
 import RoleSelectField from '../../../../components/user/RoleSelectField.vue'
 
 const emits = defineEmits(['close', 'submit-form'])
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: false,
+  modalState: {
+    type: Object,
+    default: {
+      // category:{}
+    },
+  },
+  // editingCategory:{
+  //   type: Object,
+  //   default: {},
+  // }
+})
+
+const formConfig = ref({
+  isLoading: true,
+  name: {
+    maxLength: 100,
+  },
+  duration: {
+    min: 1,
+    max: 480,
+  },
+  description: {
+    maxLength: 500,
   },
 })
-const { handleSubmit, values, resetForm, meta, setFieldValue } = useForm({
-  validationSchema: schema,
-  initialValues: {
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  },
-})
-const onSubmit = handleSubmit(({name = '', email = '', role, password, confirmPassword}) => {
-  const isPasswordConfirm = password === confirmPassword
-  if (!isPasswordConfirm) 
-    return setFieldError('confirmPassword', 'Passwords do not match, try again.')
-  
-  const trimmedUser = {
-    name: name.trim(),
-    email: email.trim(),
-    role: role,
-    password: password,
-  }
-  emits('submit-form', trimmedUser)
-})
-// onUpdated(() => {
-//   if (props.show === true) {
-//     setTimeout(resetForm, 5)
+
+const formTemplate = {
+  name: '',
+  duration: 1,
+  description: '',
+}
+
+// const formTemplate = {
+//   name: props.modalState.value.category.eventCategoryName,
+//   duration: props.modalState.value.category.eventDuration,
+//   description: props.modalState.value.category.eventCategoryDescription
+// }
+
+const { handleSubmit, values, resetForm, meta, setFieldValue, setValues } =
+  useForm({
+    validationSchema: schema,
+    initialValues: { ...formTemplate },
+  })
+// const onSubmit = handleSubmit(({name = '', email = '', role, password, confirmPassword}) => {
+//   const isPasswordConfirm = password === confirmPassword
+//   if (!isPasswordConfirm)
+//     return setFieldError('confirmPassword', 'Passwords do not match, try again.')
+
+//   const trimmedUser = {
+//     name: name.trim(),
+//     email: email.trim(),
+//     role: role,
+//     password: password,
 //   }
+//   emits('submit-form', trimmedUser)
 // })
 
-
+const onSubmit = handleSubmit((values) => {
+  console.log(values)
+})
+onUpdated(async () => {
+  if (props.modalState.visible) {
+    const category = props.modalState.category
+    setValues({
+      name: category.eventCategoryName,
+      duration: category.eventCategoryDescription,
+      duration: category.eventDuration,
+    })
+    return
+  }
+})
 </script>
 
 <template>
-  <BaseModal :show="show" :width="'w-160'">
+  <app-modal :show="modalState.visible">
     <template #header>
-      <h1 class="text-2xl font-semibold text-center">Add User</h1>
+      <h1 class="text-2xl font-semibold text-center">Edit Category</h1>
+      <!-- {{editingCategory}} -->
     </template>
     <template #body>
-      <div class="flex flex-col gap-0">
-        <InputField id="name" class="" name="name" type="text" :max="100" label="Name" :required="true" />
-        <InputField id="email" class="" name="email" type="text" :max="50" label="Email" :required="true" />
-        <!-- <p class="pt-2">Role</p> -->
-        <RoleSelectField />
-        <InputField class="" name="password" type="password" label="Password" :max="14" :required="true" />
-        <InputField class="" name="confirmPassword" type="password" label="Confirm Password" :max="14" :required="true" />
+      <div class="flex flex-col gap-0 w-128">
+        <InputField
+          id="name"
+          class=""
+          name="name"
+          type="text"
+          :max="formConfig.name.maxLength"
+          label="Category Name"
+          :required="true"
+        />
+        <InputField
+          id="duration"
+          class=""
+          name="duration"
+          type="number"
+          label="Duration"
+          :required="true"
+        />
+        <app-vee-textarea
+          name="description"
+          :max="formConfig.description.maxLength"
+          label="Description"
+        />
       </div>
     </template>
-
     <template #footer>
-      <div class="flex gap-4 justify-start">
-        <PrimaryButton type="submit" @click="onSubmit" class="btn btn-indigo duration-300 submit-btn" 
-          :disabled="!meta.valid" >Create</PrimaryButton>
-        <SecondaryButton type="button" class="btn btn-gray duration-300" @click="$emit('close')">
-          Close
-        </SecondaryButton>
-        
+      <div class="flex gap-4">
+        <app-button button-type="success" @click="onSubmit">Submit</app-button>
+        <app-button button-type="outline-danger" @click="modalState.close"
+          >Cancel</app-button
+        >
       </div>
     </template>
-  </BaseModal>
+  </app-modal>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
