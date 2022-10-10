@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-defineEmits(['delete-user', 'view-detail'])
+defineEmits(['delete-category', 'view-detail', 'edit-category'])
 const props = defineProps({
   categories: {
     type: Array,
@@ -62,12 +62,13 @@ const props = defineProps({
             <fa-icon
               :icon="['far', 'pen-to-square']"
               class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-purple-500 duration-100"
+              @click="$emit('edit-category',category)"
             />
-            <fa-icon
+            <!-- <fa-icon
               :icon="['far', 'trash-can']"
               class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
-              @click="$emit('delete-user', user.id)"
-            />
+              @click="$emit('delete-category', category.id)"
+            /> -->
           </div>
         </div>
       </li>
