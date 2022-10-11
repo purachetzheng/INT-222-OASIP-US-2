@@ -21,7 +21,7 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    @Value("$secret}")
+    @Value("${secret}")
     private String secret;
 
     @Value("${jwt.token.expiration.in.seconds}")

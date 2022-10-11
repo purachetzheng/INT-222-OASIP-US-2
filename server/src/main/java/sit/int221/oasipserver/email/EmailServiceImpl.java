@@ -9,11 +9,14 @@ import sit.int221.oasipserver.dtos.event.PostEventDto;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.services.EventcategoryService;
 
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 @Component
 public class EmailServiceImpl  {
@@ -28,26 +31,33 @@ public class EmailServiceImpl  {
     EventcategoryService eventcategoryService;
 
     public PostEventDto sendSimpleMessage(PostEventDto eventDto) {
-        Date testDate = Date.from(eventDto.getEventStartTime());
-        LocalDate date = LocalDate.ofInstant(eventDto.getEventStartTime(), ZoneId.of("UTC"));
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(testDate);
-        cal.get(Calendar.MONTH);
+        ChronoUnit minutes = ChronoUnit.MINUTES;
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy hh:mm", Locale.ENGLISH);
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm");
+
+        Date eventDateFromDto = Date.from(eventDto.getEventStartTime());
+        Date eventDateEndFromDto = Date.from(eventDto.getEventStartTime().plus(eventDto.getEventDuration(), minutes));
+
+        String testDatez = formatter.format(eventDateFromDto);
+        String startTime = timeFormatter.format(eventDateFromDto);
+        String endTime = timeFormatter.format(eventDateEndFromDto);
+
+
         String eventCategoryName = eventcategoryService.getById(eventDto.getEventCategoryId()).getEventCategoryName();
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@intproj21.sit.kmutt.ac.th");
+        message.setFrom("oasip.us2@gmail.com");
         message.setTo(eventDto.getBookingEmail());
         message.setSubject("[OASIP]" + " " + eventCategoryName
-        + " " + "@ " + dayOfWeek + " " + date);
+        + " " + "@ " + " " + testDatez + " - " + endTime);
         message.setText("Booking Name: " + eventDto.getBookingName()
                 + "\n"
                 + "Event Category: " + eventCategoryName
                 + "\n"
-                + "When: " + date
+                + "When: " + " " + testDatez + " - " + endTime
                 + "\n"
                 + "Event Notes: " + eventDto.getEventNotes());
+        message.setReplyTo("noreply@intproj21.sit.kmutt.ac.th");
         emailSender.send(message);
         return eventDto;
     }
