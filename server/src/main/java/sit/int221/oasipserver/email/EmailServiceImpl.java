@@ -5,6 +5,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import sit.int221.oasipserver.dtos.event.EventDto;
+import sit.int221.oasipserver.dtos.event.PostEventDto;
+import sit.int221.oasipserver.repo.EventcategoryRepository;
+import sit.int221.oasipserver.services.EventcategoryService;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 
 @Component
 public class EmailServiceImpl  {
@@ -12,16 +21,33 @@ public class EmailServiceImpl  {
     @Autowired
     private JavaMailSender emailSender;
 
-    public EventDto sendSimpleMessage(EventDto eventDto) {
+    @Autowired
+    EventcategoryRepository eventcategoryRepository;
+
+    @Autowired
+    EventcategoryService eventcategoryService;
+
+    public PostEventDto sendSimpleMessage(PostEventDto eventDto) {
+        Date testDate = Date.from(eventDto.getEventStartTime());
+        LocalDate date = LocalDate.ofInstant(eventDto.getEventStartTime(), ZoneId.of("UTC"));
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(testDate);
+        cal.get(Calendar.MONTH);
+        String eventCategoryName = eventcategoryService.getById(eventDto.getEventCategoryId()).getEventCategoryName();
+
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("chickenforregis1@gmail.com");
+        message.setFrom("noreply@intproj21.sit.kmutt.ac.th");
         message.setTo(eventDto.getBookingEmail());
-        message.setSubject(eventDto.getBookingName());
-        message.setText(eventDto.getEventNotes()
+        message.setSubject("[OASIP]" + " " + eventCategoryName
+        + " " + "@ " + dayOfWeek + " " + date);
+        message.setText("Booking Name: " + eventDto.getBookingName()
                 + "\n"
-                + eventDto.getEventCategoryName()
+                + "Event Category: " + eventCategoryName
                 + "\n"
-                + eventDto.getEventStartTime());
+                + "When: " + date
+                + "\n"
+                + "Event Notes: " + eventDto.getEventNotes());
         emailSender.send(message);
         return eventDto;
     }

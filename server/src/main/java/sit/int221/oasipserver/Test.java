@@ -7,6 +7,8 @@ import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.repo.EventRepository;
+import sit.int221.oasipserver.repo.EventcategoryRepository;
+import sit.int221.oasipserver.services.EventcategoryService;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -21,6 +23,10 @@ public class Test {
     }
 
     public static void main(String[] args) {
+//        EventcategoryService eventcategoryService = new EventcategoryService();
+
+
+
 //        Argon2 argon2 = Argon2Factory.create();
 //        String password = "admin";
 //        String hash = argon2.hash(22, 65536, 1, password);
