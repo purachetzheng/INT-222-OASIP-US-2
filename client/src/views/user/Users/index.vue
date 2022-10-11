@@ -1,10 +1,9 @@
 <script setup>
 import { computed, onBeforeMount, provide, readonly, ref } from 'vue'
-import { apiUser } from '../../../services/axios/api'
+import { apiUser } from '../../../services/api/lib'
 import UserTable from './UserTable.vue'
 import UserDetailModal from './modal/UserDetailModal.vue'
 import AddUserModal from './modal/AddUserModal.vue';
-
 const users = ref([])
 
 const getUsers = async (page) => {
@@ -14,11 +13,11 @@ const getUsers = async (page) => {
     users.value = data
     // return data.content
   } catch (error) {
-    // console.log(error)
+    console.log(error)
     // console.log(error.response)
-    const res = error.response
-    console.log(res.status)
-    console.log('error ', error.message)
+    // const res = error.response
+    // console.log(res.status)
+    // console.log('error ', error.message)
   }
 }
 
@@ -41,6 +40,23 @@ const deleteUsers = async (id) => {
     console.log('error ', error.message)
   }
 }
+
+const updateUsers = async (id, modifyUser, setFieldError) => {
+  try {
+    const { data } = await apiUser.patch(id, modifyUser)
+    users.value = users.value.map((user) => user.id === data.id ? data : user)
+    selectedUser.value = data
+    alert('ok')
+  } catch (error) {
+    const { data, status } = error.response
+    const { details } = data
+    if(!details) return alert(status + ' error')
+    details.forEach((details) => {
+      setFieldError(details.field, details.errorMessage)
+    })
+  }
+}
+
 const onSubmit = async (user) => {
   try {
     const { data } = await apiUser.post(user)
@@ -59,9 +75,6 @@ const onSubmit = async (user) => {
     alert(messageError)
   }
 }
-const viewTime = ref(false)
-
-provide('viewTime', readonly(viewTime))
 
 const [selectedUser, selectUser, resetSelectUser, showDetailModal] = [
   ref({}),
@@ -79,7 +92,6 @@ const [showAddUserModal, openAddUserModal, closeAddUserModal] = [
 onBeforeMount(() => {
   getUsers()
 })
-const test = (e) => console.log(e)
 </script>
 
 <template>
@@ -87,10 +99,6 @@ const test = (e) => console.log(e)
     <header class="flex justify-between">
       <h1 class="text-2xl font-bold">User</h1>
       <div class="flex items-center gap-6">
-        <!-- <div class="">
-          <input type="checkbox" name="" v-model="viewTime" id="vt" />
-          <label for="vt">view detail</label>
-        </div> -->
         <fa-icon :icon="['fas', 'ellipsis']" class="fa-xl" />
         <button class="p-2 bg-blue-500" @click="openAddUserModal">Add User</button>
       </div>
@@ -108,6 +116,7 @@ const test = (e) => console.log(e)
     <UserDetailModal
       :show="showDetailModal"
       :user="selectedUser"
+      @update-user="updateUsers"
       @close="resetSelectUser"
     />
     <AddUserModal :show="showAddUserModal" @close="closeAddUserModal" @submit-form="onSubmit" />

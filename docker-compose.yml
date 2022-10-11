@@ -27,7 +27,7 @@ services:
                                 "spring.datasource.username" : "$MYSQLDB_USER",
                                 "spring.datasource.password" : "$MYSQLUSER_PASSWORD",
                                 "spring.jpa.hibernate.ddl-auto" : "update",
-                                "spring.jpa.hibernate.naming.physical-strategy" : "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
+                                "spring.jpa.hibernate.naming.physical-strategy" : "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl" 
                         }'
                 volumes:
                         - .m2:/root/.m2
@@ -39,13 +39,15 @@ services:
                 depends_on:
                         - backapp
         reverse:
-                image: nginx:1.21.6-alpine
+                image: nginx:alpine
                 container_name: reverse
                 depends_on:
                         - frontapp
                 ports:
                         - 80:80
+                        - 443:443
                 volumes:
-                        - ./nginx.conf:/etc/nginx/nginx.conf
+                        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+                        - ./nginx/ssl/:/etc/nginx/ssl/
 volumes:
-  db:
+        db:

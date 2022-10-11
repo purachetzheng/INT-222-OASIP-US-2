@@ -52,6 +52,25 @@ CREATE TABLE IF NOT EXISTS users (
   PRIMARY KEY (userID))
 ENGINE = InnoDB;
 
+-- Event Category Owner Table
+CREATE TABLE IF NOT EXISTS eventcategoryowner (
+  -- categoryOwnerId INT NOT NULL,
+  userId INT NOT NULL,
+  eventCategoryId INT NOT NULL,
+  INDEX fk_eventcategoryowner_eventcategories1_idx (eventCategoryId ASC) VISIBLE,
+  PRIMARY KEY (userId, eventCategoryId),
+  CONSTRAINT fk_eventcategoryowner_users
+    FOREIGN KEY (userId)
+    REFERENCES oasip.users (userID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_eventcategoryowner_eventcategories1
+    FOREIGN KEY (eventCategoryId)
+    REFERENCES oasip.eventcategories (eventCategoryId)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -76,6 +95,9 @@ INSERT INTO users values
 (2, 'Somchai Jaidee', '$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
 (3, 'Komkrid Rakdee', '$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
 (4, 'สมเกียรติ ขยันเรียน', '$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+
+INSERT INTO eventcategoryowner VALUES
+(1, 22);
 
 -- INSERT INTO users values
 -- (1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());

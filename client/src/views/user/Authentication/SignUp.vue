@@ -2,8 +2,8 @@
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/AddUserSchema'
-import { apiUser } from '../../../services/axios/api'
-import RoleSelectField from '../Users/components/RoleSelectField.vue'
+import { apiUser } from '../../../services/api/lib'
+import RoleSelectField from '../../../components/user/RoleSelectField.vue'
 
 // defineEmits([])
 // const props = defineProps({

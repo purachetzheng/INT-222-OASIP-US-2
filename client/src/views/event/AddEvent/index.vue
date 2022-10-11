@@ -3,7 +3,7 @@ import { computed, onBeforeMount, provide, reactive, ref } from 'vue'
 import ProgressBar from './ProgressBar.vue'
 import SelectCategory from './stages/SelectCategory.vue'
 import FillForm from './stages/FillForm.vue'
-import { apiEvent, apiEventCategory } from '../../../services/axios/api'
+import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { formatDatetime } from '../../../utils/dateTime'
 
 // const step = ref(1)

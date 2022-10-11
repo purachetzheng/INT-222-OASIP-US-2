@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import IcArrowDown from '@/assets/icons/arrows-icons/IcArrowDown.vue'
+import { useUserStore } from '../../../stores';
+import { storeToRefs } from 'pinia';
 defineEmits([])
 const props = defineProps({
   mainItem: {
@@ -12,12 +14,14 @@ const props = defineProps({
     default: [],
   },
 })
-
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 const isHover = ref(false)
 </script>
 
 <template>
   <li
+    v-if="!mainItem.allowed || mainItem.allowed.some(role => role === user.role)"
     class="relative group hover:bg-gray-100 rounded-full"
     @mouseenter="isHover = true"
     @mouseleave="isHover = false"

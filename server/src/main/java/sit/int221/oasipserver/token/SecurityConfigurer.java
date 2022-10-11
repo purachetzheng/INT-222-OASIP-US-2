@@ -2,9 +2,11 @@ package sit.int221.oasipserver.token;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,9 +16,15 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.UUID;
 
+
+@Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true)
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
+
 
     @Autowired
     private RestAuthenticationEntryPoint unauthorizedHandler;
@@ -46,9 +54,17 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(this.unauthorizedHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authenticate", "/api/users/login", "/signup").permitAll()
-                .antMatchers("/api/events").hasRole("lecturer")
+                .antMatchers(HttpMethod.GET, "/api/users/{id}/**").access("@guard.checkUserId(authentication, #id)")
+                .antMatchers("/authenticate", "/api/auth/login", "/signup", "/api/events/emailSender",
+                        "/api/auth/logout").permitAll()
+                .antMatchers("/api/events/**", "/api/users/**").hasAnyRole("admin")
+                .antMatchers("/api/events/**").hasAnyRole("student", "admin")
+                .antMatchers("/api/events/**").hasAnyRole("student", "admin", "lecturer")
+//                .antMatchers("/api/events").hasRole("lecturer")
+                // .antMatchers(HttpMethod.POST, "/api/users")
+                // .antMatchers(HttpMethod.POST, "/us2/api/users").permitAll()
                 .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         security.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

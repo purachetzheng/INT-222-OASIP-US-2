@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +20,7 @@ import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.utils.ListMapper;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -34,6 +37,10 @@ public class EventcategoryService {
     public PageEventCategoryDto getAllPage(int pageNum, int pageSize) {
 //        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageRequest = PageRequest.of(pageNum, pageSize);
+        UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentPrincipalName = getCurrentAuthentication.getUsername();
+        Collection currentPrincipalRole = getCurrentAuthentication.getAuthorities();
+        System.out.println(currentPrincipalRole + "\n" + currentPrincipalName);
         Page page = repository.findAll(pageRequest);
         PageEventCategoryDto pageEventCategoryDto = modelMapper.map(page, PageEventCategoryDto.class);
         return pageEventCategoryDto;
