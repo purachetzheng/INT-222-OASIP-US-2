@@ -45,6 +45,16 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updatedOn", insertable = false)
     private Instant updatedOn;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+
+    @JoinTable(name = "eventcategoryowner",
+            joinColumns = { @JoinColumn(name = "userId") },
+            inverseJoinColumns = { @JoinColumn(name = "eventCategoryId") })
+    private Set<Eventcategory> categoriesOwner = new HashSet<>();
     
     public void setEmail(String email) {
         this.email = email.trim();

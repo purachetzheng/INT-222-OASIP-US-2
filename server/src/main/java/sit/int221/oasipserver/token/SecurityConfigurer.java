@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +21,8 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true)
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
 
@@ -55,7 +58,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/authenticate", "/api/auth/login", "/signup", "/api/events/emailSender",
                         "/api/auth/logout").permitAll()
                 .antMatchers("/api/events/**", "/api/users/**").hasAnyRole("admin")
-                .antMatchers("/api/events/**").hasAnyRole("student", "admin", "student")
+                .antMatchers("/api/events/**").hasAnyRole("student", "admin")
+                .antMatchers("/api/events/**").hasAnyRole("student", "admin", "lecturer")
 //                .antMatchers("/api/events").hasRole("lecturer")
                 // .antMatchers(HttpMethod.POST, "/api/users")
                 // .antMatchers(HttpMethod.POST, "/us2/api/users").permitAll()
