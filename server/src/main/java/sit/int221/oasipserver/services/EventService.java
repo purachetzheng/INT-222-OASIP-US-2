@@ -20,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
+import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.exception.ForbiddenException;
@@ -55,6 +56,8 @@ public class EventService {
     EventcategoryRepository eventcategoryRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    EmailServiceImpl emailService;
 
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
@@ -181,6 +184,8 @@ public class EventService {
         }
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+        emailService.sendSimpleMessage(newEvent);
 
         return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
     }
