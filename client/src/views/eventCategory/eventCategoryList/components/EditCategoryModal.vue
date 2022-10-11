@@ -73,7 +73,7 @@ const onSubmit = handleSubmit(({id , name, duration, description}) => {
     id,
     eventCategoryName: name.trim(),
     eventDuration: duration,
-    eventCategoryDescription: description.trim()
+    eventCategoryDescription: !description.trim() ?  null : description.trim()
   }
   emits('submit-edit-form', category)
 })
@@ -84,7 +84,7 @@ onUpdated(async () => {
       id: category.id,
       name: category.eventCategoryName,
       duration: category.eventDuration,
-      description: category.eventCategoryDescription,
+      description: category.eventCategoryDescription || '',
     })
     return
   }
