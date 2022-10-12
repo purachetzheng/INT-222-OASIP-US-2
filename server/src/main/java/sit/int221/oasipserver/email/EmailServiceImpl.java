@@ -35,7 +35,7 @@ public class EmailServiceImpl  {
         ChronoUnit minutes = ChronoUnit.MINUTES;
         ChronoUnit hours = ChronoUnit.HOURS;
         SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
-        formatter.setTimeZone(timeZone);
+        formatter.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Bangkok")));
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
         Date eventDateFromDto = Date.from(eventDto.getEventStartTime().plus(0, hours));
