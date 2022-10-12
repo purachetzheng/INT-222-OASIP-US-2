@@ -37,7 +37,7 @@ public class EmailServiceImpl  {
         SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
         formatter.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Bangkok")));
         SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-
+        timeFormatter.setTimeZone(TimeZone.getTimeZone(ZoneId.of("Asia/Bangkok")));
         Date eventDateFromDto = Date.from(eventDto.getEventStartTime().plus(0, hours));
         Date eventDateEndFromDto = Date.from(eventDto.getEventStartTime().plus(eventDto.getEventDuration(), minutes)
                 .plus(0, hours));
