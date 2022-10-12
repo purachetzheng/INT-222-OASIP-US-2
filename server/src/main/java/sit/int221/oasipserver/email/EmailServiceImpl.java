@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 @Component
 public class EmailServiceImpl  {
@@ -30,13 +31,16 @@ public class EmailServiceImpl  {
     @Autowired
     EventcategoryService eventcategoryService;
 
-    public PostEventDto sendSimpleMessage(PostEventDto eventDto) {
+    public PostEventDto sendSimpleMessage(PostEventDto eventDto, TimeZone timeZone) {
         ChronoUnit minutes = ChronoUnit.MINUTES;
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy hh:mm", Locale.ENGLISH);
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm");
+        ChronoUnit hours = ChronoUnit.HOURS;
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
+        formatter.setTimeZone(timeZone);
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
-        Date eventDateFromDto = Date.from(eventDto.getEventStartTime());
-        Date eventDateEndFromDto = Date.from(eventDto.getEventStartTime().plus(eventDto.getEventDuration(), minutes));
+        Date eventDateFromDto = Date.from(eventDto.getEventStartTime().plus(0, hours));
+        Date eventDateEndFromDto = Date.from(eventDto.getEventStartTime().plus(eventDto.getEventDuration(), minutes)
+                .plus(0, hours));
 
         String testDatez = formatter.format(eventDateFromDto);
         String startTime = timeFormatter.format(eventDateFromDto);

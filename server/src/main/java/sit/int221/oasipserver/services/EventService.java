@@ -39,6 +39,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 @Service
 public class EventService {
@@ -153,7 +154,7 @@ public class EventService {
         repository.delete(getById(id, response));
     }
 
-    public SimpleEventDto create(PostEventDto newEvent, BindingResult result)
+    public SimpleEventDto create(PostEventDto newEvent, BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException, ApiRequestException {
 
         if (result.hasErrors()
@@ -185,7 +186,9 @@ public class EventService {
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
-        emailService.sendSimpleMessage(newEvent);
+        emailService.sendSimpleMessage(newEvent, timeZone);
+
+
 
         return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
     }
