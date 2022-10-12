@@ -12,6 +12,7 @@ import sit.int221.oasipserver.dtos.event.SimpleEventDto;
 import sit.int221.oasipserver.services.EventService;
 
 import javax.validation.Valid;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api/guests")
@@ -23,8 +24,8 @@ public class GuestController {
     @PostMapping("")
     public SimpleEventDto createEvent(
             @Valid @RequestBody PostEventDto newEvent,
-            BindingResult result)
+            BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException {
-        return eventService.create(newEvent, result);
+        return eventService.create(newEvent, result, timeZone);
     }
 }

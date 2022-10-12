@@ -25,6 +25,7 @@ import sit.int221.oasipserver.services.EventService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api/events")
@@ -83,9 +84,9 @@ public class EventController {
     @PostMapping("")
     public SimpleEventDto createEvent(
             @Valid @RequestBody PostEventDto newEvent,
-            BindingResult result)
+            BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException{
-        return eventService.create(newEvent, result);
+        return eventService.create(newEvent, result, timeZone);
     }
 
     @DeleteMapping("/{id}")
@@ -104,8 +105,8 @@ public class EventController {
     }
 
     @PostMapping("/emailSender")
-    public PostEventDto sendEmail(@RequestBody PostEventDto eventDto){
-        return emailService.sendSimpleMessage(eventDto);
+    public PostEventDto sendEmail(@RequestBody PostEventDto eventDto, TimeZone timeZone){
+        return emailService.sendSimpleMessage(eventDto, timeZone);
     }
 
     @GetMapping("/test")

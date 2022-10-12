@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
@@ -21,8 +22,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import static java.time.ZoneOffset.UTC;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -99,5 +104,29 @@ public class AuthenController {
         User user = userService.getById(userId);
 
         return ResponseEntity.ok(new UserDetailDtoImpl(user.getName(), user.getEmail(), user.getRole()));
+    }
+
+    @GetMapping("/test")
+    public String test(TimeZone timeZone, HttpServletRequest request){
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
+        formatter.setTimeZone(timeZone);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH).withZone(ZoneId.of("Asia/Bangkok"));
+
+        String zoneId = timeZone.getID();
+        System.out.println(timeZone.getID());
+
+        Instant instant = Instant.now();
+        System.out.println("Instant UTC: " + instant.atZone(ZoneId.of("UTC")));
+        System.out.println("Instant NOW: " + instant);
+
+        ZonedDateTime bkTime = instant.atZone(ZoneId.of(zoneId));
+        System.out.println("Instant LOCAL: " + bkTime);
+        System.out.println("Instant LOCAL: " + bkTime.toInstant());
+        System.out.println(formatter.format(Date.from(bkTime.toInstant())));
+
+
+
+
+        return timeZone.toString();
     }
 }
