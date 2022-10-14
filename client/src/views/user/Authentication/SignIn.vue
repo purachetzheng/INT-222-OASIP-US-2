@@ -2,8 +2,12 @@
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
-import { apiUser } from '../../../services/axios/api'
+import { apiUser } from '../../../services/api/lib'
+import { useUserStore } from '../../../stores/';
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+const userStore = useUserStore()
 const { handleSubmit, values, meta, setFieldError, setErrors, errors } = useForm({
   validationSchema: schema,
   initialValues: {
@@ -23,16 +27,30 @@ const onSubmit = handleSubmit(({ email, password}) => {
 
 const signInUser = async (user) => {
   try {
-    const { data } = await apiUser.signIn(user)
+    await userStore.login(user)
+    console.log('ok');
     alert('Password Matched')
+    userStore.getUserInfo()
+    router.push({ name: 'Home'})
   } catch (error) {
     const { data, status } = error.response
     const { details, message } = data
-
     if(status === 401) setFieldError('password', message)
     if(status === 404) setFieldError('email', message)
   }
 }
+
+// const getUser = async() => {
+//   try{
+//     const {data} = await apiUser.getById(1)
+//     // myUser.
+//     console.log(data);
+//     // return data
+//   }catch(error){
+//     // const { data, status } = error.response
+//     console.log(error);
+//   }
+// }
 </script>
 
 <template>
@@ -61,7 +79,7 @@ const signInUser = async (user) => {
       @click="onSubmit"
       class="btn btn-indigo duration-300 submit-btn"
       :disabled="!meta.valid"
-      >Create</PrimaryButton
+      >Sign In</PrimaryButton
     >
   </div>
 </template>

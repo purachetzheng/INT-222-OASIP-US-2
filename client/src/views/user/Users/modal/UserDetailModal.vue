@@ -7,9 +7,9 @@ import { computed, onUpdated, ref } from 'vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/EditUserSchema'
-import RoleSelectField from '../components/RoleSelectField.vue'
-import { apiUser } from '../../../../services/axios/api'
-defineEmits(['close'])
+import RoleSelectField from '../../../../components/user/RoleSelectField.vue'
+import PlaceholderAvatar from '../../../../components/user/PlaceholderAvatar.vue'
+const emits = defineEmits(['close', 'update-user'])
 const props = defineProps({
   show: {
     type: Boolean,
@@ -35,12 +35,19 @@ const [editingMode, editingOn, editingOff] = [
   () => (editingMode.value = false),
 ]
 
-const { handleSubmit, values, resetForm, meta, setFieldValue, setValues } =
-  useForm({
-    validationSchema: schema,
-    validateOnMount: false,
-  })
-const onSubmit = handleSubmit( async({ name = '', email = '', role } = {}) => {
+const {
+  handleSubmit,
+  values,
+  resetForm,
+  meta,
+  setValues,
+  setFieldError,
+} = useForm({
+  validationSchema: schema,
+  validateOnMount: false,
+})
+
+const onSubmitEdit = handleSubmit(async ({ name = '', email = '', role } = {}) => {
   const editUser = {}
   name = name.trim()
   email = email.trim()
@@ -48,27 +55,14 @@ const onSubmit = handleSubmit( async({ name = '', email = '', role } = {}) => {
   const isEmailChanged = user.value.email !== email
   const isRoleChanged = user.value.role !== role
 
-  if(isNameChanged) editUser.name = name
-  if(isEmailChanged) editUser.email = email
-  if(isRoleChanged) editUser.role = role
+  if (isNameChanged) editUser.name = name
+  if (isEmailChanged) editUser.email = email
+  if (isRoleChanged) editUser.role = role
 
   const isUserChanged = Object.keys(editUser).length !== 0
-  if(!isUserChanged) return alert('ok')
-  try {
-    const { data } = await apiUser.patch(user.value.id, editUser)
-    console.log(data)
 
-    alert('ok')
-  } catch (error) {
-    console.log(error)
-    // const { data, status } = error.response
-    // const { details } = data
-    // let messageError = ''
-    // details.forEach(details => {
-    //     messageError+=`${details.field}: ${details.errorMessage}\n`
-    // });
-    // alert(messageError)
-  }
+  if (!isUserChanged) return alert('ok')
+  emits('update-user', user.value.id, editUser, setFieldError)
 })
 onUpdated(() => {
   if (props.show === true) {
@@ -93,17 +87,8 @@ onUpdated(() => {
     <template #body>
       <div class="flex flex-col items-center gap-4">
         <div class="flex gap-8">
-          <div
-            class="w-20 h-20 rounded-full flex items-center justify-center"
-            :class="roleProfile[user.role].profile"
-          >
-            <p class="font-sans font-semibold text-3xl">
-              {{ profilePlaceholder(user.name) }}
-            </p>
-          </div>
-
+          <PlaceholderAvatar class="avatar-medium" :name="user.name" :role="user.role" />
           <div class="flex flex-col items-start justify-center">
-            <!-- <p class="text-xl font-semibold"></p> -->
             <p class="text-sm text-gray-600">{{ user.email }}</p>
             <span
               class="px-2 py-1 rounded-lg mt-2"
@@ -185,7 +170,7 @@ onUpdated(() => {
       <div class="flex justify-center gap-4">
         <PrimaryButton
           class="btn btn-indigo duration-300 submit-btn"
-          @click="onSubmit"
+          @click="onSubmitEdit"
           :disabled="!meta.valid"
         >
           Save

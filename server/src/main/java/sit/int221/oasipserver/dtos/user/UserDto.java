@@ -15,7 +15,6 @@ import java.time.Instant;
 public class UserDto {
     private Integer id;
     private String name;
-    private String password;
     private String email;
     private UserRole role;
     private Instant createdOn;

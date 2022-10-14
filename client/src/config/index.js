@@ -1,5 +1,4 @@
-import roleProfile from "./user/roleProfile";
+import roleProfile from './user/roleProfile';
+import roleBadgeStyle from './user/roleBadgeStyle';
 
-export{
-    roleProfile
-}
+export { roleProfile, roleBadgeStyle };

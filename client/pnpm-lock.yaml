@@ -12,6 +12,7 @@ specifiers:
   dayjs: ^1.11.4
   pinia: ^2.0.18
   postcss: ^8.4.16
+  tailwind-scrollbar-hide: ^1.1.7
   tailwindcss: ^3.1.8
   vee-validate: ^4.6.5
   vite: ^3.0.0
@@ -29,6 +30,7 @@ dependencies:
   axios: 0.27.2
   dayjs: 1.11.4
   pinia: 2.0.18_vue@3.2.37
+  tailwind-scrollbar-hide: 1.1.7
   vee-validate: 4.6.5_vue@3.2.37
   vue: 3.2.37
   vue-i18n: 9.2.2_vue@3.2.37
@@ -39,7 +41,7 @@ devDependencies:
   '@vitejs/plugin-vue': 3.0.1_vite@3.0.5+vue@3.2.37
   autoprefixer: 10.4.8_postcss@8.4.16
   postcss: 8.4.16
-  tailwindcss: 3.1.8
+  tailwindcss: 3.1.8_postcss@8.4.16
   vite: 3.0.5
 
 packages:
@@ -186,8 +188,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
     dependencies:
-      fastq: 1.13.0
       '@nodelib/fs.scandir': 2.1.5
+      fastq: 1.13.0
     dev: true
 
   /@types/lodash/4.14.184:
@@ -209,9 +211,9 @@ packages:
     resolution: {integrity: sha512-81KhEjo7YAOh0vQJoSmAD68wLfYqJvoiD4ulyedzF+OEk/bk6/hx3fTNVfuzugIIaTrOx4PGx6pAiBRe5e9Zmg==}
     dependencies:
       '@babel/parser': 7.18.11
+      '@vue/shared': 3.2.37
       estree-walker: 2.0.2
       source-map: 0.6.1
-      '@vue/shared': 3.2.37
 
   /@vue/compiler-dom/3.2.37:
     resolution: {integrity: sha512-yxJLH167fucHKxaqXpYk7x8z7mMEnXOw3G2q62FTkmsvNxu4FQSu5+3UMb+L7fjKa26DEzhrmCxAgFLLIzVfqQ==}
@@ -223,15 +225,15 @@ packages:
     resolution: {integrity: sha512-+7i/2+9LYlpqDv+KTtWhOZH+pa8/HnX/905MdVmAcI/mPQOBwkHHIzrsEsucyOIZQYMkXUiTkmZq5am/NyXKkg==}
     dependencies:
       '@babel/parser': 7.18.11
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
-      postcss: 8.4.16
-      source-map: 0.6.1
       '@vue/compiler-core': 3.2.37
       '@vue/compiler-dom': 3.2.37
       '@vue/compiler-ssr': 3.2.37
       '@vue/reactivity-transform': 3.2.37
       '@vue/shared': 3.2.37
+      estree-walker: 2.0.2
+      magic-string: 0.25.9
+      postcss: 8.4.16
+      source-map: 0.6.1
 
   /@vue/compiler-ssr/3.2.37:
     resolution: {integrity: sha512-7mQJD7HdXxQjktmsWp/J67lThEIcxLemz1Vb5I6rYJHR5vI+lON3nPGOH3ubmbvYGt8xEUaAr1j7/tIFWiEOqw==}
@@ -247,10 +249,10 @@ packages:
     resolution: {integrity: sha512-IWopkKEb+8qpu/1eMKVeXrK0NLw9HicGviJzhJDEyfxTR9e1WtpnnbYkJWurX6WwoFP0sz10xQg8yL8lgskAZg==}
     dependencies:
       '@babel/parser': 7.18.11
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
       '@vue/compiler-core': 3.2.37
       '@vue/shared': 3.2.37
+      estree-walker: 2.0.2
+      magic-string: 0.25.9
 
   /@vue/reactivity/3.2.37:
     resolution: {integrity: sha512-/7WRafBOshOc6m3F7plwzPeCu/RCVv9uMpOwa/5PiY1Zz+WLVRWiy0MYKwmg19KBdGtFWsmZ4cD+LOdVPcs52A==}
@@ -266,18 +268,18 @@ packages:
   /@vue/runtime-dom/3.2.37:
     resolution: {integrity: sha512-HimKdh9BepShW6YozwRKAYjYQWg9mQn63RGEiSswMbW+ssIht1MILYlVGkAGGQbkhSh31PCdoUcfiu4apXJoPw==}
     dependencies:
-      csstype: 2.6.20
       '@vue/runtime-core': 3.2.37
       '@vue/shared': 3.2.37
+      csstype: 2.6.20
 
   /@vue/server-renderer/3.2.37_vue@3.2.37:
     resolution: {integrity: sha512-kLITEJvaYgZQ2h47hIzPh2K3jG8c1zCVbp/o/bzQOyvzaKiCquKS7AaioPI28GNxIsE/zSx+EwWYsNxDCX95MA==}
     peerDependencies:
       vue: 3.2.37
     dependencies:
-      vue: 3.2.37
       '@vue/compiler-ssr': 3.2.37
       '@vue/shared': 3.2.37
+      vue: 3.2.37
 
   /@vue/shared/3.2.37:
     resolution: {integrity: sha512-4rSJemR2NQIo9Klm1vabqWjD8rs/ZaJSzMxkMNeJS6lHiUjjUeYFbooN19NgFjztubEKh3WlZUeOLVdbbUWHsw==}
@@ -630,6 +632,7 @@ packages:
     hasBin: true
     requiresBuild: true
     optionalDependencies:
+      '@esbuild/linux-loong64': 0.14.54
       esbuild-android-64: 0.14.54
       esbuild-android-arm64: 0.14.54
       esbuild-darwin-64: 0.14.54
@@ -640,7 +643,6 @@ packages:
       esbuild-linux-64: 0.14.54
       esbuild-linux-arm: 0.14.54
       esbuild-linux-arm64: 0.14.54
-      '@esbuild/linux-loong64': 0.14.54
       esbuild-linux-mips64le: 0.14.54
       esbuild-linux-ppc64le: 0.14.54
       esbuild-linux-riscv64: 0.14.54
@@ -665,11 +667,11 @@ packages:
     resolution: {integrity: sha512-xrO3+1bxSo3ZVHAnqzyuewYT6aMFHRAd4Kcs92MAonjwQZLsK9d0SF1IyQ3k5PoirxTW0Oe/RqFgMQ6TcNE5Ew==}
     engines: {node: '>=8.6.0'}
     dependencies:
+      '@nodelib/fs.stat': 2.0.5
+      '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
       micromatch: 4.0.5
-      '@nodelib/fs.stat': 2.0.5
-      '@nodelib/fs.walk': 1.2.8
     dev: true
 
   /fastq/1.13.0:
@@ -866,18 +868,18 @@ packages:
   /pinia/2.0.18_vue@3.2.37:
     resolution: {integrity: sha512-I5MW05UVX6a5Djka136oH3VzYFiZUgeOApBwFjMx6pL91eHtGVlE3adjNUKLgtwGnrxiBRuJ8+4R3LKJKwnyZg==}
     peerDependencies:
+      '@vue/composition-api': ^1.4.0
       typescript: '>=4.4.4'
       vue: ^2.6.14 || ^3.2.0
-      '@vue/composition-api': ^1.4.0
     peerDependenciesMeta:
-      typescript:
-        optional: true
       '@vue/composition-api':
         optional: true
+      typescript:
+        optional: true
     dependencies:
+      '@vue/devtools-api': 6.2.1
       vue: 3.2.37
       vue-demi: 0.13.7_vue@3.2.37
-      '@vue/devtools-api': 6.2.1
     dev: false
 
   /postcss-import/14.1.0_postcss@8.4.16:
@@ -1023,10 +1025,16 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss/3.1.8:
+  /tailwind-scrollbar-hide/1.1.7:
+    resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
+    dev: false
+
+  /tailwindcss/3.1.8_postcss@8.4.16:
     resolution: {integrity: sha512-YSneUCZSFDYMwk+TGq8qYFdCA3yfBRdBlS7txSq0LUmzyeqRe3a8fBQzbz9M3WS/iFT4BNf/nmw9mEzrnSaC0g==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
@@ -1089,8 +1097,8 @@ packages:
     peerDependencies:
       vue: ^3.0.0
     dependencies:
-      vue: 3.2.37
       '@vue/devtools-api': 6.2.1
+      vue: 3.2.37
     dev: false
 
   /vite/3.0.5:
@@ -1126,8 +1134,8 @@ packages:
     hasBin: true
     requiresBuild: true
     peerDependencies:
-      vue: ^3.0.0-0 || ^2.6.0
       '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
@@ -1144,8 +1152,8 @@ packages:
       '@intlify/core-base': 9.2.2
       '@intlify/shared': 9.2.2
       '@intlify/vue-devtools': 9.2.2
-      vue: 3.2.37
       '@vue/devtools-api': 6.2.1
+      vue: 3.2.37
     dev: false
 
   /vue-router/4.1.3_vue@3.2.37:
@@ -1153,8 +1161,8 @@ packages:
     peerDependencies:
       vue: ^3.2.0
     dependencies:
-      vue: 3.2.37
       '@vue/devtools-api': 6.2.1
+      vue: 3.2.37
     dev: false
 
   /vue/3.2.37:
@@ -1181,10 +1189,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       '@babel/runtime': 7.18.9
+      '@types/lodash': 4.14.184
       lodash: 4.17.21
       lodash-es: 4.17.21
       nanoclone: 0.2.1
       property-expr: 2.0.5
       toposort: 2.0.2
-      '@types/lodash': 4.14.184
     dev: false

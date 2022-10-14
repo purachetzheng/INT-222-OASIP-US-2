@@ -52,6 +52,25 @@ CREATE TABLE IF NOT EXISTS users (
   PRIMARY KEY (userID))
 ENGINE = InnoDB;
 
+-- Event Category Owner Table
+CREATE TABLE IF NOT EXISTS eventcategoryowner (
+  -- categoryOwnerId INT NOT NULL,
+  userId INT NOT NULL,
+  eventCategoryId INT NOT NULL,
+  INDEX fk_eventcategoryowner_eventcategories1_idx (eventCategoryId ASC) VISIBLE,
+  PRIMARY KEY (userId, eventCategoryId),
+  CONSTRAINT fk_eventcategoryowner_users
+    FOREIGN KEY (userId)
+    REFERENCES oasip.users (userID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_eventcategoryowner_eventcategories1
+    FOREIGN KEY (eventCategoryId)
+    REFERENCES oasip.eventcategories (eventCategoryId)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -67,7 +86,36 @@ values (1,'Project Management Clinic', 'ตารางนัดหมายน�
 INSERT INTO events values
 (1, 'Somchai Jaidee (OR-7)', 'somchai.jai@mail.kmutt.ac.th', 2, 30, '2022-05-23 6:30:00', null),
 (2, 'Somsri Rakdee (SJ-3)', 'somsri.rak@mail.kmutt.ac.th', 1, 30, '2022-04-27 2:30:00', 'ขอปรึกษาปัญหาเพื่อนไม่ช่วยงาน'),
-(3, 'สมเกียรติ ขยันเรียน กลุ่ม TT-4', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-05-23 9:30:00', null);
+(3, 'สมเกียรติ ขยันเรียน กลุ่ม TT-4', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-05-23 9:30:00', null),
+(4, 'TEST-DAY-11', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 14:00:00', null),
+(5, 'TEST-DAY-11-1', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 15:00:00', null),
+(6, 'TEST-DAY-11-2', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 16:00:00', null),
+(7, 'TEST-DAY-11-3', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 17:00:00', null),
+(8, 'TEST-DAY-01-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 18:00:00', null),
+(9, 'TEST-DAY-02-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 19:00:00', null),
+(10, 'TEST-DAY-03-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 20:00:00', null),
+(11, 'TEST-DAY-04-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 21:00:00', null),
+(12, 'TEST-DAY-05-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 22:00:00', null),
+(13, 'TEST-DAY-06-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-11 23:00:00', null),
+(14, 'TEST-DAY-07-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 00:00:00', null),
+(15, 'TEST-DAY-08-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 01:00:00', null),
+(16, 'TEST-DAY-09-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 02:00:00', null),
+(17, 'TEST-DAY-10-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 03:00:00', null),
+(18, 'TEST-DAY-11-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 04:00:00', null),
+(19, 'TEST-DAY-12-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 05:00:00', null),
+(20, 'TEST-DAY-13-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 06:00:00', null),
+(21, 'TEST-DAY-14-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 07:00:00', null),
+(22, 'TEST-DAY-15-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 08:00:00', null),
+(23, 'TEST-DAY-16-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 09:00:00', null),
+(24, 'TEST-DAY-17-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 10:00:00', null),
+(25, 'TEST-DAY-18-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 11:00:00', null),
+(26, 'TEST-DAY-19-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 12:00:00', null),
+(27, 'TEST-DAY-20-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 13:00:00', null),
+(28, 'TEST-DAY-21-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 14:00:00', null),
+(29, 'TEST-DAY-22-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 15:00:00', null),
+(30, 'TEST-DAY-23-00', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 16:00:00', null),
+(31, 'TEST-DAY-13-1', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 17:00:00', null),
+(32, 'TEST-DAY-13-2', 'somkiat.kay@kmutt.ac.th', 3, 15, '2022-12-12 18:00:00', null);
 
 -- User
 INSERT INTO users values
@@ -76,6 +124,9 @@ INSERT INTO users values
 (2, 'Somchai Jaidee', '$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
 (3, 'Komkrid Rakdee', '$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
 (4, 'สมเกียรติ ขยันเรียน', '$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+
+INSERT INTO eventcategoryowner VALUES
+(1, 22);
 
 -- INSERT INTO users values
 -- (1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());

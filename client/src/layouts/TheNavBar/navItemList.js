@@ -22,14 +22,15 @@ const navItemList = [
   {
     mainItem: {
       name: 'Categories',
-      route: 'Schedules',
+      route: 'EventCategoryList',
+      allowed: ['lecturer', 'admin'],
     },
     subItems: [
       {
         icon: 'fa-regular fa-calendar',
         name: 'Categories',
         desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. At, ex?',
-        route: 'Schedules',
+        route: 'EventCategoryList',
       },
       {
         icon: 'fa-solid fa-circle-plus',
@@ -43,12 +44,13 @@ const navItemList = [
     mainItem: {
       name: 'Users',
       route: 'Users',
+      allowed: ['admin'],
     },
   },
   {
     mainItem: {
       name: 'About',
-      route: 'Schedules',
+      route: 'About',
     },
   },
   

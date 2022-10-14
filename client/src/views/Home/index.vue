@@ -1,13 +1,15 @@
 <script setup>
 import { useDarkmode } from '../../stores'
 import { storeToRefs } from 'pinia'
+import PageWrapper from '../../components/Layout/PageWrapper.vue';
 const myDarkmode = useDarkmode()
 const { darkmode } = storeToRefs(myDarkmode)
 // myDarkmode.init()
 </script>
 
 <template>
-  <main class="my-container">
+  <PageWrapper>
+  <div class="">
     <div>
       <h1 class="text-3xl font-bold underline ">
         {{ $t('hello') }}
@@ -36,7 +38,46 @@ const { darkmode } = storeToRefs(myDarkmode)
         inverse
       />
     </fa-layer>
-  </main>
+    <fa-layer class="fa-2xl">
+      <fa-icon :icon="['fas', 'filter']" class="text-red-500" />
+      <fa-icon :icon="['fas', 'filter']" class="fa-2xs"  inverse />
+    </fa-layer>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+  </div>
+</PageWrapper>
 </template>
 
 <style></style>

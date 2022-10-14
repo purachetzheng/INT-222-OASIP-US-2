@@ -2,15 +2,17 @@
 import 
 { 
     faCoffee, faUserSecret, faSpinner, faCircle, faTimes, faTag, 
-    faArrowRight, 
-    faPlus, faPlusCircle, faEllipsis,
+    faArrowRight,
+    faChevronDown,
+    faPlus, faPlusCircle, faEllipsis, faFilter, faSliders,
     faUser,
 } from '@fortawesome/free-solid-svg-icons'
 
 const solidIconsList = [
     faCoffee, faUserSecret, faSpinner, faCircle, faTimes, faTag, 
     faArrowRight,
-    faPlus,faPlusCircle,faEllipsis,
+    faChevronDown,
+    faPlus,faPlusCircle,faEllipsis,faFilter, faSliders,
     faUser,
 ]
 

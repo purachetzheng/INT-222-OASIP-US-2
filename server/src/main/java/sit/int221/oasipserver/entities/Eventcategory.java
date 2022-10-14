@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 @Setter
@@ -30,5 +31,16 @@ public class Eventcategory {
     @JsonIgnore
     @OneToMany(mappedBy = "eventCategory")
     private Set<Event> events = new LinkedHashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "eventcategoryowner",
+            joinColumns = { @JoinColumn(name = "eventCategoryId") },
+            inverseJoinColumns = { @JoinColumn(name = "userId") })
+    private Set<User> users = new HashSet<>();
 
 }

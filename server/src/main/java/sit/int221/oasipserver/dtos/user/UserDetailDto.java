@@ -14,7 +14,6 @@ import java.time.Instant;
 @AllArgsConstructor
 public class UserDetailDto {
     private String name;
-    private String password;
     private String email;
     private UserRole role;
     private Instant createdOn;
