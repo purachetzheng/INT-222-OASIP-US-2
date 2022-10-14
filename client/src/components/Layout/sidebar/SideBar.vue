@@ -1,0 +1,85 @@
+<script setup>
+import { collapsed, toggleSidebar, sidebarWidth } from './state'
+import { ref, computed } from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import navItemList from './navItemList';
+const router = useRouter()
+const route = useRoute()
+console.log(navItemList);
+console.log(route.name);
+</script>
+
+<template>
+  <aside class="min-h-screen bg-blue-100">
+    <div class="sidebar">
+      <div id="sidebar-wrapper" class="flex h-screen flex-col pt-2 pb-6">
+        <div class="sidebar-logo">
+          <div class="w-max p-2.5">
+            <div class="w-32">
+              <h1 class="">Logo</h1>
+            </div>
+          </div>
+        </div>
+        <nav id="sidebar-body" class="grow">
+          <ul class="mt-2 space-y-2 tracking-wide">
+            <li class="min-w-max" v-for="{mainItem, subItems} in navItemList">
+              <router-link :to="{ name: mainItem.route }" class="sidebar-nav-item" :class="[route.name === mainItem.route && 'active' ]" >
+                <div class="-ml-1 h-6 w-6 flex justify-center items-center">
+                <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
+              </div>
+                <span class="-mr-1 font-medium">{{ mainItem.name }}</span>
+              </router-link>
+            </li>
+          </ul>
+        </nav>
+        <!-- <div class="sidebar-footer">
+          <a
+            href="#"
+            class="group flex items-center space-x-4 rounded-md px-4 py-3 text-gray-600"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 group-hover:fill-cyan-600"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            <span class="group-hover:text-gray-700">Settings</span>
+          </a>
+        </div> -->
+      </div>
+
+    </div>
+  </aside>
+</template>
+
+<style>
+:root {
+  --sidebar-bg-color: #2f855a;
+  --sidebar-item-hover: #38a169;
+  --sidebar-item-active: #276749;
+}
+</style>
+
+<style scoped>
+.sidebar-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+.sidebar {
+  @apply sidebar-transition min-h-screen w-[3.35rem] overflow-hidden border-r hover:w-56 hover:bg-white hover:shadow-lg;
+}
+#sidebar-footer {
+  @apply w-max -mb-3;
+}
+.sidebar-nav-item{
+  @apply flex items-center space-x-4  px-4 py-3 text-gray-600 hover:bg-gray-200 duration-200
+}
+.sidebar-nav-item.active{
+  @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white
+}
+</style>
