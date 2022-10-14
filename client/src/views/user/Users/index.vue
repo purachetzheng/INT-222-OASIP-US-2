@@ -4,6 +4,7 @@ import { apiUser } from '../../../services/api/lib'
 import UserTable from './UserTable.vue'
 import UserDetailModal from './modal/UserDetailModal.vue'
 import AddUserModal from './modal/AddUserModal.vue';
+import PageWrapper from '../../../components/Layout/PageWrapper.vue';
 const users = ref([])
 
 const getUsers = async (page) => {
@@ -95,7 +96,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <main class="my-container grow flex flex-col py-4 gap-0 justify-between">
+  <PageWrapper>
+  <main class="flex flex-col  gap-0 justify-between">
     <header class="flex justify-between">
       <h1 class="text-2xl font-bold">User</h1>
       <div class="flex items-center gap-6">
@@ -121,6 +123,7 @@ onBeforeMount(() => {
     />
     <AddUserModal :show="showAddUserModal" @close="closeAddUserModal" @submit-form="onSubmit" />
   </main>
+</PageWrapper>
 </template>
 
 <style></style>

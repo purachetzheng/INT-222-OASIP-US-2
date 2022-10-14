@@ -27,7 +27,7 @@ const disPlayUpdated = (datetime) => {
         <li class="px-4 py-2 basis-36 hidden md:block">Actions</li>
       </ul>
     </header>
-    <ul class="flex flex-col gap-2 p-2 overflow-y-scroll h-0 grow ">
+    <ul class="flex flex-col gap-2 p-2 grow ">
 
       <li
         class="bg-white hover:bg-gray-100 flex items-center rounded-md"

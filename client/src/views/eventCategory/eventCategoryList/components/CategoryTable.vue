@@ -28,7 +28,7 @@ const props = defineProps({
         <li class="px-4 py-2 basis-24 hidden md:block">Actions</li>
       </ul>
     </header>
-    <ul class="flex flex-col gap-2 p-2 h-0 grow ">
+    <ul class="flex flex-col gap-2 p-2">
 
       <li
         class="bg-white hover:bg-gray-100 flex items-center rounded-md"
