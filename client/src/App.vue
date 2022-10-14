@@ -12,7 +12,7 @@ userStore.getUserInfo()
   <div class="min-h-screen w-full flex flex-col bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700">
     <Navbar />
     <!-- <TheNavBar /> -->
-      <router-view></router-view>
+    <router-view></router-view>
   </div>
 </template>
  

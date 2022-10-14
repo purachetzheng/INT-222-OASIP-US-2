@@ -6,6 +6,7 @@ import { getEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
+import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 const router = useRouter()
 
 const isLoading = ref(false)
@@ -72,9 +73,11 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main
+  
+  <!-- <main
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
-  >
+  > -->
+  <PageWrapper>
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />
@@ -99,8 +102,8 @@ onBeforeMount(async () => {
         <fa-icon :icon="['fas', 'chevron-down']" class="fa-lg"  />
       </button>
     </div>
-    
-  </main>
+  </PageWrapper>
+  <!-- </main> -->
 </template>
 
 <style scoped>

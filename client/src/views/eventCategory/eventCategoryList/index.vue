@@ -3,6 +3,7 @@ import { onBeforeMount, ref } from 'vue'
 import { apiGetEventCategory, apiPatchEventCategory } from '../../../services/api/lib/eventCategory'
 import CategoryTable from './components/CategoryTable.vue'
 import EditCategoryModal from './components/EditCategoryModal.vue'
+import PageWrapper from '../../../components/Layout/PageWrapper.vue';
 const isLoading = ref(false)
 const eventCategories = ref([])
 
@@ -58,13 +59,15 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <main class="my-container grow flex flex-col py-4 gap-0 justify-between">
+  <PageWrapper>
+  <main class="flex flex-col gap-0 justify-between">
     <EditCategoryModal :modal-state="editModal" @submit-edit-form="patchCategory" />
-    <CategoryTable class="grow overflow-hidden" :categories="eventCategories" @edit-category="editModal.show" />
+    <CategoryTable class="" :categories="eventCategories" @edit-category="editModal.show" />
     <!-- <div class="bg-white p-2" v-for="category in eventCategories">
       {{ category }}
     </div> -->
   </main>
+</PageWrapper>
 </template>
 
 <style></style>

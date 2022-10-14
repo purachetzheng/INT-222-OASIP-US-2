@@ -19,7 +19,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col ">
+  <div class="flex flex-col h-full">
     <header class=" pl-2 pr-4 " v-show="1">
       <ul class="flex flex-wrap font-semibold ">
         <li class="px-4 py-2 basis-60 ">Name</li>
@@ -28,7 +28,7 @@ const props = defineProps({
         <li class="px-4 py-2 basis-24 hidden md:block">Actions</li>
       </ul>
     </header>
-    <ul class="flex flex-col gap-2 p-2 overflow-y-scroll h-0 grow ">
+    <ul class="flex flex-col gap-2 p-2 h-0 grow ">
 
       <li
         class="bg-white hover:bg-gray-100 flex items-center rounded-md"

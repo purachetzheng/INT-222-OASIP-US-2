@@ -5,6 +5,7 @@ import SelectCategory from './stages/SelectCategory.vue'
 import FillForm from './stages/FillForm.vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { formatDatetime } from '../../../utils/dateTime'
+import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 
 // const step = ref(1)
 const addEvent = reactive({
@@ -47,7 +48,7 @@ onBeforeMount(() => {
   getCategories()
 })
 
-const onSubmit = async({ name, email, datetime, notes }) => {
+const onSubmit = async ({ name, email, datetime, notes }) => {
   const newEvent = {
     bookingName: name,
     bookingEmail: email,
@@ -57,27 +58,29 @@ const onSubmit = async({ name, email, datetime, notes }) => {
   }
   if (notes) newEvent.eventNotes = notes
   console.log(newEvent)
-  try{
-    const {data} = await apiEvent.post(newEvent)
-    console.log(data);
+  try {
+    const { data } = await apiEvent.post(newEvent)
+    console.log(data)
     alert('ok')
-  }catch(error){
-    console.log(error.message);
+  } catch (error) {
+    console.log(error.message)
   }
 }
 </script>
 
 <template>
-  <main class="my-container grow flex flex-col py-4 gap-4 justify-between">
-    <ProgressBar :step="addEvent.step" />
-    <SelectCategory
-      v-if="addEvent.step === 1"
-      class="grow"
-      :categories="categories"
-      @next-step="addEvent.nextStep()"
-    />
-    <FillForm v-if="addEvent.step > 1" class="grow" @submit-form="onSubmit" />
-  </main>
+  <PageWrapper>
+    <div class="grow flex flex-col gap-4 justify-between">
+      <ProgressBar :step="addEvent.step" />
+      <SelectCategory
+        v-if="addEvent.step === 1"
+        class="grow"
+        :categories="categories"
+        @next-step="addEvent.nextStep()"
+      />
+      <FillForm v-if="addEvent.step > 1" class="grow" @submit-form="onSubmit" />
+    </div>
+  </PageWrapper>
 </template>
 
 <style></style>

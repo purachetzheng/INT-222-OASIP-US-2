@@ -1,4 +1,5 @@
 <script setup>
+import PageWrapper from '../../components/Layout/PageWrapper.vue';
 
     
 const members = [
@@ -9,8 +10,9 @@ const members = [
 </script>
 
 <template>
-  <main
-    class="my-container h-full flex flex-col py-4 gap-4 items-center"
+  <PageWrapper>
+  <div
+    class=" flex flex-col gap-4 items-center"
   >
     <h1 class="text-3xl font-bold">INT222 - US2</h1>
     <div class="grid grid-cols-3 container">
@@ -20,7 +22,8 @@ const members = [
             <p class="">{{ member.student_id}}</p>
         </div>
     </div>
-  </main>
+  </div>
+</PageWrapper>
 </template>
 
 <style>

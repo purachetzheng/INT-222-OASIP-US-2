@@ -1,13 +1,15 @@
 <script setup>
 import { useDarkmode } from '../../stores'
 import { storeToRefs } from 'pinia'
+import PageWrapper from '../../components/Layout/PageWrapper.vue';
 const myDarkmode = useDarkmode()
 const { darkmode } = storeToRefs(myDarkmode)
 // myDarkmode.init()
 </script>
 
 <template>
-  <main class="my-container">
+  <PageWrapper>
+  <div class="">
     <div>
       <h1 class="text-3xl font-bold underline ">
         {{ $t('hello') }}
@@ -74,7 +76,8 @@ const { darkmode } = storeToRefs(myDarkmode)
     <h1>1</h1>
     <h1>1</h1>
     <h1>1</h1>
-  </main>
+  </div>
+</PageWrapper>
 </template>
 
 <style></style>
