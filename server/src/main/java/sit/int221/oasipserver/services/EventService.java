@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,12 +20,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
+import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.exception.type.ApiRequestException;
 import sit.int221.oasipserver.repo.EventRepository;
+import sit.int221.oasipserver.repo.EventcategoryRepository;
+import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
@@ -35,6 +39,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 @Service
 public class EventService {
@@ -48,6 +53,12 @@ public class EventService {
     public EventcategoryService eventcategoryService;
     @Autowired
     private OverlapValidate overlapValidate;
+    @Autowired
+    EventcategoryRepository eventcategoryRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    EmailServiceImpl emailService;
 
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
@@ -61,6 +72,7 @@ public class EventService {
 //        List<Event> eventList = repository.findAllByEventCategoryEventCategoryName("Project Management Clinic");
         return listMapper.mapList(eventList, SimpleEventDto.class, modelMapper);
     }
+
 
     public PageEventDto getEventPage(int pageNum, int pageSize, String sortBy, Integer eventCategoryId, String dateStatus, String date) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
@@ -88,6 +100,11 @@ public class EventService {
             return repository.findAll(pageRequest);
         } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_lecturer]")) {
             System.out.println("lecturer paging");
+            Integer userId = userRepository.findUserIdByEmail(currentPrincipalEmail);
+            System.out.println(userId);
+            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
+            System.out.println(categoryIdOwner.getId());
+            return repository.findByEventCategoryId(pageRequest, categoryIdOwner.getId());
 //            return repository.findByEventCategory(eventcategoryownerRepository.findById(pageRequest, 1));
         }
 
@@ -95,6 +112,7 @@ public class EventService {
         return repository.findAllFilter(pageRequest, eventCategoryId, date);
     }
 
+    @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin') or hasRole('ROLE_lecturer')")
     public Event getById(Integer id, HttpServletResponse response) throws ForbiddenException {
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
@@ -110,11 +128,19 @@ public class EventService {
 //                System.out.println("403");
                 throw new ForbiddenException();
             }
+        } else if(getCurrentAuthority().equals("[ROLE_lecturer]")){
+            Integer userId = userRepository.findUserIdByEmail(getCurrentUserPrincipalEmail());
+            System.out.println(userId);
+            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
+            System.out.println(categoryIdOwner.getId());
+            if(!categoryIdOwner.getId().equals(event.getEventCategory().getId())){
+                throw new ForbiddenException();
+            }
         }
-
         return event;
     }
 
+    @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin')")
     public void delete(Integer id, HttpServletResponse response) throws ForbiddenException {
 
         Event event = repository.findById(id).orElseThrow
@@ -128,7 +154,7 @@ public class EventService {
         repository.delete(getById(id, response));
     }
 
-    public SimpleEventDto create(PostEventDto newEvent, BindingResult result)
+    public SimpleEventDto create(PostEventDto newEvent, BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException, ApiRequestException {
 
         if (result.hasErrors()
@@ -160,9 +186,14 @@ public class EventService {
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
+        emailService.sendSimpleMessage(newEvent, timeZone);
+
+
+
         return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
     }
 
+    @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin')")
     public EventDto update(PatchEventDto updateEventDto, Integer id, BindingResult result, HttpServletResponse response)
             throws MethodArgumentNotValidException, ForbiddenException {
         Event eventForEmailCheck = repository.findById(id).orElseThrow

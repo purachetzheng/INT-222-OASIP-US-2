@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
+import java.util.TimeZone;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,4 +35,5 @@ public class PostEventDto {
     //ไว้ set ก่อนการ modelMap เพื่อไม่ให้ return กลับแล้ว
     // eventCategoryName null (ปัญหาเมื่อ ใช้การสร้าง id เอง)
     private String eventCategoryName;
+
 }
