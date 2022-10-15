@@ -22,6 +22,13 @@ const navItemList = [
   },
   {
     mainItem: {
+      name: 'Add Event',
+      route: 'AddEvent',
+      icon: ['fas', 'circle-plus'],
+    },
+  },
+  {
+    mainItem: {
       name: 'Categories',
       route: 'EventCategoryList',
       icon: ['far', 'folder-open'],

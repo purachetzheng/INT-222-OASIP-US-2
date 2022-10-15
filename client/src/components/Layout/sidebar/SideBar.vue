@@ -3,16 +3,28 @@ import { collapsed, toggleSidebar, sidebarWidth } from './state'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import navItemList from './navItemList'
+import { useUserStore } from '../../../stores'
+import { storeToRefs } from 'pinia'
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
 console.log(navItemList)
 console.log(route.name)
+console.log(user)
+const allowedNavItems = computed(() =>
+  navItemList.filter(
+    (item) =>
+      !item.mainItem.allowed ||
+      item.mainItem.allowed.some((role) => role === user.value.role)
+  )
+)
 </script>
 
 <template>
-  <aside class="min-h-screen bg-gray-100">
-    <div class="sidebar p-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
-      <div id="sidebar-wrapper" class="flex h-screen flex-col pt-2 pb-6">
+  <aside class="h-screen bg-gray-100">
+    <div class="sidebar px-3 py-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
+      <div id="sidebar-wrapper" class="flex  flex-col pt-2 pb-6">
         <div class="sidebar-logo">
           <div class="w-max p-2.5" @click="toggleSidebar">
             <div class="w-32">
@@ -22,13 +34,16 @@ console.log(route.name)
         </div>
         <nav id="sidebar-body" class="grow">
           <ul class="mt-2 space-y-2 tracking-wide">
-            <li class="min-w-max " v-for="{ mainItem, subItems } in navItemList">
+            <li
+              class="min-w-max"
+              v-for="{ mainItem, subItems } in allowedNavItems"
+            >
               <router-link
                 :to="{ name: mainItem.route }"
-                class="sidebar-nav-item  block"
+                class="sidebar-nav-item block"
                 :class="[route.name === mainItem.route && 'active']"
               >
-                <div class=" h-6 w-6 flex justify-center items-center">
+                <div class="h-6 w-6 flex justify-center items-center">
                   <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
                 </div>
                 <div
@@ -37,9 +52,10 @@ console.log(route.name)
                 >
                   <div class="flex w-36 justify-between pr-3.5">
                     <p>{{ mainItem.name }}</p>
-                    <p><fa-icon :icon="['fas', 'chevron-down']" class="fa-xs" /></p>
+                    <p>
+                      <fa-icon :icon="['fas', 'chevron-down']" class="fa-xs" />
+                    </p>
                   </div>
-                  
                 </div>
               </router-link>
             </li>
@@ -89,15 +105,15 @@ console.log(route.name)
   @apply w-max -mb-3;
 }
 .sidebar-nav-item {
-  @apply flex items-center space-x-4 pl-4 py-3 text-gray-600 hover:bg-gray-200 rounded-md ;
+  @apply flex items-center space-x-4 pl-4 py-3 text-gray-600 hover:bg-gray-200 rounded-md;
 }
 .sidebar-nav-item.active {
   @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white;
 }
 .text-collapsed {
-  @apply opacity-0 -translate-x-8
+  @apply opacity-0 -translate-x-8;
 }
-.sidebar-nav-item div{
+.sidebar-nav-item div {
   transition: opacity 150ms ease-in-out, transform 200ms linear;
 }
 </style>
