@@ -1,20 +1,20 @@
 <script setup>
 import { collapsed, toggleSidebar, sidebarWidth } from './state'
 import { ref, computed } from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import navItemList from './navItemList';
+import { useRoute, useRouter } from 'vue-router'
+import navItemList from './navItemList'
 const router = useRouter()
 const route = useRoute()
-console.log(navItemList);
-console.log(route.name);
+console.log(navItemList)
+console.log(route.name)
 </script>
 
 <template>
-  <aside class="min-h-screen bg-blue-100">
-    <div class="sidebar">
+  <aside class="min-h-screen bg-gray-100">
+    <div class="sidebar p-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
       <div id="sidebar-wrapper" class="flex h-screen flex-col pt-2 pb-6">
         <div class="sidebar-logo">
-          <div class="w-max p-2.5">
+          <div class="w-max p-2.5" @click="toggleSidebar">
             <div class="w-32">
               <h1 class="">Logo</h1>
             </div>
@@ -22,12 +22,20 @@ console.log(route.name);
         </div>
         <nav id="sidebar-body" class="grow">
           <ul class="mt-2 space-y-2 tracking-wide">
-            <li class="min-w-max" v-for="{mainItem, subItems} in navItemList">
-              <router-link :to="{ name: mainItem.route }" class="sidebar-nav-item" :class="[route.name === mainItem.route && 'active' ]" >
-                <div class="-ml-1 h-6 w-6 flex justify-center items-center">
-                <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
-              </div>
-                <span class="-mr-1 font-medium">{{ mainItem.name }}</span>
+            <li class="min-w-max " v-for="{ mainItem, subItems } in navItemList">
+              <router-link
+                :to="{ name: mainItem.route }"
+                class="sidebar-nav-item  transition-all"
+                :class="[route.name === mainItem.route && 'active']"
+              >
+                <div class=" h-6 w-6 flex justify-center items-center">
+                  <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
+                </div>
+                <p
+                  class="font-medium w-0 relative transition-all duration-200 ease-linear"
+                  :class="[collapsed ? 'text-collapsed' : '']"
+                  >{{ mainItem.name }}</p
+                >
               </router-link>
             </li>
           </ul>
@@ -53,7 +61,6 @@ console.log(route.name);
           </a>
         </div> -->
       </div>
-
     </div>
   </aside>
 </template>
@@ -71,15 +78,20 @@ console.log(route.name);
   @apply transition-all duration-300 ease-in-out;
 }
 .sidebar {
-  @apply sidebar-transition min-h-screen w-[3.35rem] overflow-hidden border-r hover:w-56 hover:bg-white hover:shadow-lg;
+  @apply sidebar-transition min-h-screen border-r hover:shadow-lg;
 }
 #sidebar-footer {
   @apply w-max -mb-3;
 }
-.sidebar-nav-item{
-  @apply flex items-center space-x-4  px-4 py-3 text-gray-600 hover:bg-gray-200 duration-200
+.sidebar-nav-item {
+  @apply flex items-center space-x-4 pl-4 py-3 text-gray-600 hover:bg-gray-200 rounded-md ;
 }
-.sidebar-nav-item.active{
-  @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white
+.sidebar-nav-item.active {
+  @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white;
 }
+.text-collapsed {
+  @apply opacity-0 -translate-x-6 absolute left-[3.25rem];
+  
+}
+
 </style>
