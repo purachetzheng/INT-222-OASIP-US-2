@@ -17,6 +17,10 @@ userStore.getUserInfo()
 </template>
  
 <style>
+#app {
+  height: 100vh;
+  /* position: relative; */
+}
 
 
 </style>
