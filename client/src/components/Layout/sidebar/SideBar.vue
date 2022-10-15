@@ -25,17 +25,22 @@ console.log(route.name)
             <li class="min-w-max " v-for="{ mainItem, subItems } in navItemList">
               <router-link
                 :to="{ name: mainItem.route }"
-                class="sidebar-nav-item  transition-all"
+                class="sidebar-nav-item  block"
                 :class="[route.name === mainItem.route && 'active']"
               >
                 <div class=" h-6 w-6 flex justify-center items-center">
                   <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
                 </div>
-                <p
-                  class="font-medium w-0 relative transition-all duration-200 ease-linear"
-                  :class="[collapsed ? 'text-collapsed' : '']"
-                  >{{ mainItem.name }}</p
+                <div
+                  class="font-medium relative w-0"
+                  :class="[collapsed ? 'text-collapsed' : 'max-w-full']"
                 >
+                  <div class="flex w-36 justify-between pr-3.5">
+                    <p>{{ mainItem.name }}</p>
+                    <p><fa-icon :icon="['fas', 'chevron-down']" class="fa-xs" /></p>
+                  </div>
+                  
+                </div>
               </router-link>
             </li>
           </ul>
@@ -90,8 +95,9 @@ console.log(route.name)
   @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white;
 }
 .text-collapsed {
-  @apply opacity-0 -translate-x-6 absolute left-[3.25rem];
-  
+  @apply opacity-0 -translate-x-8
 }
-
+.sidebar-nav-item div{
+  transition: opacity 150ms ease-in-out, transform 200ms linear;
+}
 </style>
