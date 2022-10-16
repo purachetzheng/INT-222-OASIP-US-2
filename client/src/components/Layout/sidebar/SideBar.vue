@@ -25,14 +25,19 @@ const allowedNavItems = computed(() =>
 <template>
   <aside class="h-screen bg-gray-100">
     <div class="sidebar px-3 py-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
-      <div id="sidebar-wrapper" class="flex flex-col h-full justify-between">
+      <div id="sidebar-wrapper" class="flex flex-col h-full justify-between divide-y-2 divide-gray-500">
         <div class="sidebar-logo">
-          <div class="w-max p-2.5" @click="toggleSidebar">
+          <div class="w-max py-3 px-2.5" @click="toggleSidebar">
             <div class="w-32">
-              <h1 class="">Logo</h1>
+              <h1 class="font-bold">US-2</h1>
             </div>
           </div>
         </div>
+        <!-- <hr> -->
+        <div class="py-3">
+          <user-panel :collapsed="collapsed" />
+        </div>
+        <!-- <hr class=" h-px border-0 bg-gray-700"> -->
         <nav id="sidebar-body" class="grow ">
           <ul class="mt-2 space-y-2 tracking-wide">
             <li
@@ -62,9 +67,6 @@ const allowedNavItems = computed(() =>
             </li>
           </ul>
         </nav>
-        <div class="pl-0 py-3">
-          <user-panel />
-        </div>
         <!-- <div class="sidebar-footer">
           <a
             href="#"

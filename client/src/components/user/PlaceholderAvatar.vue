@@ -29,6 +29,9 @@ const props = defineProps({
 .avatar-small{
     @apply w-10 h-10 
 }
+.avatar-md{
+    @apply w-12 h-12 
+}
 .avatar-medium{
     @apply w-20 h-20 text-3xl
 }

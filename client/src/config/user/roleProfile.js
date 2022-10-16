@@ -14,5 +14,10 @@ const roleProfile = {
     // profile: 'bg-blue-600 text-white',
     profile: 'bg-blue-100 text-blue-600',
   },
+  guest:{
+    badges: 'bg-gray-200 text-gray-500',
+    // profile: 'bg-blue-600 text-white',
+    profile: 'bg-gray-300 text-gray-600',
+  }
 }
 export default roleProfile
