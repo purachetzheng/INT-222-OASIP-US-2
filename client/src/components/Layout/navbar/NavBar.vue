@@ -1,29 +1,37 @@
 <script setup>
-import { useDarkmode } from '../../../stores'
+import { useRoute, useRouter } from 'vue-router'
+import { useDarkmode,useUserStore } from '../../../stores'
 import { storeToRefs } from 'pinia'
+import UserMenu from './UserMenu.vue'
+const router = useRouter()
+const route = useRoute()
 const myDarkmode = useDarkmode()
 const { darkmode } = storeToRefs(myDarkmode)
+const userStore = useUserStore()
+const { user, isAuth } = storeToRefs(userStore)
 </script>
  
 <template>
 <header class="py-2 bg-gray-100 dark:bg-gray-700">
     <div class="flex justify-between items-center px-6">
         <div class="">
-            Breadcrumbs > Event
+            <p class="font-semibold text-lg">{{route.name}}</p>
         </div>
-        <div class="flex gap-4">
-            <div class="flex p-2 rounded-full hover:bg-gray-200">
-                <fa-icon :icon="['fas', 'circle']" class="fa-lg text-black" />
+        <div class="flex gap-4 items-center">
+            <div class="flex p-2 rounded-full hover:bg-gray-200 h-10 w-10">
+                <!-- <fa-icon :icon="['fas', 'circle']" class="fa-lg text-black" /> -->
+                <img src="../../../assets/images/flags/united-kingdom.png" alt="h-full w-full">
             </div>
             
-            <button class="flex p-2 rounded-full hover:bg-gray-200 relative" @click="myDarkmode.toggleMode()">
+            <button class="flex p-2 rounded-full hover:bg-gray-200 relative h-10 w-10" @click="myDarkmode.toggleMode()">
                 <Transition name="switch">
-                    <fa-icon :icon="['far', 'sun']" class="fa-lg" v-if="!darkmode" />
-                    <fa-icon :icon="['far', 'moon']" class="fa-lg" v-else />
+                    <fa-icon :icon="['far', 'sun']" class="h-full w-full" v-if="!darkmode" />
+                    <fa-icon :icon="['far', 'moon']" class="h-full w-full" v-else />
                 </Transition>
-                
             </button>
             
+            <UserMenu />
+            <!-- <fa-icon :icon="['far', 'user']" class="fa-lg text-black" /> -->
         </div>
     </div>
 </header>
