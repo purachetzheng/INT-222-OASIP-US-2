@@ -48,15 +48,15 @@ const allowedNavItems = computed(() =>
                   <fa-icon :icon="mainItem.icon" class="h-5 w-5" />
                 </div>
                 <div
-                  class="font-medium relative w-0"
+                  class="font-medium relative w-0 whitespace-nowrap"
                   :class="[collapsed ? 'text-collapsed' : 'max-w-full']"
                 >
-                  <div class="flex w-36 justify-between pr-3.5">
-                    <p>{{ mainItem.name }}</p>
+                  {{ mainItem.name }}
+                  <!-- <div class="flex w-36 justify-between pr-3.5">
                     <p>
                       <fa-icon :icon="['fas', 'chevron-down']" class="fa-xs" />
                     </p>
-                  </div>
+                  </div> -->
                 </div>
               </router-link>
             </li>
