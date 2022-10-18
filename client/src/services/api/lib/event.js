@@ -11,7 +11,7 @@ export const getEventById = (id) =>
 // const getEventNonPage = (params = {eventCategoryId, date}) => apiClient.get('/events/all', params)
 
 const postEvent = (data) => 
-  apiClient.get(endpoint, data)
+  apiClient.post(endpoint, data)
 
 const patchEvent = ({id, data}) => 
   apiClient.patch(`${endpoint}/${id}`, data)

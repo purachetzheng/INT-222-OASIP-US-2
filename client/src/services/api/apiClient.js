@@ -39,6 +39,7 @@ const noAuthRequired = [
   { url: '/api/auth/login' },
   { url: '/api/users', method: ['post'] },
   { url: '/api/eventcategories', method: ['get'] },
+  { url: '/api/guests' },
 ]
 const isAuthRequired = ({ url, method } = {}) => {
   if (
