@@ -178,11 +178,46 @@ public class EventService {
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
+
         if(getCurrentAuthority().equals("[ROLE_student]")){
             if(!newEvent.getBookingEmail().equals(getCurrentUserPrincipalEmail())){
                 result.addError(bookingEmailNotMatchObj);
             }
         }
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+        emailService.sendSimpleMessage(newEvent, timeZone);
+
+
+
+        return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
+    }
+
+    public SimpleEventDto guestCreate(PostEventDto newEvent, BindingResult result, TimeZone timeZone)
+            throws MethodArgumentNotValidException, ApiRequestException {
+
+        if (result.hasErrors()
+                && newEvent.getEventCategoryId() == null
+                || newEvent.getEventStartTime() == null)
+            throw new MethodArgumentNotValidException(null, result);
+
+        Integer categoryId = newEvent.getEventCategoryId();
+        Eventcategory category = eventcategoryService.getById(categoryId);
+        newEvent.setEventDuration(category.getEventDuration());
+        newEvent.setEventCategoryName(category.getEventCategoryName());
+
+        Event event = modelMapper.map(newEvent, Event.class);
+        ChronoUnit minutes = ChronoUnit.MINUTES;
+        Integer duration = event.getEventDuration();
+
+        List<Event> eventList = repository.findAllByEventCategoryIsAndEventStartTimeBetween
+                (event.getEventCategory(), event.getEventStartTime().minus(480, minutes),
+                        event.getEventStartTime().plus((480 + duration), minutes));
+
+        if (overlapValidate.overlapCheck(event, eventList))
+            result.addError(overlapErrorObj);
+
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
@@ -235,6 +270,10 @@ public class EventService {
     private String getCurrentUserPrincipalEmail(){
         UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getCurrentAuthentication.getUsername();
+    }
+
+    private UserDetails getUserDetails(){
+        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private String getCurrentAuthority(){

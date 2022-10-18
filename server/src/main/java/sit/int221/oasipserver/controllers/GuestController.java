@@ -26,6 +26,6 @@ public class GuestController {
             @Valid @RequestBody PostEventDto newEvent,
             BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException {
-        return eventService.create(newEvent, result, timeZone);
+        return eventService.guestCreate(newEvent, result, timeZone);
     }
 }
