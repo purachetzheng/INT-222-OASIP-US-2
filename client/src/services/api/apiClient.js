@@ -7,7 +7,7 @@ const defaultOptions = {
   headers: {
     Accept: '*/*',
     'Content-Type': 'application/json',
-    withCredentials: true,
+    // withCredentials: true,
   },
 }
 

@@ -6,7 +6,9 @@ import FillForm from './stages/FillForm.vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { formatDatetime } from '../../../utils/dateTime'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-
+import { useUserStore } from '../../../stores'
+import { postGuestsEvent } from '../../../services/api/lib/guests'
+const userStore = useUserStore()
 // const step = ref(1)
 const addEvent = reactive({
   step: 1,
@@ -59,7 +61,7 @@ const onSubmit = async ({ name, email, datetime, notes }) => {
   if (notes) newEvent.eventNotes = notes
   console.log(newEvent)
   try {
-    const { data } = await apiEvent.post(newEvent)
+    const { data } =  userStore.isAuth ? await apiEvent.post(newEvent) : await postGuestsEvent(newEvent)
     console.log(data)
     alert('ok')
   } catch (error) {
