@@ -32,7 +32,7 @@ const { user, isAuth } = storeToRefs(userStore)
       </ul>
     </div>
     <router-link :to="{ name: 'Authentication' }" v-else>
-      <app-button button-type="success" >Sign In</app-button>
+      <app-button button-type="primary" >Sign In</app-button>
 
     </router-link>
 

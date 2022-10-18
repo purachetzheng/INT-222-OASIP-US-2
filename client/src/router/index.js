@@ -12,7 +12,7 @@ const router = createRouter({ history, routes })
 
 const isAuthenticated = () => localStorage.getItem('accessToken') !== null
 
-const nonNeededAuth = ['Home', 'About', 'NewEvents']
+const nonNeededAuth = ['Home', 'About', 'NewEvents', 'AddEvent']
 
 router.beforeEach(async (to, from) => {
   if(nonNeededAuth.some((el) => el === to.name)) return
