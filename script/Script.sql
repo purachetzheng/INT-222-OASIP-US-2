@@ -121,12 +121,27 @@ INSERT INTO events values
 INSERT INTO users values
 -- (1, 'OASIP ADMIN', 'oasip.admin@kmutt.ac.th', 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 (1, 'OASIP ADMIN', '$argon2id$v=19$m=4096,t=3,p=1$sYXzbUOqBoHY1NfhJ8cjnw$H6+adWySiFPgcUogJK3hEhcF6Y4fusy7tcXYEL+f0cQ', 'oasip.admin@kmutt.ac.th', 'admin', '2022-08-01 00:00:00+07:00', '2022-08-01 00:00:00+07:00'),
-(2, 'Somchai Jaidee', '$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI', 'somchai.jai@kmutt.ac.th', 'admin', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
-(3, 'Komkrid Rakdee', '$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0', 'komkrid.rak@mail.kmutt.ac.th', 'admin', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
-(4, 'สมเกียรติ ขยันเรียน', '$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ', 'somkiat.kay@kmutt.ac.th', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
+(7, 'Somchai Jaidee', '$argon2id$v=19$m=4096,t=3,p=1$dmsOy7LPTjmooPu+P2oTZA$NZFTFd3f0K1Sp19aaUwyn3jgiy15yFcXhp8E4/1yXoI', 'somchai.jai@kmutt.ac.th', 'student', '2022-08-08 15:00:00+07:00', '2022-08-08 15:00:00+07:00'),
+(8, 'Komkrid Rakdee', '$argon2id$v=19$m=4096,t=3,p=1$8W61ZOC5RU7sJP5kKRbSqg$OLwZNPeMqxp+g0Vbn+odcA47XMClFN+IswTueVah7F0', 'komkrid.rak@mail.kmutt.ac.th', 'student', '2022-08-08 15:00:01+07:00', '2022-08-08 15:00:01+07:00'),
+(9, 'สมเกียรติ ขยันเรียน', '$argon2id$v=19$m=4096,t=3,p=1$gBqgjspF45FcIKQEw8GmaQ$alrOCZ0YrDqOu8/aZiLDMGZo4vFkSEAXA0YoHhY0BDQ', 'somkiat.kay@kmutt.ac.th', 'student', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(2, 'Olarn Rojanapornpun', '$argon2id$v=19$m=4096,t=3,p=1$Sx7y2jxKZSjpWUV4srd8eg$AMH09iFiPQgAZ00cAdN3Gucqfhx2kRo3tQbHeLSR0RE', 'olarn.roj@kmutt.ac.th', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(3, 'Pichet Limvachiranan', '$argon2id$v=19$m=4096,t=3,p=1$46EB43gQ46Z1/EmdqxtKNA$7m6cWGO2iDlFl/ETDYuYf+ArnSjRnsNwXLIP18DTYQY', 'pichet.limv@kmutt.ac.th', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(4, 'Umaporn Supasitthimethee', '$argon2id$v=19$m=4096,t=3,p=1$1Z2UK1zC76FIQeLH54GVAQ$qfXcHF31LnuWpt37QAcWyNp8PdbOQ+jjaV1xWXixS0M', 'umaporn.sup@kmutt.ac.th', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(5, 'Siam Yamsaengsung', '$argon2id$v=19$m=4096,t=3,p=1$46EB43gQ46Z1/EmdqxtKNA$7m6cWGO2iDlFl/ETDYuYf+ArnSjRnsNwXLIP18DTYQY', 'siam.yam@kmutt.ac.th', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(6, 'Sunisa Sathapornvajana', '$argon2id$v=19$m=4096,t=3,p=1$29/ffaszvjvi3CZO45bSCg$kKpfq5WEswoqa/LfyIZzQaQ6AFdjhyiYjXRCfMiTnwg', 'sunisa.sat@kmutt.ac.th', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(10, 'lecturer', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 'l@l.com', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(11, 'student', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 's@s.com', 'student', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
+(12, 'admin', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 'a@a.com', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
 
 INSERT INTO eventcategoryowner VALUES
-(1, 22);
+(10, 1),
+(2, 1),
+(2, 2),
+(5, 2),
+(6, 3),
+(4, 4),
+(2, 5),
+(3, 5);
 
 -- INSERT INTO users values
 -- (1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());
