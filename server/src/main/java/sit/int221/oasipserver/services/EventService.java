@@ -23,6 +23,7 @@ import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.exception.type.ApiRequestException;
@@ -36,10 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -101,14 +99,24 @@ public class EventService {
         } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_lecturer]")) {
             System.out.println("lecturer paging");
             Integer userId = userRepository.findUserIdByEmail(currentPrincipalEmail);
-            System.out.println(userId);
-            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
-            System.out.println(categoryIdOwner.getId());
-            return repository.findByEventCategoryId(pageRequest, categoryIdOwner.getId());
+            User user = userRepository.findByEmail(currentPrincipalEmail);
+            System.out.println("UserID: " + userId);
+//            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId); //ได้ id category
+
+            Set<Integer> integers = new HashSet<>();
+
+            for(Eventcategory eventcategory : user.getCategoriesOwner()){
+                integers.add(eventcategory.getId());
+                System.out.println(eventcategory.getId());
+            }
+
+            return repository.findAllByEventCategoryIn(pageRequest, user.getCategoriesOwner());
+//            System.out.println(categoryIdOwner.getId());
+//            return repository.findByEventCategoryId(pageRequest, categoryIdOwner.getId());
 //            return repository.findByEventCategory(eventcategoryownerRepository.findById(pageRequest, 1));
         }
 
-
+        System.out.println("This is find all events");
         return repository.findAllFilter(pageRequest, eventCategoryId, date);
     }
 

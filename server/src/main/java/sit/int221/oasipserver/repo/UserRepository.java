@@ -9,6 +9,7 @@ import sit.int221.oasipserver.entities.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     public List<User> findAllByOrderByNameAsc();
@@ -25,7 +26,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT id FROM User WHERE email = ?1")
     public Integer findUserIdByEmail(String email);
-
 
 //    Optional<User> findByName(String name);
     public User findByName(String name);
