@@ -11,6 +11,7 @@ import sit.int221.oasipserver.entities.Eventcategory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
@@ -73,5 +74,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Page<Event> findAllEventUpcoming(Pageable pageable,
                                          @Param("id") Integer eventCategoryId,
                                          @Param("date") String date);
+
+    Page<Event> findAllByEventCategoryIn(Pageable pageable, Set<Eventcategory> eventcategories);
 
 }
