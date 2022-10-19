@@ -7,18 +7,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
@@ -34,8 +29,6 @@ import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -86,38 +79,30 @@ public class EventService {
     private Page<Event> filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
         UserDetails currentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentPrincipalEmail = currentAuthentication.getUsername();
-        if(dateStatus.equals("past"))
-            return repository.findAllEventPast(pageRequest, eventCategoryId, date);
-        if(dateStatus.equals("upcoming"))
-            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
-        if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_student]")){
-            System.out.println("student paging");
-            return repository.findByBookingEmail(pageRequest, currentPrincipalEmail);
-        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_admin]")) {
-            System.out.println("admin paging");
-            return repository.findAll(pageRequest);
-        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_lecturer]")) {
-            System.out.println("lecturer paging");
-            Integer userId = userRepository.findUserIdByEmail(currentPrincipalEmail);
-            User user = userRepository.findByEmail(currentPrincipalEmail);
-            System.out.println("UserID: " + userId);
-//            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId); //ได้ id category
 
-            Set<Integer> integers = new HashSet<>();
+        String userEmail = currentAuthentication.getUsername();
+        User user = userRepository.findByEmail(userEmail);
+        String role = getCurrentAuthority();
+        String studentEmail = role.equals("[ROLE_student]") ? userEmail : null;
 
+        Set<Integer> lecturerCategoryIds = new HashSet<>();
+        if(role.equals("[ROLE_lecturer]")){
             for(Eventcategory eventcategory : user.getCategoriesOwner()){
-                integers.add(eventcategory.getId());
-                System.out.println(eventcategory.getId());
+                lecturerCategoryIds.add(eventcategory.getId());
             }
-
-            return repository.findAllByEventCategoryIn(pageRequest, user.getCategoriesOwner());
-//            System.out.println(categoryIdOwner.getId());
-//            return repository.findByEventCategoryId(pageRequest, categoryIdOwner.getId());
-//            return repository.findByEventCategory(eventcategoryownerRepository.findById(pageRequest, 1));
+            lecturerCategoryIds.stream().forEach(integer -> System.out.println(integer));
         }
 
-        System.out.println("This is find all events");
-        return repository.findAllFilter(pageRequest, eventCategoryId, date);
+        if(dateStatus.equals("past"))
+            return repository.findAllEventPast(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
+
+        if(dateStatus.equals("upcoming"))
+            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
+
+        if(date == null && eventCategoryId == null)
+            return repository.findAll(pageRequest, studentEmail, lecturerCategoryIds);
+
+        return repository.findAllFilter(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
     }
 
     @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin') or hasRole('ROLE_lecturer')")

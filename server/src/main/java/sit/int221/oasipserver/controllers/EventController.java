@@ -46,7 +46,7 @@ public class EventController {
 
 
     @GetMapping("")
-    public PageEventDto getAllProducts(
+    public PageEventDto getAllEvents(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "eventStartTime") String sortBy,
