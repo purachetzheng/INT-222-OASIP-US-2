@@ -125,7 +125,7 @@ public class EventService {
             Boolean isCategoryiesOwner = categoriesOwner.stream().anyMatch(
                     category -> category.getId().equals(event.getEventCategory().getId())
             );
-            if(isCategoryiesOwner) throw new ForbiddenException();
+            if(!isCategoryiesOwner) throw new ForbiddenException();
         }
         return event;
     }
