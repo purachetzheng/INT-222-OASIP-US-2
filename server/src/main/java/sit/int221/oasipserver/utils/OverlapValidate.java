@@ -16,19 +16,12 @@ public class OverlapValidate {
         Instant startTime = newEvent.getEventStartTime();
         Instant newEventStart = startTime;
         Instant newEventEnd = startTime.plus(newEvent.getEventDuration(), minutes);
-        for (Event e: eventList){
+        return eventList.stream().anyMatch(e -> {
             Instant eEventStart = e.getEventStartTime();
             Instant eEventEnd = e.getEventStartTime().plus(e.getEventDuration(), minutes);
-
-            Boolean isStartBetween = (newEventStart.isAfter(eEventStart)
-                    || newEventStart.equals(eEventStart))
-                    && newEventStart.isBefore(eEventEnd);
-            Boolean isEndBetween = newEventEnd.isAfter(eEventStart)
-                    && newEventEnd.isBefore(eEventEnd);
-
-            if (isStartBetween || isEndBetween) return true;
-        }
-        return false;
+            if (newEventStart.isBefore(eEventEnd) && eEventStart.isBefore(newEventEnd)) return true;
+            return false;
+        });
     }
     public static OverlapValidate getInstance() {
         return overlapValidate;
