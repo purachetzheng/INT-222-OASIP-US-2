@@ -109,26 +109,23 @@ public class EventService {
     public Event getById(Integer id, HttpServletResponse response) throws ForbiddenException {
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        Boolean isStudent = getCurrentAuthority().equals("[ROLE_student]");
+        Boolean isLecturer = getCurrentAuthority().equals("[ROLE_lecturer]");
+        Boolean isAdmin = getCurrentAuthority().equals("[ROLE_admin]");
+        Boolean isOwnerEvent = getCurrentUserPrincipalEmail().equals(event.getBookingEmail());
 
-//        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+        if(isStudent && !isOwnerEvent){
 //            response.setStatus(HttpStatus.FORBIDDEN.value());
-//            return null;
-//        }
-
-        if(getCurrentAuthority().equals("[ROLE_student]")){
-            if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
-//                response.setStatus(HttpStatus.FORBIDDEN.value());
-//                System.out.println("403");
-                throw new ForbiddenException();
-            }
-        } else if(getCurrentAuthority().equals("[ROLE_lecturer]")){
+//            System.out.println("403");
+            throw new ForbiddenException();
+        }
+        if(isLecturer){
             Integer userId = userRepository.findUserIdByEmail(getCurrentUserPrincipalEmail());
-            System.out.println(userId);
-            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
-            System.out.println(categoryIdOwner.getId());
-            if(!categoryIdOwner.getId().equals(event.getEventCategory().getId())){
-                throw new ForbiddenException();
-            }
+            List<Eventcategory> categoriesOwner = eventcategoryRepository.findAllByUsersId(userId);
+            Boolean isCategoryiesOwner = categoriesOwner.stream().anyMatch(
+                    category -> category.getId().equals(event.getEventCategory().getId())
+            );
+            if(isCategoryiesOwner) throw new ForbiddenException();
         }
         return event;
     }

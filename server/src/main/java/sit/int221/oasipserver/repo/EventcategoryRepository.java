@@ -12,6 +12,7 @@ import java.util.Set;
 public interface EventcategoryRepository extends JpaRepository<Eventcategory, Integer> {
 //    public Eventcategory findByEventCategoryName();
     public Eventcategory findEventcategoryByUsersId(Integer id);
+    public List<Eventcategory> findAllByUsersId(Integer id);
 
 
     public List<Eventcategory> findEventcategoriesByUsersLike(User user);
