@@ -57,7 +57,7 @@ const subFilterBar = reactive({
 </script>
 
 <template>
-  <div class=" ">
+  <div class="mb-4">
     <div class="flex gap-2 justify-between">
       <!-- <button :id="id" class="block w-full px-2 h-9 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500">
           All
@@ -124,7 +124,7 @@ const subFilterBar = reactive({
         class="px-3 block h-10 transition duration-100 ease-in-out border rounded shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed text-black placeholder-gray-400 bg-white border-gray-300 focus:border-blue-500"
         @change="setDate($event.target.value)"
       />
-      {{ filterSetting }}
+      <!-- {{ filterSetting }} -->
     </div>
   </div>
 </template>
