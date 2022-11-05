@@ -30,8 +30,8 @@ const members = [
       <div class="bg-white rounded-lg shadow-xl min-h-[50px]">
         <div class="p-4 h-full">
           <h1 class="text-xl font-semibold text-center mb-4">Team Members</h1>
-          <div class="grid grid-cols-3 gap-4 container">
-            <div class="flex flex-col items-center" v-for="member in members">
+          <div class="grid grid-cols-3 gap-8 container mx-auto">
+            <div class="flex flex-col items-center justify-center" v-for="member in members">
               <div
                 class="w-40 h-40 bg-blue-200 rounded-full mb-4"
               ></div>
