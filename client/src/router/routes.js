@@ -55,5 +55,10 @@ export default [
         path: '/event-category-list',
         name: 'EventCategoryList',
         component: () => import('../views/eventCategory/eventCategoryList/index.vue'),
-    }
+    },
+    {
+        path: '/add-event',
+        name: 'AddEventNew',
+        component: () => import('../views/event/Add-Event/AddEvent.vue'),
+    },
 ];
