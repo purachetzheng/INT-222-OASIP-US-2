@@ -10,6 +10,7 @@ specifiers:
   autoprefixer: ^10.4.8
   axios: ^0.27.2
   dayjs: ^1.11.4
+  object-to-formdata: ^4.4.2
   pinia: ^2.0.18
   postcss: ^8.4.16
   tailwind-scrollbar-hide: ^1.1.7
@@ -29,6 +30,7 @@ dependencies:
   '@fortawesome/vue-fontawesome': 3.0.1_sqiqa7hvpgqdakjrbqzbqxvzme
   axios: 0.27.2
   dayjs: 1.11.4
+  object-to-formdata: 4.4.2
   pinia: 2.0.18_vue@3.2.37
   tailwind-scrollbar-hide: 1.1.7
   vee-validate: 4.6.5_vue@3.2.37
@@ -847,6 +849,10 @@ packages:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
     dev: true
+
+  /object-to-formdata/4.4.2:
+    resolution: {integrity: sha512-fu6UDjsqIfFUu/B3GXJ2IFnNAL/YbsC1PPzqDIFXcfkhdYjTD3K4zqhyD/lZ6+KdP9O/64YIPckIOiS5ouXwLA==}
+    dev: false
 
   /path-parse/1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
