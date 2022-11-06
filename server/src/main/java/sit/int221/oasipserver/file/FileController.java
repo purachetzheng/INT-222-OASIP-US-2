@@ -1,24 +1,28 @@
 package sit.int221.oasipserver.file;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-@Controller
+@RestController
+@RequestMapping("/api/file")
 @CrossOrigin("*")
 public class FileController {
 
@@ -26,37 +30,67 @@ public class FileController {
     FilesStorageService storageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<FileResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<FileResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) throws IOException{
         String message = "";
         try {
-            storageService.save(file);
+            List<String> fileNames = new ArrayList<>();
 
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            Arrays.asList(files).stream().forEach(file -> {
+                try {
+                    storageService.save(file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                fileNames.add(file.getOriginalFilename());
+            });
+
+            message = "Uploaded the files successfully: " + fileNames;
             return ResponseEntity.status(HttpStatus.OK).body(new FileResponseMessage(message));
         } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            message = "Fail to upload files!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new FileResponseMessage(message));
         }
     }
 
-    @GetMapping("/files")
+    @GetMapping("")
     public ResponseEntity<List<FileInfo>> getListFiles() {
         List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
             String filename = path.getFileName().toString();
             String url = MvcUriComponentsBuilder
                     .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
-
             return new FileInfo(filename, url);
         }).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
 
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping("/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        Resource file = storageService.load(filename);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    public ResponseEntity<?> getFile(@PathVariable String filename,
+                                     @RequestParam(required = false) Boolean nameOnly) throws IOException {
+        File file = storageService.load(filename).orElseThrow(); //File Object ที่หา
+        Path path = Paths.get(file.getAbsolutePath()); //Path File ที่หา
+        Resource resource = new UrlResource(path.toUri()); //สร้าง Link จาก Path ที่เราหา
+//        long bytes = Files.size(path);
+//        ResponseEntity.BodyBuilder bodyBuilder =  ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"" +
+//                        "size=\"" + bytes + "\"");
+        ResponseEntity.BodyBuilder bodyBuilderDownload =  ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
+        if (nameOnly == null || !nameOnly) {
+            return bodyBuilderDownload.body(resource);
+        } else {
+//            return bodyBuilder.body(file.getName());
+            return bodyBuilderDownload.body(file.getName());
+        }
+
+    }
+
+
+
+    @DeleteMapping("/{filename:.+}")
+    public ResponseEntity<?> deleteFile(@PathVariable String filename) {
+        storageService.delete(filename);
+        return ResponseEntity.ok().body(new FileResponseMessage(filename + " successfully deleted"));
     }
 }

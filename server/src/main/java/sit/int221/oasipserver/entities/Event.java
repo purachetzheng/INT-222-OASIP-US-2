@@ -34,4 +34,7 @@ public class Event {
     @Column(name = "eventNotes", length = 500)
     private String eventNotes;
 
+    @Column(name = "fileName")
+    private String fileName;
+
 }

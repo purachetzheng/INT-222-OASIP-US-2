@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
-import java.util.TimeZone;
 
 @Getter
 @Setter
@@ -35,5 +35,7 @@ public class PostEventDto {
     //ไว้ set ก่อนการ modelMap เพื่อไม่ให้ return กลับแล้ว
     // eventCategoryName null (ปัญหาเมื่อ ใช้การสร้าง id เอง)
     private String eventCategoryName;
+
+    private MultipartFile file;
 
 }
