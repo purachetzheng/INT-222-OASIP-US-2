@@ -22,7 +22,7 @@ app
   .component('app-modal', AppModal)
   .component('app-button', AppButton)
   .component('app-input', AppInput)
-  .component('app-vee-input', AppVeeTextArea)
+  .component('app-vee-input', AppVeeInput)
   .component('app-vee-textarea', AppVeeTextArea)
 
 fontawesome.init(app)
