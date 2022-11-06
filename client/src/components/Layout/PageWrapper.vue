@@ -19,12 +19,12 @@ import NavBar from './navbar/NavBar.vue';
 <style scoped>
 
 .app-wrapper {
-  @apply h-full w-full flex bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700;
+  @apply h-full w-full flex bg-gray-100;
 }
 .app-container {
   @apply w-full flex flex-col flex-1 overflow-hidden;
 }
 .app-content {
-  @apply py-8 px-6 h-full overflow-y-auto;
+  @apply py-6 px-6 h-full overflow-y-auto;
 }
 </style>

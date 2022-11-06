@@ -23,7 +23,7 @@ const allowedNavItems = computed(() =>
 </script>
 
 <template>
-  <aside class="h-screen bg-gray-100">
+  <aside class="h-screen bg-slate-200">
     <div class="sidebar px-3 py-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
       <div id="sidebar-wrapper" class="flex flex-col h-full justify-between divide-y-2 divide-gray-500">
         <div class="sidebar-logo">
@@ -105,7 +105,7 @@ const allowedNavItems = computed(() =>
   @apply transition-all duration-300 ease-in-out;
 }
 .sidebar {
-  @apply sidebar-transition h-full border-r shadow-lg;
+  @apply sidebar-transition h-full ;
 }
 #sidebar-footer {
   @apply w-max -mb-3;

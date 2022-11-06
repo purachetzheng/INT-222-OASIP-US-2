@@ -12,7 +12,7 @@ const { user, isAuth } = storeToRefs(userStore)
 </script>
  
 <template>
-<header class="py-2 bg-gray-100 dark:bg-gray-700">
+<header class="py-2 bg-slate-200 dark:bg-gray-700">
     <div class="flex justify-between items-center px-6">
         <div class="">
             <p class="font-semibold text-lg">{{route.name}}</p>
