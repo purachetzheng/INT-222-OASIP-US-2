@@ -13,7 +13,7 @@ import { object, string, number, date, mixed} from 'yup'
 //   notes: notesRules,
 
 // }
-
+const FILE_SIZE = 10 * 1024 * 1024
 const schema = object().shape({
   name: string().required().max(100).trim().label('Name'),
   email: string().required().max(100).trim().label('Email'),
@@ -23,6 +23,10 @@ const schema = object().shape({
   datetime: object().shape({
     date: string().required().label('Date'),
     time: string().required().label('Time'),
+  }),
+  file: mixed().test('fileSize', "The file size exceeds 10Mb.", value => {
+    if (!value) return true
+    return value.size <= FILE_SIZE
   })
 })
 

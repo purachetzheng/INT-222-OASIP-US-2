@@ -9,6 +9,7 @@ import { postGuestsEvent } from '../../../services/api/lib/guests'
 import SelectCategory from './stages/SelectCategory.vue'
 import FillForm from './stages/FillForm.vue'
 import TabStep from './components/TabStep.vue'
+import {objRemoveEmpty,objRenameKeys} from '../../../utils/ObjectUtils'
 const userStore = useUserStore()
 // const step = ref(1)
 const addEventForm = reactive({
@@ -85,18 +86,24 @@ onBeforeMount(() => {
     getCategories()
 })
 
-const onSubmit = async ({ name, email, datetime, notes }) => {
+const onSubmit = async ({ name, email, datetime, notes, file }) => {
     const newEvent = {
-        bookingName: name,
-        bookingEmail: email,
         eventCategoryId: selectedCategory.value.id,
         eventDuration: selectedCategory.value.eventDuration,
         eventStartTime: formatDatetime.jsonDatetime(
             datetime.date,
             datetime.time
         ),
+        name, email, file, notes
     }
-    if (notes) newEvent.eventNotes = notes
+    if (!notes) delete newEvent['notes'];
+    if (!file) delete newEvent['file'];
+    const changesMap = {
+        name: 'bookingName',
+        email: 'bookingEmail',
+    }
+    objRenameKeys(newEvent,changesMap)
+    console.log(newEvent);
     const newEventFormData = serialize(newEvent);
     console.log(newEventFormData)
     try {
