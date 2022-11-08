@@ -44,4 +44,9 @@ export default [
         name: 'AddEvent',
         component: () => import('../views/event/Add-Event/AddEvent.vue'),
     },
+    {
+        path: '/schedules-new/:eventId',
+        name: 'EventDetailNew',
+        component: () => import('../views/event/DetailNew/EventDetail.vue'),
+    },
 ];
