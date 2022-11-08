@@ -45,7 +45,9 @@ const apiEvent = {
     })
   },
   post(data) {
-    return apiClient.post(`/api/events/`, data)
+    return apiClient.post(`/api/events/`, data, {headers: {
+      'Content-Type': 'multipart/form-data'
+    }})
   },
   patch(id, data) {
     return apiClient.patch(`/api/events/${id}`, data)
