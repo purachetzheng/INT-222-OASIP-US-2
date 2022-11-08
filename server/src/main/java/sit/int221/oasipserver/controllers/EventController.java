@@ -12,12 +12,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.dtos.eventCategory.EventcategoryDto;
 import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
+import sit.int221.oasipserver.file.FilesStorageServiceImpl;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.EventService;
@@ -25,6 +27,7 @@ import sit.int221.oasipserver.services.EventService;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.TimeZone;
 
 @RestController
@@ -38,6 +41,9 @@ public class EventController {
 
     @Autowired UserRepository userRepository;
     @Autowired private EventcategoryRepository eventcategoryRepository;
+
+    @Autowired
+    FilesStorageServiceImpl storageService;
 
 //    @GetMapping("")
 //    public List<SimpleEventDto> getAllEvent(){
@@ -83,9 +89,10 @@ public class EventController {
 
     @PostMapping("")
     public SimpleEventDto createEvent(
-            @Valid @RequestBody PostEventDto newEvent,
+            @Valid @ModelAttribute PostEventDto newEvent,
             BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException{
+
         return eventService.create(newEvent, result, timeZone);
     }
 
@@ -96,7 +103,7 @@ public class EventController {
 
     @PatchMapping("/{id}")
     public EventDto updateEvent(
-            @Valid @RequestBody PatchEventDto updateEventDto,
+            @Valid @ModelAttribute PatchEventDto updateEventDto,
             @PathVariable Integer id,
             BindingResult result,
             HttpServletResponse response)

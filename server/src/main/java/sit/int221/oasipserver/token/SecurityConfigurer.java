@@ -56,7 +56,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/users/{id}/**").access("@guard.checkUserId(authentication, #id)")
                 .antMatchers("/authenticate", "/api/auth/login", "/signup", "/api/events/emailSender",
-                        "/api/auth/logout", "/api/auth/test", "/api/guests", "/api/eventcategories").permitAll()
+                        "/api/auth/logout", "/api/auth/test", "/api/guests", "/api/eventcategories", "/api/file/**").permitAll()
                 .antMatchers("/api/events/**", "/api/users/**").hasAnyRole("admin")
                 .antMatchers("/api/events/**").hasAnyRole("student", "admin")
                 .antMatchers("/api/events/**").hasAnyRole("student", "admin", "lecturer")

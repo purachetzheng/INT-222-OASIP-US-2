@@ -22,6 +22,7 @@ import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.exception.type.ApiRequestException;
+import sit.int221.oasipserver.file.FilesStorageServiceImpl;
 import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.repo.UserRepository;
@@ -50,6 +51,9 @@ public class EventService {
     UserRepository userRepository;
     @Autowired
     EmailServiceImpl emailService;
+
+    @Autowired
+    FilesStorageServiceImpl storageService;
 
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
@@ -175,6 +179,19 @@ public class EventService {
             }
         }
 
+
+        if(newEvent.getFile() != null) {
+            try {
+                String uuid = storageService.save(newEvent.getFile()); //UUID
+                event.setFileName(uuid); //DTO to DB
+                String fileMsg = "Uploaded the file successfully: " + newEvent.getFile().getOriginalFilename();
+                System.out.println(fileMsg);
+            } catch (Exception e) {
+                String fileMsg =  "Could not upload the file: " + newEvent.getFile().getOriginalFilename() + "!";
+                System.out.println(fileMsg);
+            }
+        }
+
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
         emailService.sendSimpleMessage(newEvent, timeZone);
@@ -241,6 +258,22 @@ public class EventService {
                         event.getEventStartTime().minus(480, minutes),
                         event.getEventStartTime().plus((480 + duration), minutes));
 
+        if(updateEventDto.getFile() != null) {
+            try {
+                storageService.delete(eventForEmailCheck.getFileName());
+                System.out.println("deleted");
+                String uuid = storageService.save(updateEventDto.getFile()); //UUID
+                System.out.println("saved");
+                event.setFileName(uuid); //DTO to DB
+                System.out.println("dto set");
+                String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+                System.out.println(fileMsg);
+            } catch (Exception e) {
+                String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+                System.out.println(fileMsg);
+            }
+        }
+
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
@@ -254,6 +287,8 @@ public class EventService {
             existingEvent.setEventStartTime(updateEvent.getEventStartTime());
         if (updateEvent.getEventNotes() != null)
             existingEvent.setEventNotes(updateEvent.getEventNotes());
+//        if (updateEvent.getFile() != null)
+//            existingEvent.setFileName(updateEvent.getFile());
         return existingEvent;
     }
 
