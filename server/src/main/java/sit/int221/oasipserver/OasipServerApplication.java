@@ -20,7 +20,7 @@ public class OasipServerApplication implements CommandLineRunner {
 
     @Override
     public void run(String... arg) throws Exception {
-
+        storageService.init();
     }
 
 //    @PostConstruct
