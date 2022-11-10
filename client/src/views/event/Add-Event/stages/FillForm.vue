@@ -5,6 +5,7 @@ import InputField from '../../../../components/base/form/InputField.vue'
 import TextAreaField from '../../../../components/base/form/TextAreaField.vue'
 import schema from '@/services/validation/schema/AddEventSchema'
 import InputDatetime from '../components/InputDatetime.vue'
+import FillFormFileField from '../components/FillFormFileField.vue'
 const emits = defineEmits(['submit-form'])
 const props = defineProps({
     // categories: {
@@ -32,6 +33,7 @@ const onSubmit = handleSubmit((values) => {
     // console.log(values)
     emits('submit-form', values)
 })
+
 </script>
 
 <template>
@@ -53,11 +55,11 @@ const onSubmit = handleSubmit((values) => {
                 <app-vee-input name="datetime.date" type="date" label="Date" />
                 <app-vee-input name="datetime.time" type="time" label="Time" />
             </div>
-            <Field name="file" v-slot="{ handleChange, handleBlur }">
+            <!-- <Field name="file" v-slot="{ handleChange, handleBlur }">
                 <input type="file" @change="handleChange" @blur="handleBlur" />
-            </Field>
-            <ErrorMessage class="text-red-500" name="file" />
-
+            </Field> -->
+            <!-- <ErrorMessage class="text-red-500" name="file" /> -->
+            <FillFormFileField />
             <!-- <div class="flex justify-center items-center w-full">
                 <label for="dropzone-file" class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     <div class="flex flex-col justify-center items-center pt-5 pb-6">
