@@ -7,6 +7,8 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
+import EventDetail from './EventDetail/EventDetail.vue';
+
 const router = useRouter()
 
 const isLoading = ref(false)
@@ -70,6 +72,11 @@ onBeforeMount(async () => {
 //   delay: 200,
 //   // suspensible: false,
 // })
+
+const detailSidebar = ref({
+  visible: false,
+})
+
 </script>
 
 <template>
@@ -77,7 +84,10 @@ onBeforeMount(async () => {
   <!-- <main
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
-  <PageWrapper>
+  <PageWrapper :enable-scroll="!detailSidebar.visible">
+    <button @click="detailSidebar.visible = !detailSidebar.visible">test</button>
+
+    <EventDetail :sidebar-stage="detailSidebar" />
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />

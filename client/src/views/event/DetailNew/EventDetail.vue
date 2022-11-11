@@ -146,16 +146,19 @@ const EditEventModal = defineAsyncComponent(async () => {
 <template>
     <PageWrapper>
         <div class="">
-            <p class="">name: {{event.name}}</p>
+            <h1 class="">{{event.name}}</h1>
+
+            <!-- <p class="">name: {{event.name}}</p>
             <p class="">email: {{event.email}}</p>
             <p class="">category: {{event.category.name}}</p>
             <p class="">startDate: {{event.startTime.date}}</p>
             <p class="">startTime: {{event.startTime.time}}</p>
             <p class="">duration: {{event.duration}} min</p>
             <p class="">notes: {{event.notes}}</p>
-            <p class="">file: <a :href="`api/file/${event.file.id}`" class="text-blue-500" download>{{ event.file.name}}</a></p>
+            <p class="">file: <a :href="`api/file/${event.file.id}`" class="text-blue-500" download>{{ event.file.name}}</a></p> -->
         </div>
     </PageWrapper>
+    
 </template>
 
 <style></style>
