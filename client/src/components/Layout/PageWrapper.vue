@@ -2,6 +2,13 @@
 import SideBar from './sidebar/SideBar.vue'
 // import NavBar from '../../layouts/TheNavBar/index.vue';
 import NavBar from './navbar/NavBar.vue';
+const props = defineProps({
+    enableScroll: {
+        type: Boolean,
+        default: true
+    },
+})
+
 </script>
 
 <template>
@@ -9,7 +16,7 @@ import NavBar from './navbar/NavBar.vue';
     <SideBar class="" />
     <div class="app-container flex"  >
       <NavBar />
-      <div class="app-content">
+      <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
         <slot />
       </div>
     </div>
@@ -25,6 +32,6 @@ import NavBar from './navbar/NavBar.vue';
   @apply w-full flex flex-col flex-1 overflow-hidden;
 }
 .app-content {
-  @apply py-6 px-6 h-full overflow-y-auto;
+  @apply relative py-6 px-6 h-full ;
 }
 </style>
