@@ -8,12 +8,19 @@ export default [
         path: '/schedules',
         name: 'Schedules',
         component: () => import('../views/event/Schedules/index.vue'),
+        children: [
+            {
+                name: 'EventDetail',
+                path:':eventId',
+                component: () => import('../views/event/Schedules/EventDetail/EventDetail.vue')
+            }
+        ]
     },
-    {
-        path: '/schedules/:eventId',
-        name: 'EventDetail',
-        component: () => import('../views/event/Detail/index.vue'),
-    },
+    // {
+    //     path: '/schedules/:eventId',
+    //     name: 'EventDetail',
+    //     component: () => import('../views/event/Detail/index.vue'),
+    // },
     {
         path: '/users',
         name: 'Users',

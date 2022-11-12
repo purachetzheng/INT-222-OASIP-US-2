@@ -17,6 +17,7 @@ const props = defineProps({
     <div class="app-container flex"  >
       <NavBar />
       <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
+        <div id="sidebar-div"></div>
         <slot />
       </div>
     </div>

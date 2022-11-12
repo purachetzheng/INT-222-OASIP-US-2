@@ -7,7 +7,7 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-import EventDetail from './EventDetail/EventDetail.vue';
+import EventDetailSidebar from './EventDetail/EventDetailSidebar.vue';
 
 const router = useRouter()
 
@@ -73,10 +73,14 @@ onBeforeMount(async () => {
 //   // suspensible: false,
 // })
 
-const detailSidebar = ref({
+const detailSidebar = reactive({
   visible: false,
 })
-
+const viewEventDetail = async (id) => {
+  await router.push({ name: 'EventDetail', params: { eventId: id } })
+  detailSidebar.visible = true
+  // setTimeout(()=> detailSidebar.visible = true, 50)
+}
 </script>
 
 <template>
@@ -87,7 +91,7 @@ const detailSidebar = ref({
   <PageWrapper :enable-scroll="!detailSidebar.visible">
     <button @click="detailSidebar.visible = !detailSidebar.visible">test</button>
 
-    <EventDetail :sidebar-stage="detailSidebar" />
+    <EventDetailSidebar :sidebar-stage="detailSidebar" />
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />
@@ -101,7 +105,7 @@ const detailSidebar = ref({
         v-for="event in events"
         :key="event.id"
         :event="event"
-        @click-event-card="router.push({ name: 'EventDetail', params: { eventId: event.id } })"
+        @click-event-card="viewEventDetail(event.id)"
       />
     </TransitionGroup>
     <div class="flex justify-center" v-if="!pageInfo.last">
