@@ -30,6 +30,9 @@ import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -54,6 +57,8 @@ public class EventService {
 
     @Autowired
     FilesStorageServiceImpl storageService;
+
+    private final Path root = Paths.get("uploads");
 
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
@@ -143,6 +148,10 @@ public class EventService {
             if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
                 throw new ForbiddenException();
             }
+        }
+
+        if(event.getFileName() != null) {
+            storageService.delete(event.getFileName());
         }
 
         repository.delete(getById(id, response));
@@ -258,21 +267,27 @@ public class EventService {
                         event.getEventStartTime().minus(480, minutes),
                         event.getEventStartTime().plus((480 + duration), minutes));
 
-        if(updateEventDto.getFile() != null) {
-            try {
-                storageService.delete(eventForEmailCheck.getFileName());
-                System.out.println("deleted");
-                String uuid = storageService.save(updateEventDto.getFile()); //UUID
-                System.out.println("saved");
-                event.setFileName(uuid); //DTO to DB
-                System.out.println("dto set");
-                String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
-                System.out.println(fileMsg);
-            } catch (Exception e) {
-                String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
-                System.out.println(fileMsg);
+        String fileNameExisting = eventForEmailCheck.getFileName();
+
+
+        if(updateEventDto.getFile() != null) {//มีไฟล์ส่งมา ซึ่งไม่ใช่ undefined
+
+            if(updateEventDto.getFile().isEmpty()) { //null or empty
+                if(fileNameExisting != null) { //มีไฟล์ใน event อยู่ จึงลบออกเพราะ null ส่งมาแทน
+                    storageService.delete(fileNameExisting);
+                }
+                System.out.println("set ไฟล์ใน event เป็น null");
+                eventForEmailCheck.setFileName(null);
+            } else { //not null or not empty
+                if(fileNameExisting != null) { //มีไฟล์ใน event อยู่จึงลบออกก่อนแล้วอัพอันใหม่
+                    storageService.delete(fileNameExisting);
+                }
+                upload(updateEventDto, eventForEmailCheck);
             }
+
         }
+
+        System.out.println("ไม่เข้าเงื่อนไขไฟล์ด้านบน");
 
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
@@ -311,4 +326,49 @@ public class EventService {
         return  getCurrentAuthentication.getAuthorities();
     }
 
+    private void upload(PatchEventDto updateEventDto, Event event) {
+        try {
+            String uuid = storageService.save(updateEventDto.getFile()); //UUID
+            System.out.println("saved new file: " + uuid);
+            event.setFileName(uuid); //DTO to DB
+            String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+            System.out.println(fileMsg);
+        } catch (Exception e) {
+            String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+            System.out.println(fileMsg);
+        }
+    }
+
 }
+
+//        if(updateEventDto.getFile() != null) {
+//            if(fileNameExisting != null) {
+//                try {
+//                    storageService.delete(fileNameExisting);
+//                    System.out.println("deleted" + fileNameExisting);
+//                    String uuid = storageService.save(updateEventDto.getFile()); //UUID
+//                    System.out.println("saved new file: " + uuid);
+//                    event.setFileName(uuid); //DTO to DB
+//                    String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+//                    System.out.println(fileMsg);
+//                } catch (Exception e) {
+//                    String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+//                    System.out.println(fileMsg);
+//                }
+//            } else {
+//                try {
+//                    String uuid = storageService.save(updateEventDto.getFile()); //UUID
+//                    System.out.println("saved new file: " + uuid);
+//                    event.setFileName(uuid); //DTO to DB
+//                    String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+//                    System.out.println(fileMsg);
+//                } catch (Exception e) {
+//                    String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+//                    System.out.println(fileMsg);
+//                }
+//            }
+//        } else {
+//            if(fileNameExisting != null) {
+//                storageService.delete(fileNameExisting);
+//            }
+//        }
