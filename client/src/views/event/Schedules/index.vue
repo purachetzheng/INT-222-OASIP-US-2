@@ -7,7 +7,7 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-import EventDetailSidebar from './EventDetail/EventDetailSidebar.vue';
+import EventDetailSlideOver from './EventDetail/EventDetailSlideOver.vue';
 
 const router = useRouter()
 
@@ -73,13 +73,13 @@ onBeforeMount(async () => {
 //   // suspensible: false,
 // })
 
-const detailSidebar = reactive({
+const detailSlideOver = reactive({
   visible: false,
 })
 const viewEventDetail = async (id) => {
   await router.push({ name: 'EventDetail', params: { eventId: id } })
-  detailSidebar.visible = true
-  // setTimeout(()=> detailSidebar.visible = true, 50)
+  detailSlideOver.visible = true
+  // setTimeout(()=> detailSlideOver.visible = true, 50)
 }
 </script>
 
@@ -88,10 +88,10 @@ const viewEventDetail = async (id) => {
   <!-- <main
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
-  <PageWrapper :enable-scroll="!detailSidebar.visible">
-    <button @click="detailSidebar.visible = !detailSidebar.visible">test</button>
+  <PageWrapper :enable-scroll="!detailSlideOver.visible">
+    <!-- <button @click="detailSlideOver.visible = !detailSlideOver.visible">test</button> -->
 
-    <EventDetailSidebar :sidebar-stage="detailSidebar" />
+    <EventDetailSlideOver :sidebar-stage="detailSlideOver" />
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />

@@ -29,28 +29,35 @@ onMounted(() => {
 </script>
 
 <template>
-    <Teleport to="#sidebar-div" v-if="isMounted">
+    <!-- <Teleport to="#sidebar-div" v-if="isMounted"> -->
         <router-view v-slot="{ Component }">
             <Transition name="fade" @enter="openSidebar">
                 <div
                     v-if="sidebarStage.visible"
-                    class="absolute top-0 right-0 bottom-0 left-0 z-40 overflow-x-hidden"
-                    style="background-color: rgba(0, 0, 0, 0.5)"
-                    @click="closeSidebar"
+                    class="absolute top-0 right-0 bottom-0 left-0 z-10 overflow-x-hidden"
+                    
+                    
                 >
+                <div class="h-full w-full bg-black opacity-50 fixed" @click="closeSidebar"></div>
                     <div
-                        class="slidein absolute z-50 top-0 right-0 w-96 h-full overflow-y-auto bg-white duration-500"
+                        class="slidein fixed right-0 w-128 h-full overflow-y-auto bg-white duration-500"
                         :class="[
                             showSidebar ? 'translate-x-0' : 'translate-x-96',
                         ]"
                     >
-                        <component :is="Component" />
+                        <!-- <Transition name="fade" duration="1000"> -->
+                        <component
+                            :is="Component"
+                            :class="showSidebar ? 'opacity-100' : 'opacity-0'"
+                            class="transition-opacity duration-700 ease"
+                        />
+                        <!-- </Transition> -->
                         <!-- <p v-for="num in 50">Lorem</p> -->
                     </div>
                 </div>
             </Transition>
         </router-view>
-    </Teleport>
+    <!-- </Teleport> -->
 </template>
 
 <style scoped>
