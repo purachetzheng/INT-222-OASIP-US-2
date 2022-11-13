@@ -14,11 +14,11 @@ const props = defineProps({
 <template>
   <div class="app-wrapper">
     <SideBar class="" />
-    <div class="app-container flex"  >
+    <div class="app-container "  >
       <NavBar />
-      <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
-        <div id="sidebar-div"></div>
+      <div class="app-content relative" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
         <slot />
+        <!-- <div id="sidebar-div"></div> -->
       </div>
     </div>
   </div>
@@ -33,6 +33,6 @@ const props = defineProps({
   @apply w-full flex flex-col flex-1 overflow-hidden;
 }
 .app-content {
-  @apply relative py-6 px-6 h-full ;
+  @apply py-6 px-6 h-full ;
 }
 </style>

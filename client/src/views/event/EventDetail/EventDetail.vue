@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { apiEvent } from '../../../services/api/lib';
 import { getFile } from '../../../services/api/lib/file';
@@ -28,6 +28,28 @@ const eventTemplate = {
     }
 }
 const event = ref({...eventTemplate})
+
+const editingEventTemplate = {
+  id: null,
+  eventCategoryName: '',
+  eventCategoryDescription: '',
+  eventDuration: null,
+}
+
+const editModal = reactive({
+  visible: false,
+  eventTemplate: {
+
+  },
+  event: { ...editingEventTemplate }, 
+  show: (event) => {
+    editModal.event = event
+    editModal.visible = true
+  },
+  close: () => {
+    editModal.visible = false
+  },
+})
 
 const getEvent = async () => {
     try {
@@ -77,7 +99,6 @@ const getFileName = async () => {
         event.value.file.name = data
     } catch (error) {
         const res = error.response
-        event.value = 'no'
         console.log(res.status)
         console.log('error ', error.message)
     }
@@ -90,7 +111,7 @@ onBeforeMount(async () => {
 </script>
  
 <template>
- <div class="p-8 flex flex-col gap-4">
+ <div class="p-8 flex flex-col gap-4 overflow-y-auto">
     <!-- {{params.eventId}} -->
     
     <header class="flex justify-between items-center">
@@ -100,10 +121,10 @@ onBeforeMount(async () => {
             <app-button btn-type="danger" btn-size="sm">Delete</app-button>
         </div>
     </header>
-    <div class="">
-        <p class="font-medium">Information</p>
+    <div class="font-medium">
+        <p class="">Information</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 text-sm">
             <div class="flex">
                 <span class="basis-28 text-gray-500">Name</span>
                 <span class="flex-1">{{ event.name }}</span>
@@ -124,39 +145,34 @@ onBeforeMount(async () => {
                 <span class="basis-28 text-gray-500">Duration</span>
                 <span class="flex-1">{{ event.duration }} Minutes</span>
             </div>
+            <div class="flex" v-if="event.file.id">
+                <span class="basis-28 text-gray-500">File</span>
+                <span class="flex-1">
+                    <a :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`" class="underline text-blue-500">{{ event.file.name }}</a>
+                </span>
+            </div>
         </div>
     </div>
-    <div class="">
-        <p class="font-medium">Category</p>
+
+    <div class="font-medium">
+        <p class="">Category</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 text-sm">
             <div class="flex">
                 <span class="basis-28 text-gray-500">Name</span>
                 <span class="flex-1">{{ event.category.name }}</span>
             </div>
-            <div class="flex ">
+            <div class="flex">
                 <span class="basis-28 text-gray-500">Description</span>
                 <span class="flex-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit officia, optio, nam modi nobis distinctio tempora ducimus vero at inventore, architecto suscipit totam officiis?</span>
             </div>
         </div>
     </div>
-    <div class="" v-if="event.file.id">
-        <p class="font-medium">File</p>
+    <div class="font-medium" v-if="event.notes">
+        <p class="">Note</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="flex flex-col gap-2">
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Name</span>
-                <span class="flex-1">
-                    <a :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`" class="underline text-blue-500">{{ event.file.name }}</a>
-                </span>
-            </div>
-            <!-- <div class="flex ">
-                <span class="basis-28 text-gray-500">Size</span>
-                <span class="flex-1">{{  }} MB.</span>
-            </div> -->
-        </div>
+        <div class="text-sm">{{ event.notes }}</div>
     </div>
- 
  </div>
 </template>
  
