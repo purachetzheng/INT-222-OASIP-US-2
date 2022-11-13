@@ -76,13 +76,13 @@ const onSubmit = handleSubmit((values) => {
             class="flex w-full justify-between flex-row-reverse gap-4 mt-4"
             v-show="addEventForm.step == 2"
         >
-            <app-button button-type="success" @click="onSubmit">
+            <app-button btn-type="success" @click="onSubmit">
                 Book
             </app-button>
             <app-button
                 v-if="addEventForm.step > 1"
                 button-type="no-border"
-                :button-icon="['fas', 'arrow-right']"
+                :btn-icon="['fas', 'arrow-right']"
                 @click="addEventForm.prevStep"
             >
                 Back

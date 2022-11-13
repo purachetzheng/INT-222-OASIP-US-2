@@ -125,8 +125,8 @@ onUpdated(async () => {
     </template>
     <template #footer>
       <div class="flex gap-4">
-        <app-button button-type="success" @click="onSubmit">Submit</app-button>
-        <app-button button-type="outline-danger" @click="modalState.close"
+        <app-button btn-type="success" @click="onSubmit">Submit</app-button>
+        <app-button btn-type="outline-danger" @click="modalState.close"
           >Cancel</app-button
         >
       </div>

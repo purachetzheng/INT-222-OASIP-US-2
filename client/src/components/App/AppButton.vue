@@ -1,27 +1,43 @@
 <script setup>
 defineEmits([])
 const props = defineProps({
-  buttonType: {
+  btnType: {
     type: String,
     default: 'primary',
   },
-  buttonIcon: {
+  btnIcon: {
     type: Array,
     default: null
+  },
+  btnSize: {
+    type: String,
+    default: 'md',
   }
 })
 </script>
 
 <template>
-  <button :class="`btn ${buttonType}`">
-    <fa-icon :icon="props.buttonIcon" v-if="props.buttonIcon !== null" class="pr-2" />
+  <button :class="`btn ${btnType} btn-${btnSize}`">
+    <fa-icon :icon="props.btnIcon" v-if="props.btnIcon !== null" class="pr-2" />
     <slot></slot>
   </button>
 </template>
 
 <style scoped>
 .btn {
-  @apply px-4 py-2 border-2 rounded-lg font-semibold select-none duration-300 flex items-center;
+  @apply border-2 rounded-lg font-semibold select-none duration-300 flex items-center;
+}
+.btn-sm{
+  @apply px-2.5 py-1 text-sm
+}
+.btn-md{
+  @apply px-3 py-1
+}
+.btn-lg{
+  @apply px-4 py-1.5
+}
+.btn-xl{
+  @apply px-4 py-2
 }
 .btn:disabled {
   @apply text-white bg-gray-400 border-gray-400;

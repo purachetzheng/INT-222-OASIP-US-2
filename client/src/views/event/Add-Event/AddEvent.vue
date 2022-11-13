@@ -156,7 +156,7 @@ const onSubmit = async ({ name, email, datetime, notes, file }) => {
                         v-show="addEventForm.step != 2"
                     >
                         <app-button
-                            button-type="primary"
+                            btn-type="primary"
                             :disabled="!addEventForm.isStepComplete"
                             @click="addEventForm.nextStep"
                         >
@@ -164,9 +164,9 @@ const onSubmit = async ({ name, email, datetime, notes, file }) => {
                         </app-button>
                         <app-button
                             v-if="addEventForm.step > 1"
-                            button-type="no-border"
+                            btn-type="no-border"
                             @click="addEventForm.prevStep"
-                            :button-icon="['fas', 'arrow-right']"
+                            :btn-icon="['fas', 'arrow-right']"
                         >
                             Back
                         </app-button>
