@@ -35,8 +35,6 @@ onMounted(() => {
                 <div
                     v-if="sidebarStage.visible"
                     class="absolute top-0 right-0 bottom-0 left-0 z-10 overflow-x-hidden"
-                    
-                    
                 >
                 <div class="h-full w-full bg-black opacity-50 fixed" @click="closeSidebar"></div>
                     <div

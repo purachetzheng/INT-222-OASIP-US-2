@@ -1,10 +1,10 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { apiEvent } from '../../../../services/api/lib';
-import { getFile } from '../../../../services/api/lib/file';
-import { formatDatetime } from '../../../../utils/dateTime';
-import { objRenameKeys } from '../../../../utils/ObjectUtils';
+import { apiEvent } from '../../../services/api/lib';
+import { getFile } from '../../../services/api/lib/file';
+import { formatDatetime } from '../../../utils/dateTime';
+import { objRenameKeys } from '../../../utils/ObjectUtils';
 const { params } = useRoute()
 const router = useRouter()
 

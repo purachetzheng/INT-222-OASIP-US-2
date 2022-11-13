@@ -12,7 +12,7 @@ export default [
             {
                 name: 'EventDetail',
                 path:':eventId',
-                component: () => import('../views/event/Schedules/EventDetail/EventDetail.vue')
+                component: () => import('../views/event/EventDetail/EventDetail.vue')
             }
         ]
     },

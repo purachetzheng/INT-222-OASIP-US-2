@@ -7,7 +7,7 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-import EventDetailSlideOver from './EventDetail/EventDetailSlideOver.vue';
+import EventDetailSlideOver from './EventDetailSlideOver.vue';
 
 const router = useRouter()
 
