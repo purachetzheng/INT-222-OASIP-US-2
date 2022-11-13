@@ -94,7 +94,8 @@ const onSubmit = async ({ name, email, datetime, notes, file }) => {
             datetime.date,
             datetime.time
         ),
-        name, email, file, notes
+        eventNotes: notes,
+        name, email, file, 
     }
     if (!notes) delete newEvent['notes'];
     if (!file) delete newEvent['file'];
