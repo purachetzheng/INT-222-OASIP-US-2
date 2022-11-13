@@ -45,7 +45,7 @@ const select = (option) => {
         <fa-icon :icon="['fas', 'chevron-down']" class="fa-2xs" />
       </span>   
     </button>
-    <div v-show="show"  class="absolute top-12 rounded-md py-2 bg-white w-48">
+    <div v-show="show"  class="absolute top-12 rounded-md py-2 bg-white w-48 z-20">
         <ul class="flex flex-col ">
             <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" v-for="option in options" @click="select(option)">
                 <p class="text-sm">{{option.name}}</p>

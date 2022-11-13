@@ -11,6 +11,7 @@ import sit.int221.oasipserver.entities.Eventcategory;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
@@ -25,53 +26,76 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     public List<Event> findAllByBookingEmail(String email);
 
-    @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%')",nativeQuery=true)
-    Page<Event> findAllByEventStartTimeEquals(Pageable pageable, @Param("date") String date);
-
-    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()", nativeQuery=true)
-    Page<Event> findAllByEventStartTimePast(Pageable pageable);
-
-    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()",nativeQuery=true)
-    Page<Event> findAllByEventStartTimeUpcoming(Pageable pageable);
-
-    @Query(value = "select * from events where DATE(eventStartTime) like concat(:date,'%') and eventCategoryId = :id",nativeQuery=true)
-    Page<Event> findAllByEventCategoryIdAndEventStartTime(Pageable pageable, @Param("id") Integer eventCategoryId, @Param("date") String date);
+    @Query(
+            value = "select * from events where (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            nativeQuery=true
+    )
+    Page<Event> findAll(
+            Pageable pageable,
+            @Param("email") String email,
+            @Param("categoryIds") Set<Integer> categoryIds
+    );
 
     String FILTERALL_VALUE ="select * from events where" +
             "(:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))";
+            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
+            "and (:email is null or bookingemail = :email)" +
+            "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))";
     String FILTERALL_COUNT = "select count(*) from events where" +
             "(:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))";
+            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
+            "and (:email is null or bookingemail = :email)" +
+            "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))";
     @Query(value = FILTERALL_VALUE, countQuery = FILTERALL_COUNT, nativeQuery=true)
-    Page<Event> findAllFilter(Pageable pageable,
-                                     @Param("id") Integer eventCategoryId,
-                                     @Param("date") String date);
+    Page<Event> findAllFilter(
+            Pageable pageable,
+            @Param("id") Integer eventCategoryId,
+            @Param("date") String date,
+            @Param("email") String email,
+            @Param("categoryIds") Set<Integer> categoryIds
+    );
 
-    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
-            "and (:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
-            ,countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
-            "and (:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
-            ,nativeQuery=true)
-    Page<Event> findAllEventPast(Pageable pageable,
-                                     @Param("id") Integer eventCategoryId,
-                                     @Param("date") String date);
+    @Query(
+            value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
+                    "and (:id is null or eventCategoryId = :id)" +
+                    "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
+                    "and (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
+                    "and (:id is null or eventCategoryId = :id)" +
+                    "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
+                    "and (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            nativeQuery = true
+    )
+    Page<Event> findAllEventPast(
+            Pageable pageable,
+            @Param("id") Integer eventCategoryId,
+            @Param("date") String date,
+            @Param("email") String email,
+            @Param("categoryIds") Set<Integer> categoryIds
+    );
 
-    Page<Event> findByBookingEmail(Pageable pageable, String email);
-
-    Page<Event> findByEventCategoryId(Pageable pageable, Integer id);
-
-    @Query(value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
-            "and (:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
-            ,countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
-            "and (:id is null or eventCategoryId = :id)" +
-            "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"
-            ,nativeQuery=true)
-    Page<Event> findAllEventUpcoming(Pageable pageable,
-                                         @Param("id") Integer eventCategoryId,
-                                         @Param("date") String date);
+    @Query(
+            value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
+                    "and (:id is null or eventCategoryId = :id)" +
+                    "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
+                    "and (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
+                    "and (:id is null or eventCategoryId = :id)" +
+                    "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
+                    "and (:email is null or bookingemail = :email)"+
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            nativeQuery=true
+    )
+    Page<Event> findAllEventUpcoming(
+            Pageable pageable,
+            @Param("id") Integer eventCategoryId,
+            @Param("date") String date,
+            @Param("email") String email,
+            @Param("categoryIds") Set<Integer> categoryIds
+    );
 
 }

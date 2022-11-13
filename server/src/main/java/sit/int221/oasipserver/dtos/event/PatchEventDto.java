@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -22,5 +23,7 @@ public class PatchEventDto {
     @Size(min = 0, max = 500,
             message = "size must be between 0 and 500")
     private String eventNotes;
+
+    private MultipartFile file;
 
 }

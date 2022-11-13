@@ -9,14 +9,18 @@ userStore.getUserInfo()
 </script>
  
 <template>
-  <div class="min-h-screen w-full flex flex-col bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700">
-    <Navbar />
+  <!-- <div class="min-h-screen w-full flex flex-col bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700"> -->
+    <!-- <Navbar /> -->
     <!-- <TheNavBar /> -->
     <router-view></router-view>
-  </div>
+  <!-- </div> -->
 </template>
  
 <style>
+#app {
+  height: 100vh;
+  /* position: relative; */
+}
 
 
 </style>

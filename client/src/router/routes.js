@@ -8,29 +8,19 @@ export default [
         path: '/schedules',
         name: 'Schedules',
         component: () => import('../views/event/Schedules/index.vue'),
+        children: [
+            {
+                name: 'EventDetail',
+                path:':eventId',
+                component: () => import('../views/event/Schedules/EventDetail/EventDetail.vue')
+            }
+        ]
     },
-    {
-        path: '/schedules/:eventId',
-        name: 'EventDetail',
-        component: () => import('../views/event/Detail/index.vue'),
-    },
-    {
-        path: '/addEvent',
-        name: 'AddEvent',
-        component: () => import('../views/event/AddEvent/index.vue'),
-        // children: [
-        //   {
-        //     path: 'selectCategory',
-        //     name: 'SelectCategory',
-        //     component: () => import('../views/event/AddEvent/nestedViews/SelectCategory.vue'),
-        //   },
-        //   {
-        //     path: 'fillForm',
-        //     name: 'FillForm',
-        //     component: () => import('../views/event/AddEvent/nestedViews/FillForm.vue'),
-        //   },
-        // ],
-    },
+    // {
+    //     path: '/schedules/:eventId',
+    //     name: 'EventDetail',
+    //     component: () => import('../views/event/Detail/index.vue'),
+    // },
     {
         path: '/users',
         name: 'Users',
@@ -55,5 +45,15 @@ export default [
         path: '/event-category-list',
         name: 'EventCategoryList',
         component: () => import('../views/eventCategory/eventCategoryList/index.vue'),
-    }
+    },
+    {
+        path: '/add-event',
+        name: 'AddEvent',
+        component: () => import('../views/event/Add-Event/AddEvent.vue'),
+    },
+    {
+        path: '/schedules-new/:eventId',
+        name: 'EventDetailNew',
+        component: () => import('../views/event/DetailNew/EventDetail.vue'),
+    },
 ];

@@ -7,25 +7,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.client.HttpServerErrorException;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.exception.type.ApiRequestException;
+import sit.int221.oasipserver.file.FilesStorageServiceImpl;
 import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.repo.UserRepository;
@@ -33,13 +30,11 @@ import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.Instant;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 @Service
 public class EventService {
@@ -59,6 +54,11 @@ public class EventService {
     UserRepository userRepository;
     @Autowired
     EmailServiceImpl emailService;
+
+    @Autowired
+    FilesStorageServiceImpl storageService;
+
+    private final Path root = Paths.get("uploads");
 
     final private FieldError overlapErrorObj = new FieldError("newEventDto",
             "eventStartTime", "overlapped with other events");
@@ -88,54 +88,53 @@ public class EventService {
     private Page<Event> filterEventPage(Pageable pageRequest, Integer eventCategoryId, String dateStatus, String date) {
         UserDetails currentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentPrincipalEmail = currentAuthentication.getUsername();
-        if(dateStatus.equals("past"))
-            return repository.findAllEventPast(pageRequest, eventCategoryId, date);
-        if(dateStatus.equals("upcoming"))
-            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date);
-        if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_student]")){
-            System.out.println("student paging");
-            return repository.findByBookingEmail(pageRequest, currentPrincipalEmail);
-        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_admin]")) {
-            System.out.println("admin paging");
-            return repository.findAll(pageRequest);
-        } else if(date == null && eventCategoryId == null && getCurrentAuthority().equals("[ROLE_lecturer]")) {
-            System.out.println("lecturer paging");
-            Integer userId = userRepository.findUserIdByEmail(currentPrincipalEmail);
-            System.out.println(userId);
-            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
-            System.out.println(categoryIdOwner.getId());
-            return repository.findByEventCategoryId(pageRequest, categoryIdOwner.getId());
-//            return repository.findByEventCategory(eventcategoryownerRepository.findById(pageRequest, 1));
+
+        String userEmail = currentAuthentication.getUsername();
+        User user = userRepository.findByEmail(userEmail);
+        String role = getCurrentAuthority();
+        String studentEmail = role.equals("[ROLE_student]") ? userEmail : null;
+
+        Set<Integer> lecturerCategoryIds = new HashSet<>();
+        if(role.equals("[ROLE_lecturer]")){
+            for(Eventcategory eventcategory : user.getCategoriesOwner()){
+                lecturerCategoryIds.add(eventcategory.getId());
+            }
+            lecturerCategoryIds.stream().forEach(integer -> System.out.println(integer));
         }
 
+        if(dateStatus.equals("past"))
+            return repository.findAllEventPast(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
 
-        return repository.findAllFilter(pageRequest, eventCategoryId, date);
+        if(dateStatus.equals("upcoming"))
+            return repository.findAllEventUpcoming(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
+
+        if(date == null && eventCategoryId == null)
+            return repository.findAll(pageRequest, studentEmail, lecturerCategoryIds);
+
+        return repository.findAllFilter(pageRequest, eventCategoryId, date, studentEmail, lecturerCategoryIds);
     }
 
     @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin') or hasRole('ROLE_lecturer')")
     public Event getById(Integer id, HttpServletResponse response) throws ForbiddenException {
         Event event = repository.findById(id).orElseThrow
                 (() -> new ApiNotFoundException("Event id " + id + " Does Not Exist !!!"));
+        Boolean isStudent = getCurrentAuthority().equals("[ROLE_student]");
+        Boolean isLecturer = getCurrentAuthority().equals("[ROLE_lecturer]");
+        Boolean isAdmin = getCurrentAuthority().equals("[ROLE_admin]");
+        Boolean isOwnerEvent = getCurrentUserPrincipalEmail().equals(event.getBookingEmail());
 
-//        if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
+        if(isStudent && !isOwnerEvent){
 //            response.setStatus(HttpStatus.FORBIDDEN.value());
-//            return null;
-//        }
-
-        if(getCurrentAuthority().equals("[ROLE_student]")){
-            if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
-//                response.setStatus(HttpStatus.FORBIDDEN.value());
-//                System.out.println("403");
-                throw new ForbiddenException();
-            }
-        } else if(getCurrentAuthority().equals("[ROLE_lecturer]")){
+//            System.out.println("403");
+            throw new ForbiddenException();
+        }
+        if(isLecturer){
             Integer userId = userRepository.findUserIdByEmail(getCurrentUserPrincipalEmail());
-            System.out.println(userId);
-            Eventcategory categoryIdOwner = eventcategoryRepository.findEventcategoryByUsersId(userId);
-            System.out.println(categoryIdOwner.getId());
-            if(!categoryIdOwner.getId().equals(event.getEventCategory().getId())){
-                throw new ForbiddenException();
-            }
+            List<Eventcategory> categoriesOwner = eventcategoryRepository.findAllByUsersId(userId);
+            Boolean isCategoryiesOwner = categoriesOwner.stream().anyMatch(
+                    category -> category.getId().equals(event.getEventCategory().getId())
+            );
+            if(!isCategoryiesOwner) throw new ForbiddenException();
         }
         return event;
     }
@@ -149,6 +148,10 @@ public class EventService {
             if(!getCurrentUserPrincipalEmail().equals(event.getBookingEmail())){
                 throw new ForbiddenException();
             }
+        }
+
+        if(event.getFileName() != null) {
+            storageService.delete(event.getFileName());
         }
 
         repository.delete(getById(id, response));
@@ -178,11 +181,59 @@ public class EventService {
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
+
         if(getCurrentAuthority().equals("[ROLE_student]")){
             if(!newEvent.getBookingEmail().equals(getCurrentUserPrincipalEmail())){
                 result.addError(bookingEmailNotMatchObj);
             }
         }
+
+
+        if(newEvent.getFile() != null) {
+            try {
+                String uuid = storageService.save(newEvent.getFile()); //UUID
+                event.setFileName(uuid); //DTO to DB
+                String fileMsg = "Uploaded the file successfully: " + newEvent.getFile().getOriginalFilename();
+                System.out.println(fileMsg);
+            } catch (Exception e) {
+                String fileMsg =  "Could not upload the file: " + newEvent.getFile().getOriginalFilename() + "!";
+                System.out.println(fileMsg);
+            }
+        }
+
+        if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
+        emailService.sendSimpleMessage(newEvent, timeZone);
+
+
+
+        return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
+    }
+
+    public SimpleEventDto guestCreate(PostEventDto newEvent, BindingResult result, TimeZone timeZone)
+            throws MethodArgumentNotValidException, ApiRequestException {
+
+        if (result.hasErrors()
+                && newEvent.getEventCategoryId() == null
+                || newEvent.getEventStartTime() == null)
+            throw new MethodArgumentNotValidException(null, result);
+
+        Integer categoryId = newEvent.getEventCategoryId();
+        Eventcategory category = eventcategoryService.getById(categoryId);
+        newEvent.setEventDuration(category.getEventDuration());
+        newEvent.setEventCategoryName(category.getEventCategoryName());
+
+        Event event = modelMapper.map(newEvent, Event.class);
+        ChronoUnit minutes = ChronoUnit.MINUTES;
+        Integer duration = event.getEventDuration();
+
+        List<Event> eventList = repository.findAllByEventCategoryIsAndEventStartTimeBetween
+                (event.getEventCategory(), event.getEventStartTime().minus(480, minutes),
+                        event.getEventStartTime().plus((480 + duration), minutes));
+
+        if (overlapValidate.overlapCheck(event, eventList))
+            result.addError(overlapErrorObj);
+
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
@@ -216,6 +267,28 @@ public class EventService {
                         event.getEventStartTime().minus(480, minutes),
                         event.getEventStartTime().plus((480 + duration), minutes));
 
+        String fileNameExisting = eventForEmailCheck.getFileName();
+
+
+        if(updateEventDto.getFile() != null) {//มีไฟล์ส่งมา ซึ่งไม่ใช่ undefined
+
+            if(updateEventDto.getFile().isEmpty()) { //null or empty
+                if(fileNameExisting != null) { //มีไฟล์ใน event อยู่ จึงลบออกเพราะ null ส่งมาแทน
+                    storageService.delete(fileNameExisting);
+                }
+                System.out.println("set ไฟล์ใน event เป็น null");
+                eventForEmailCheck.setFileName(null);
+            } else { //not null or not empty
+                if(fileNameExisting != null) { //มีไฟล์ใน event อยู่จึงลบออกก่อนแล้วอัพอันใหม่
+                    storageService.delete(fileNameExisting);
+                }
+                upload(updateEventDto, eventForEmailCheck);
+            }
+
+        }
+
+        System.out.println("ไม่เข้าเงื่อนไขไฟล์ด้านบน");
+
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
 
@@ -229,12 +302,18 @@ public class EventService {
             existingEvent.setEventStartTime(updateEvent.getEventStartTime());
         if (updateEvent.getEventNotes() != null)
             existingEvent.setEventNotes(updateEvent.getEventNotes());
+//        if (updateEvent.getFile() != null)
+//            existingEvent.setFileName(updateEvent.getFile());
         return existingEvent;
     }
 
     private String getCurrentUserPrincipalEmail(){
         UserDetails getCurrentAuthentication = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return getCurrentAuthentication.getUsername();
+    }
+
+    private UserDetails getUserDetails(){
+        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     private String getCurrentAuthority(){
@@ -247,4 +326,49 @@ public class EventService {
         return  getCurrentAuthentication.getAuthorities();
     }
 
+    private void upload(PatchEventDto updateEventDto, Event event) {
+        try {
+            String uuid = storageService.save(updateEventDto.getFile()); //UUID
+            System.out.println("saved new file: " + uuid);
+            event.setFileName(uuid); //DTO to DB
+            String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+            System.out.println(fileMsg);
+        } catch (Exception e) {
+            String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+            System.out.println(fileMsg);
+        }
+    }
+
 }
+
+//        if(updateEventDto.getFile() != null) {
+//            if(fileNameExisting != null) {
+//                try {
+//                    storageService.delete(fileNameExisting);
+//                    System.out.println("deleted" + fileNameExisting);
+//                    String uuid = storageService.save(updateEventDto.getFile()); //UUID
+//                    System.out.println("saved new file: " + uuid);
+//                    event.setFileName(uuid); //DTO to DB
+//                    String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+//                    System.out.println(fileMsg);
+//                } catch (Exception e) {
+//                    String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+//                    System.out.println(fileMsg);
+//                }
+//            } else {
+//                try {
+//                    String uuid = storageService.save(updateEventDto.getFile()); //UUID
+//                    System.out.println("saved new file: " + uuid);
+//                    event.setFileName(uuid); //DTO to DB
+//                    String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
+//                    System.out.println(fileMsg);
+//                } catch (Exception e) {
+//                    String fileMsg =  "Could not upload the file: " + updateEventDto.getFile().getOriginalFilename() + "!";
+//                    System.out.println(fileMsg);
+//                }
+//            }
+//        } else {
+//            if(fileNameExisting != null) {
+//                storageService.delete(fileNameExisting);
+//            }
+//        }

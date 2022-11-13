@@ -7,6 +7,8 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue';
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
+import EventDetailSlideOver from './EventDetail/EventDetailSlideOver.vue';
+
 const router = useRouter()
 
 const isLoading = ref(false)
@@ -70,6 +72,15 @@ onBeforeMount(async () => {
 //   delay: 200,
 //   // suspensible: false,
 // })
+
+const detailSlideOver = reactive({
+  visible: false,
+})
+const viewEventDetail = async (id) => {
+  await router.push({ name: 'EventDetail', params: { eventId: id } })
+  detailSlideOver.visible = true
+  // setTimeout(()=> detailSlideOver.visible = true, 50)
+}
 </script>
 
 <template>
@@ -77,7 +88,10 @@ onBeforeMount(async () => {
   <!-- <main
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
-  <PageWrapper>
+  <PageWrapper :enable-scroll="!detailSlideOver.visible">
+    <!-- <button @click="detailSlideOver.visible = !detailSlideOver.visible">test</button> -->
+
+    <EventDetailSlideOver :sidebar-stage="detailSlideOver" />
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />
@@ -91,7 +105,7 @@ onBeforeMount(async () => {
         v-for="event in events"
         :key="event.id"
         :event="event"
-        @click-event-card="router.push({ name: 'EventDetail', params: { eventId: event.id } })"
+        @click-event-card="viewEventDetail(event.id)"
       />
     </TransitionGroup>
     <div class="flex justify-center" v-if="!pageInfo.last">

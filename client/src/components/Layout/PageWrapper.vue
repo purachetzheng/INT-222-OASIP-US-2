@@ -1,23 +1,38 @@
 <script setup>
+import SideBar from './sidebar/SideBar.vue'
+// import NavBar from '../../layouts/TheNavBar/index.vue';
+import NavBar from './navbar/NavBar.vue';
+const props = defineProps({
+    enableScroll: {
+        type: Boolean,
+        default: true
+    },
+})
 
 </script>
 
 <template>
-    <div class="app-container">
-      <div class="app-content">
+  <div class="app-wrapper">
+    <SideBar class="" />
+    <div class="app-container flex"  >
+      <NavBar />
+      <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
+        <div id="sidebar-div"></div>
         <slot />
       </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
-.app-wrapper{
-    @apply min-h-screen w-full  flex flex-col bg-gradient-to-b from-slate-300 to-slate-100 dark:bg-gray-700
+
+.app-wrapper {
+  @apply h-full w-full flex bg-gray-100;
 }
-.app-container{
-    @apply my-container h-full
+.app-container {
+  @apply w-full flex flex-col flex-1 overflow-hidden;
 }
-.app-content{
-    @apply py-8 h-full 
+.app-content {
+  @apply relative py-6 px-6 h-full ;
 }
 </style>

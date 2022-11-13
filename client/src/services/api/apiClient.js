@@ -7,7 +7,7 @@ const defaultOptions = {
   headers: {
     Accept: '*/*',
     'Content-Type': 'application/json',
-    withCredentials: true,
+    // withCredentials: true,
   },
 }
 
@@ -38,6 +38,8 @@ const noAuthRequired = [
   { url: '/api/auth/refresh' },
   { url: '/api/auth/login' },
   { url: '/api/users', method: ['post'] },
+  { url: '/api/eventcategories', method: ['get'] },
+  { url: '/api/guests' },
 ]
 const isAuthRequired = ({ url, method } = {}) => {
   if (
