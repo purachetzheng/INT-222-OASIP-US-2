@@ -14,12 +14,12 @@ const props = defineProps({
 <template>
   <div class="app-wrapper">
     <SideBar class="" />
-    <div class="app-container "  >
+    <div class="app-container relative"  >
       <NavBar />
-      <div class="app-content relative" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
+      <div class="app-content " :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
         <slot />
-        <!-- <div id="sidebar-div"></div> -->
       </div>
+      <div id="sidebar-div"></div>
     </div>
   </div>
 </template>
