@@ -92,11 +92,22 @@ onBeforeMount(async () => {
 <template>
  <div class="p-8 flex flex-col gap-4">
     <!-- {{params.eventId}} -->
-    <p class="text-lg font-semibold">{{event.name}}</p>
+    
+    <header class="flex justify-between items-center">
+        <p class="text-xl font-semibold">Event Detail</p>
+        <div class="flex gap-2">
+            <app-button btn-size="sm">Edit</app-button>
+            <app-button btn-type="danger" btn-size="sm">Delete</app-button>
+        </div>
+    </header>
     <div class="">
         <p class="font-medium">Information</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
         <div class="flex flex-col gap-2">
+            <div class="flex">
+                <span class="basis-28 text-gray-500">Name</span>
+                <span class="flex-1">{{ event.name }}</span>
+            </div>
             <div class="flex">
                 <span class="basis-28 text-gray-500">Email</span>
                 <span class="flex-1">{{ event.email }}</span>
@@ -145,6 +156,7 @@ onBeforeMount(async () => {
             </div> -->
         </div>
     </div>
+ 
  </div>
 </template>
  
