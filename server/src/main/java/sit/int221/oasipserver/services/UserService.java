@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,10 +25,12 @@ import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.event.EventDto;
 import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.Event;
+import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.EventRepository;
+import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.token.AuthenticationResponse;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
@@ -43,6 +46,7 @@ import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,6 +57,7 @@ public class UserService {
     @Autowired private ModelMapper modelMapper;
     @Autowired private ListMapper listMapper;
     @Autowired private RoleValidate roleValidate;
+    @Autowired private EventcategoryRepository eventcategoryRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -103,6 +108,10 @@ public class UserService {
 
     //Delete
     public void delete(Integer id) {
+        List<Event> events = eventRepository.findAllByBookingEmail(getById(id).getEmail());
+        if(events != null)
+            eventRepository.deleteAll(events);
+
         repository.delete(getById(id));
     }
 
@@ -165,7 +174,12 @@ public class UserService {
             result.addError(emailErrorObj);
         }
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
+
         User user = mapUser(getById(id), updateUser);
+        if(updateUser.getCategoriesOwner() != null) {
+            mapUserCategory(updateUser, user);
+        }
+
         User updatedUser = repository.saveAndFlush(user);
         UserDto userDto =  modelMapper.map(updatedUser, UserDto.class);
         return userDto;
@@ -283,6 +297,22 @@ public class UserService {
         if(updateUser.getRole() != null && !updateUser.getRole().equals(""))
             existingUser.setRole(UserRole.valueOf(updateUser.getRole()));
         return existingUser;
+    }
+
+    @PreAuthorize("hasRole('ROLE_admin')")
+    private User mapUserCategory(PatchUserDto updateUser, User user) {
+        Set<Eventcategory> eventCategoriesOwner = new HashSet<>(); //สร้าง Set ไว้สำหรับ patch เข้าไป DB
+        if(updateUser.getCategoriesOwner() != null) { //ถ้ามีส่งมา
+            for(Integer categoryId : updateUser.getCategoriesOwner()) { //forEach แต่ละ id ที่ส่งมา
+                System.out.println("This is id: " + categoryId + " to patch");
+                eventCategoriesOwner.add(eventcategoryRepository.findEventcategoryById(categoryId)); //add object แต่ละ id เข้าไปใน Set
+            }
+            user.setCategoriesOwner(eventCategoriesOwner); //set object ว่า user คนนี้มี category ไหนบ้าง (ของ Lecturer)
+            for(Eventcategory eventcategory : user.getCategoriesOwner()) {
+                System.out.println(eventcategory.getId() + ": " + eventcategory.getEventCategoryName());
+            }
+        }
+        return user;
     }
 
     private Event mapEmailEvent(Event existingEvent, PatchUserDto updateUser){

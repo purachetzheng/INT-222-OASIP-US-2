@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.entities.File;
 
 import java.time.Instant;
 
@@ -19,7 +21,6 @@ public class EventDto {
     private Integer eventDuration;
     private Instant eventStartTime;
     private String eventNotes;
-    private Integer eventCategoryId;
-    private String eventCategoryName;
-    private String fileName;
+    private Eventcategory eventcategory;
+    private File file;
 }
