@@ -12,6 +12,10 @@ const props = defineProps({
     type: Function,
     default: () => {}
   },
+  slideOverStage: {
+    type: Object,
+    default: {}
+  },
 })
 const eventTemplate = {
     name: '',
@@ -111,16 +115,17 @@ const getFileName = async () => {
 }
 
 const cancelEvent = async () => {
-    props.closeSlideOver()
-  try {
-    const res = await apiEvent.delete(params.eventId)
-    console.log(res.data)
-    alert('Cancel successfully')
-  } catch (error) {
-    console.log(error.message)
-    const { data, status } = error.response
-    alert(data.message)
-  }
+    props.slideOverStage.close()
+    // props.closeSlideOver()
+//   try {
+//     const res = await apiEvent.delete(params.eventId)
+//     console.log(res.data)
+//     alert('Cancel successfully')
+//   } catch (error) {
+//     console.log(error.message)
+//     const { data, status } = error.response
+//     alert(data.message)
+//   }
 }
 
 
