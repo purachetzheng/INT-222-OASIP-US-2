@@ -36,6 +36,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     @Query(
             value = "select * from events where (:email is null or bookingemail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            countQuery = "select count(*) from events where (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             nativeQuery=true
     )
     Page<Event> findAll(
