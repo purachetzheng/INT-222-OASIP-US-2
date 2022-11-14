@@ -33,7 +33,8 @@ const eventTemplate = {
     },
     category: {
         id: 0,
-        name: ''
+        name: '',
+        desc: ''
     }
 }
 const event = ref({...eventTemplate})
@@ -83,11 +84,12 @@ const eventObjectCleaner = (data) => {
     }
     objRenameKeys(data, changesMap)
     //Change format
-    const { eventCategoryName, eventCategoryId, eventStartTime, fileName, ...updatedObject } = data
+    const { eventcategory, eventStartTime, fileName, ...updatedObject } = data
     const addedField = {
         category: {
-            id: eventCategoryId,
-            name: eventCategoryName,
+            id: eventcategory.id,
+            name: eventcategory.eventCategoryName,
+            desc: eventcategory.eventCategoryDescription
         },
         startTime: {
             raw: eventStartTime,
