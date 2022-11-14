@@ -14,10 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import sit.int221.oasipserver.dtos.FileDto;
 import sit.int221.oasipserver.dtos.event.*;
 import sit.int221.oasipserver.email.EmailServiceImpl;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
+import sit.int221.oasipserver.entities.File;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.ForbiddenException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
@@ -25,16 +27,17 @@ import sit.int221.oasipserver.exception.type.ApiRequestException;
 import sit.int221.oasipserver.file.FilesStorageServiceImpl;
 import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
+import sit.int221.oasipserver.repo.FileRepository;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.utils.ListMapper;
 import sit.int221.oasipserver.utils.OverlapValidate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+
 
 @Service
 public class EventService {
@@ -54,6 +57,9 @@ public class EventService {
     UserRepository userRepository;
     @Autowired
     EmailServiceImpl emailService;
+
+    @Autowired
+    FileRepository fileRepository;
 
     @Autowired
     FilesStorageServiceImpl storageService;
@@ -150,8 +156,8 @@ public class EventService {
             }
         }
 
-        if(event.getFileName() != null) {
-            storageService.delete(event.getFileName());
+        if(event.getFile() != null) {
+            storageService.delete(event.getFile().getId());
         }
 
         repository.delete(getById(id, response));
@@ -188,11 +194,16 @@ public class EventService {
             }
         }
 
+        event.setEventCategory(category);
 
         if(newEvent.getFile() != null) {
             try {
                 String uuid = storageService.save(newEvent.getFile()); //UUID
-                event.setFileName(uuid); //DTO to DB
+                File file = new File();
+                file.setId(uuid);
+                file.setFileName(newEvent.getFile().getOriginalFilename());
+                file.setFileSize((int)newEvent.getFile().getSize());
+                event.setFile(file); //DTO to DB
                 String fileMsg = "Uploaded the file successfully: " + newEvent.getFile().getOriginalFilename();
                 System.out.println(fileMsg);
             } catch (Exception e) {
@@ -203,9 +214,10 @@ public class EventService {
 
         if (result.hasErrors()) throw new MethodArgumentNotValidException(null, result);
 
-        emailService.sendSimpleMessage(newEvent, timeZone);
-
-
+        Thread t = new Thread(() -> {
+            emailService.sendSimpleMessage(newEvent, timeZone);
+        });
+        t.start();
 
         return modelMapper.map(repository.saveAndFlush(event), SimpleEventDto.class);
     }
@@ -267,27 +279,32 @@ public class EventService {
                         event.getEventStartTime().minus(480, minutes),
                         event.getEventStartTime().plus((480 + duration), minutes));
 
-        String fileNameExisting = eventForEmailCheck.getFileName();
+        File fileNameExisting = eventForEmailCheck.getFile();
 
 
         if(updateEventDto.getFile() != null) {//มีไฟล์ส่งมา ซึ่งไม่ใช่ undefined
-
+            System.out.println("เข้าเงื่อนไข");
             if(updateEventDto.getFile().isEmpty()) { //null or empty
+                System.out.println("file params null");
                 if(fileNameExisting != null) { //มีไฟล์ใน event อยู่ จึงลบออกเพราะ null ส่งมาแทน
-                    storageService.delete(fileNameExisting);
+                    System.out.println("มีไฟล์อยู่ ทำการลบ");
+                    repository.updateFileToNull(eventForEmailCheck.getId());
+                    fileRepository.deleteById(fileNameExisting.getId());
+                    storageService.delete(fileNameExisting.getId());
                 }
                 System.out.println("set ไฟล์ใน event เป็น null");
-                eventForEmailCheck.setFileName(null);
+                eventForEmailCheck.setFile(null);
             } else { //not null or not empty
                 if(fileNameExisting != null) { //มีไฟล์ใน event อยู่จึงลบออกก่อนแล้วอัพอันใหม่
-                    storageService.delete(fileNameExisting);
+                    repository.updateFileToNull(eventForEmailCheck.getId());
+                    fileRepository.deleteById(fileNameExisting.getId());
+                    storageService.delete(fileNameExisting.getId());
                 }
                 upload(updateEventDto, eventForEmailCheck);
             }
 
         }
 
-        System.out.println("ไม่เข้าเงื่อนไขไฟล์ด้านบน");
 
         if (overlapValidate.overlapCheck(event, eventList))
             result.addError(overlapErrorObj);
@@ -330,7 +347,11 @@ public class EventService {
         try {
             String uuid = storageService.save(updateEventDto.getFile()); //UUID
             System.out.println("saved new file: " + uuid);
-            event.setFileName(uuid); //DTO to DB
+            File file = new File();
+            file.setId(uuid);
+            file.setFileName(updateEventDto.getFile().getOriginalFilename());
+            file.setFileSize((int)updateEventDto.getFile().getSize());
+            event.setFile(file); //DTO to DB
             String fileMsg = "Uploaded the file successfully: " + updateEventDto.getFile().getOriginalFilename();
             System.out.println(fileMsg);
         } catch (Exception e) {

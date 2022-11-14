@@ -14,6 +14,8 @@ public interface EventcategoryRepository extends JpaRepository<Eventcategory, In
     public Eventcategory findEventcategoryByUsersId(Integer id);
     public List<Eventcategory> findAllByUsersId(Integer id);
 
+    public Eventcategory findEventcategoryById(Integer id);
+
 
     public List<Eventcategory> findEventcategoriesByUsersLike(User user);
 

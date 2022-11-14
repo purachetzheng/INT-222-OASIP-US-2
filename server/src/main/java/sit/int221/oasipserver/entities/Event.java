@@ -34,7 +34,8 @@ public class Event {
     @Column(name = "eventNotes", length = 500)
     private String eventNotes;
 
-    @Column(name = "fileName")
-    private String fileName;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fileID")
+    private File file;
 
 }

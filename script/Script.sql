@@ -23,22 +23,51 @@ ENGINE = InnoDB;
 
 -- Table events.Events
 
-CREATE TABLE IF NOT EXISTS events (
-bookingID INT NOT NULL AUTO_INCREMENT,
-bookingName VARCHAR(100) NOT NULL,
-bookingEmail VARCHAR(45) NOT NULL,
-eventCategoryId INT NOT NULL,
-eventDuration INT NOT NULL, CHECK (eventDuration between 1 and 480),
-eventStartTime DATETIME NOT NULL,
-eventNotes VARCHAR(500),
-fileName VARCHAR(100),
-PRIMARY KEY (bookingID),
-INDEX fk_event_eventCategoryId_idx (eventCategoryId ASC) VISIBLE,
-CONSTRAINT fk_event_eventCategoryId
-FOREIGN KEY (eventCategoryId)
-REFERENCES eventcategories (eventCategoryId)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION)
+-- CREATE TABLE IF NOT EXISTS events (
+-- bookingID INT NOT NULL AUTO_INCREMENT,
+-- bookingName VARCHAR(100) NOT NULL,
+-- bookingEmail VARCHAR(45) NOT NULL,
+-- eventCategoryId INT NOT NULL,
+-- eventDuration INT NOT NULL, CHECK (eventDuration between 1 and 480),
+-- eventStartTime DATETIME NOT NULL,
+-- eventNotes VARCHAR(500),
+-- fileName VARCHAR(100),
+-- PRIMARY KEY (bookingID),
+-- INDEX fk_event_eventCategoryId_idx (eventCategoryId ASC) VISIBLE,
+-- CONSTRAINT fk_event_eventCategoryId
+-- FOREIGN KEY (eventCategoryId)
+-- REFERENCES eventcategories (eventCategoryId)
+-- ON DELETE NO ACTION
+-- ON UPDATE NO ACTION)
+-- ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `oasip`.events (
+  `bookingID` INT NOT NULL AUTO_INCREMENT,
+  `bookingName` VARCHAR(100) NOT NULL,
+  `bookingEmail` VARCHAR(45) NOT NULL,
+  `eventCategoryId` INT NOT NULL,
+  `eventDuration` INT NOT NULL,
+  `eventStartTime` DATETIME NOT NULL,
+  `eventNotes` VARCHAR(500) NULL DEFAULT NULL,
+  `fileID` VARCHAR(100) NULL,
+  PRIMARY KEY (`bookingID`),
+  INDEX `fk_event_eventCategoryId_idx` (`eventCategoryId` ASC) VISIBLE,
+  INDEX `fk_events_files1_idx` (`fileID` ASC) VISIBLE,
+  CONSTRAINT `fk_event_eventCategoryId`
+    FOREIGN KEY (`eventCategoryId`)
+    REFERENCES `oasip`.`eventcategories` (`eventCategoryId`),
+  CONSTRAINT `fk_events_files1`
+    FOREIGN KEY (`fileID`)
+    REFERENCES `oasip`.`files` (`fileID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS files (
+  `fileID` VARCHAR(100) NOT NULL,
+  `fileName` VARCHAR(45) NOT NULL,
+  `fileSize` INT NOT NULL,
+  PRIMARY KEY (`fileID`))
 ENGINE = InnoDB;
 
 -- User Table
@@ -143,11 +172,3 @@ INSERT INTO eventcategoryowner VALUES
 (4, 4),
 (2, 5),
 (3, 5);
-
--- INSERT INTO users values
--- (1, 'PBI24 สมส่วน สุขศรี 1', SHA2('admin', 256), 'somsuan.s241@kmutt.ac.th', 'admin', current_timestamp(), current_timestamp());
-
--- Create USER for specific use
-CREATE USER 'OASIPBE'@'%' IDENTIFIED BY 'BEBE';
-GRANT ALL PRIVILEGES ON oasip.* TO 'OASIPBE'@'%';
-FLUSH PRIVILEGES;

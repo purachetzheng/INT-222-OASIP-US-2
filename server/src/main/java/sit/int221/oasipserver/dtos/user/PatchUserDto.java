@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,5 +34,7 @@ public class PatchUserDto {
     private Instant createdOn;
 
     private Instant updatedOn;
+
+    private Set<Integer> categoriesOwner;
 }
 
