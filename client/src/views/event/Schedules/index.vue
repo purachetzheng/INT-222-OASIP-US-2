@@ -99,20 +99,14 @@ const viewEventDetail = async (id) => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
     <PageWrapper :enable-scroll="!detailSlideOver.visible">
-        <!-- <button @click="detailSlideOver.visible = !detailSlideOver.visible">test</button> -->
-
-        <AppSlideOver
+        <router-view v-slot="{ Component }">
+            <AppSlideOver
             :show="detailSlideOver.show"
             @close="detailSlideOver.close"
-        >
-            <router-view :slide-over-stage="detailSlideOver"></router-view>
-        </AppSlideOver>
-
-        <!-- <router-view v-slot="{ Component }">
-            <AppSlideOver :show="detailSlideOver.show" @close="detailSlideOver.close">
+            >
                 <component :is="Component" :slide-over-stage="detailSlideOver" />
             </AppSlideOver>
-        </router-view> -->
+        </router-view>
 
         <!-- <EventDetailSlideOver :slide-over-stage="detailSlideOver" /> -->
         <PageLoader v-if="isLoading" />

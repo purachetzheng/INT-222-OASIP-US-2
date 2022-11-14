@@ -42,7 +42,9 @@ onMounted(() => {
                 :class="[show ? 'slide-in' : 'slide-out']"
                 style=""
             >
-                <slot />
+                <Transition name="fade">
+                    <slot v-if="show" />
+                </Transition>
             </div>
         </div>
     </Teleport>
