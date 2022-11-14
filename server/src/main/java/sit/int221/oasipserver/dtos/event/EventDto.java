@@ -1,5 +1,6 @@
 package sit.int221.oasipserver.dtos.event;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class EventDto {
     private Integer eventDuration;
     private Instant eventStartTime;
     private String eventNotes;
-    private Eventcategory eventcategory;
+//    @JsonProperty("category")
+    private Eventcategory eventCategory;
     private File file;
 }
