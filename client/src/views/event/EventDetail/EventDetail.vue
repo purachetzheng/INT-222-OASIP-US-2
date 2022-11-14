@@ -7,7 +7,12 @@ import { formatDatetime } from '../../../utils/dateTime';
 import { objRenameKeys } from '../../../utils/ObjectUtils';
 const { params } = useRoute()
 const router = useRouter()
-
+const props = defineProps({
+  closeSlideOver: {
+    type: Function,
+    default: () => {}
+  },
+})
 const eventTemplate = {
     name: '',
     email: '',
@@ -81,7 +86,8 @@ const eventObjectCleaner = (data) => {
             name: eventCategoryName,
         },
         startTime: {
-            datetime: eventStartTime,
+            raw: eventStartTime,
+            datetime: formatDatetime.full2(eventStartTime),
             date: formatDatetime.dayMonthYear(eventStartTime),
             time: formatDatetime.hourTime(eventStartTime),
         },
@@ -104,6 +110,20 @@ const getFileName = async () => {
     }
 }
 
+const cancelEvent = async () => {
+    props.closeSlideOver()
+  try {
+    const res = await apiEvent.delete(params.eventId)
+    console.log(res.data)
+    alert('Cancel successfully')
+  } catch (error) {
+    console.log(error.message)
+    const { data, status } = error.response
+    alert(data.message)
+  }
+}
+
+
 onBeforeMount(async () => {
     getEvent()
 })
@@ -115,10 +135,10 @@ onBeforeMount(async () => {
     <!-- {{params.eventId}} -->
     
     <header class="flex justify-between items-center">
-        <p class="text-xl font-semibold">Event Detail</p>
+        <p class="text-xl font-semibold">Event Detail </p>
         <div class="flex gap-2">
             <app-button btn-size="sm">Edit</app-button>
-            <app-button btn-type="danger" btn-size="sm">Delete</app-button>
+            <app-button btn-type="danger" btn-size="sm" @click="cancelEvent">Cancel</app-button>
         </div>
     </header>
     <div class="font-medium">

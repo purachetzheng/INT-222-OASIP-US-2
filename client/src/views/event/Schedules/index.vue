@@ -74,11 +74,18 @@ onBeforeMount(async () => {
 // })
 
 const detailSlideOver = reactive({
-  visible: false,
+  show: false,
+  open: () => {
+    detailSlideOver.show = true
+  },
+  close: () => {
+    detailSlideOver.show = false
+  },
 })
+
 const viewEventDetail = async (id) => {
   await router.push({ name: 'EventDetail', params: { eventId: id } })
-  detailSlideOver.visible = true
+  detailSlideOver.open()
   // setTimeout(()=> detailSlideOver.visible = true, 50)
 }
 </script>
@@ -91,7 +98,7 @@ const viewEventDetail = async (id) => {
   <PageWrapper :enable-scroll="!detailSlideOver.visible">
     <!-- <button @click="detailSlideOver.visible = !detailSlideOver.visible">test</button> -->
 
-    <EventDetailSlideOver :sidebar-stage="detailSlideOver" />
+    <EventDetailSlideOver :slide-over-stage="detailSlideOver" />
     <PageLoader v-if="isLoading" />
     <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
     <FilterBar :filter-setting="filterSettingProxy" />

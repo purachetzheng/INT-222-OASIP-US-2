@@ -1,25 +1,33 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 
 defineEmits([])
 const props = defineProps({
-    sidebarStage: {
+    slideOverStage: {
         type: Object,
         default: {
-            visible: null,
+            show: null,
+            // close: () => {},
         },
     },
 })
 
-const showSidebar = ref(false)
-
+const slideOverContent = reactive({
+    visible: false,
+    show: () => {
+        slideOverContent.visible = true
+    },
+    hide: () => {
+        slideOverContent.visible = false
+    }
+})
 // for fix slide animation
-const closeSidebar = () => {
-    showSidebar.value = false
-    setTimeout(() => (props.sidebarStage.visible = false), 50)
+const closeSlideOver = async () => {
+    slideOverContent.hide()
+    setTimeout(props.slideOverStage.close)
 }
-const openSidebar = () => {
-    setTimeout(() => (showSidebar.value = true), 50)
+const openSlideOver = () => {
+    setTimeout(slideOverContent.show)
 }
 // for fix teleport
 const isMounted = ref(false)
@@ -31,24 +39,25 @@ onMounted(() => {
 <template>
     <Teleport to="#sidebar-div" v-if="isMounted">
         <router-view v-slot="{ Component }">
-            <Transition name="fade" @enter="openSidebar">
+            <Transition name="fade" @enter="openSlideOver">
                 <div
-                    v-if="sidebarStage.visible"
+                    v-if="slideOverStage.show"
                     class="absolute top-0 right-0 bottom-0 left-0 z-20 overflow-x-hidden"
 
                 >
-                <div class="h-full w-full bg-black opacity-50 fixed" @click="closeSidebar"></div>
+                <div class="h-full w-full bg-black opacity-50 fixed" @click="closeSlideOver"></div>
                     <div
                         class="slidein fixed right-0 w-128 h-full overflow-y-auto bg-white duration-500"
                         :class="[
-                            showSidebar ? 'translate-x-0' : 'translate-x-96',
+                            slideOverContent.visible ? 'translate-x-0' : 'translate-x-96',
                         ]"
                     >
                         <!-- <Transition name="fade" duration="1000"> -->
                         <component
                             :is="Component"
-                            :class="showSidebar ? 'opacity-100' : 'opacity-0'"
+                            :class="slideOverContent.visible ? 'opacity-100' : 'opacity-0'"
                             class="transition-opacity duration-700 ease "
+                            :close-slide-over="closeSlideOver"
                         />
                         <!-- </Transition> -->
                         <!-- <p v-for="num in 50">Lorem</p> -->
