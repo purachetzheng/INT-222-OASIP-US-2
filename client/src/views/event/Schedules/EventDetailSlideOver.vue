@@ -19,7 +19,7 @@ const slideOverContent = reactive({
     },
     hide: () => {
         slideOverContent.visible = false
-    }
+    },
 })
 // for fix slide animation
 const closeSlideOver = async () => {
@@ -37,40 +37,39 @@ onMounted(() => {
 </script>
 
 <template>
-    <Teleport to="#sidebar-div" v-if="isMounted">
-        <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }">
+        <Teleport to="#sidebar-div" v-if="isMounted">
             <Transition name="fade" @enter="openSlideOver">
                 <div
                     v-if="slideOverStage.show"
                     class="absolute top-0 right-0 bottom-0 left-0 z-20 overflow-x-hidden"
-
                 >
-                <div class="h-full w-full bg-black opacity-50 fixed" @click="closeSlideOver"></div>
+                    <div
+                        class="h-full w-full bg-black opacity-50 fixed"
+                        @click="closeSlideOver"
+                    ></div>
                     <div
                         class="slidein fixed right-0 w-128 h-full overflow-y-auto bg-white duration-500"
                         :class="[
-                            slideOverContent.visible ? 'translate-x-0' : 'translate-x-96',
+                            slideOverContent.visible
+                                ? 'translate-x-0 opacity-100'
+                                : 'translate-x-128 opacity-0',
                         ]"
                     >
-                        <!-- <Transition name="fade" duration="1000"> -->
                         <component
                             :is="Component"
-                            :class="slideOverContent.visible ? 'opacity-100' : 'opacity-0'"
-                            class="transition-opacity duration-700 ease "
                             :close-slide-over="closeSlideOver"
                         />
-                        <!-- </Transition> -->
-                        <!-- <p v-for="num in 50">Lorem</p> -->
                     </div>
                 </div>
             </Transition>
-        </router-view>
-    </Teleport>
+        </Teleport>
+    </router-view>
 </template>
 
 <style scoped>
 .slidein {
-    transition: all 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out, opacity 0.5s ease;
 }
 
 /* .slide-enter-active,
