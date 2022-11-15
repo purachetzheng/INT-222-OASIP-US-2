@@ -14,8 +14,8 @@ const event = computed(() => {
     id: props.event.id,
     name: props.event.bookingName,
     category: {
-      id: props.event.eventCategoryID,
-      name: props.event.eventCategoryName,
+      id: props.event.eventCategory.id,
+      name: props.event.eventCategory.eventCategoryName,
     },
     duration: props.event.eventDuration,
     startDate: formatDatetime.monthDayYear(props.event.eventStartTime),
