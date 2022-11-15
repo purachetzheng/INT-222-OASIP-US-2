@@ -16,7 +16,7 @@ const postEvent = (data) =>
 const patchEvent = ({id, data}) => 
   apiClient.patch(`${endpoint}/${id}`, data)
 
-const deleteEvent = (id) => 
+export const deleteEvent = (id) => 
   apiClient.delete(`${endpoint}/${id}`)
 
 const apiEvent = {
