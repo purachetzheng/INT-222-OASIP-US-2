@@ -4,8 +4,10 @@ package sit.int221.oasipserver.repo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
 
@@ -26,8 +28,15 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     public List<Event> findAllByBookingEmail(String email);
 
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE events SET fileID = null WHERE bookingID = ?1", nativeQuery = true)
+    public void updateFileToNull(Integer id);
+
     @Query(
             value = "select * from events where (:email is null or bookingemail = :email)" +
+                    "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
+            countQuery = "select count(*) from events where (:email is null or bookingemail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             nativeQuery=true
     )
