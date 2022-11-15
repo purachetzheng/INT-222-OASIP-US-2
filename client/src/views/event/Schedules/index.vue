@@ -2,7 +2,7 @@
 import { computed, onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { getEvent, deleteEvent } from '../../../services/api/lib/event'
+import apiEvent, { getEvent, deleteEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue'
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
@@ -95,6 +95,22 @@ const confirmDeleteModal = reactive({
     },
 })
 
+const editEvent = async (submitEvent) => {
+    // console.log('eventData', eventData);
+    const {id, ...event} = submitEvent
+  try {
+    const res = await apiEvent.patch(id, event)
+    const data = await res.data
+    console.log(res)
+    getEvents()
+    alert('Edit complete')
+  } catch (error) {
+    alert(error.message)
+    // const { data, status } = error.response
+    // alert(data.message)
+  }
+}
+
 onBeforeMount(async () => {
     getEvents()
 })
@@ -142,6 +158,7 @@ const viewEventDetail = async (id) => {
                     :is="Component"
                     :slide-over-stage="detailSlideOver"
                     @cancel-event="confirmDeleteModal.show"
+                    @submit-edit="editEvent"
                 />
             </AppSlideOver>
         </router-view>

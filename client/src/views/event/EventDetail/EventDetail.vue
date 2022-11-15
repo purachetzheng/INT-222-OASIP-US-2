@@ -5,9 +5,10 @@ import { apiEvent } from '../../../services/api/lib';
 import { getFile } from '../../../services/api/lib/file';
 import { formatDatetime } from '../../../utils/dateTime';
 import { objRenameKeys } from '../../../utils/ObjectUtils';
+import EditEventModal from '../EventDetail/EditEventModal.vue';
 const { params } = useRoute()
 const router = useRouter()
-defineEmits(['cancel-event'])
+const emits = defineEmits(['cancel-event', 'submit-edit'])
 const props = defineProps({
   closeSlideOver: {
     type: Function,
@@ -50,17 +51,17 @@ const editingEventTemplate = {
 
 const editModal = reactive({
   visible: false,
-  eventTemplate: {
-
-  },
-  event: { ...editingEventTemplate }, 
-  show: (event) => {
-    editModal.event = event
+  event: { ...eventTemplate }, 
+  show: () => {
+    editModal.event = event.value
     editModal.visible = true
   },
   close: () => {
     editModal.visible = false
   },
+  onSubmit: (event) => {
+    emits('submit-edit', event)
+  }
 })
 
 const getEvent = async () => {
@@ -141,17 +142,25 @@ const cancelEvent = async () => {
 onBeforeMount(async () => {
     getEvent()
 })
+const editingMode = reactive({
+    state: false,
+    on: () => {
+        editingMode.state = true
+    },
+    off: () => editingMode.state = false
+})
+
 
 </script>
  
 <template>
  <div class="p-8 flex flex-col gap-4 overflow-y-auto">
     <!-- {{params.eventId}} -->
-    
+    <EditEventModal :modal-state="editModal"  />
     <header class="flex justify-between items-center">
         <p class="text-xl font-semibold">Event Detail </p>
         <div class="flex gap-2">
-            <app-button btn-size="sm">Edit</app-button>
+            <app-button btn-size="sm" @click="editModal.show">Edit</app-button>
             <app-button btn-type="danger" btn-size="sm" @click="$emit('cancel-event', params.eventId)">Cancel</app-button>
         </div>
     </header>
@@ -207,7 +216,7 @@ onBeforeMount(async () => {
             </div>
         </div>
     </div>
-    <div class="font-medium" v-if="event.notes">
+    <div class="font-medium">
         <p class="">Note</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
         <div class="text-sm">{{ event.notes }}</div>
