@@ -7,6 +7,7 @@ import { formatDatetime } from '../../../utils/dateTime';
 import { objRenameKeys } from '../../../utils/ObjectUtils';
 const { params } = useRoute()
 const router = useRouter()
+defineEmits(['cancel-event'])
 const props = defineProps({
   closeSlideOver: {
     type: Function,
@@ -151,9 +152,10 @@ onBeforeMount(async () => {
         <p class="text-xl font-semibold">Event Detail </p>
         <div class="flex gap-2">
             <app-button btn-size="sm">Edit</app-button>
-            <app-button btn-type="danger" btn-size="sm" @click="cancelEvent">Cancel</app-button>
+            <app-button btn-type="danger" btn-size="sm" @click="$emit('cancel-event', params.eventId)">Cancel</app-button>
         </div>
     </header>
+    
     <div class="font-medium">
         <p class="">Information</p>
         <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">

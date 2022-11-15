@@ -2,7 +2,7 @@
 import { computed, onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { getEvent } from '../../../services/api/lib/event'
+import { getEvent, deleteEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue'
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
@@ -62,6 +62,39 @@ const getEvents = async (params) => {
     }
 }
 
+const cancelEvent = async (id) => {
+    console.log(id);
+    try {
+        const res = await deleteEvent(id)
+        console.log(res.data)
+        // alert('Cancel successfully')
+        // router.push({ name: 'Schedules' })
+        // events.value = events.value.filter((event) => (event.id = id))
+        getEvents()
+    } catch (error) {
+        alert(error.message)
+        // const { data, status } = error.response
+    } finally {
+        
+        confirmDeleteModal.close()
+    }
+}
+
+const confirmDeleteModal = reactive({
+    state: false,
+    selectedId: null,
+    show: (id) => {
+        confirmDeleteModal.state = true
+        confirmDeleteModal.selectedId = id
+        detailSlideOver.close()
+    },
+    close: () => (confirmDeleteModal.state = false),
+    onConfirm: () => cancelEvent(confirmDeleteModal.selectedId),
+    onCancel: () => {
+        confirmDeleteModal.close()
+    },
+})
+
 onBeforeMount(async () => {
     getEvents()
 })
@@ -99,32 +132,64 @@ const viewEventDetail = async (id) => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
     <PageWrapper :enable-scroll="!detailSlideOver.visible">
+        <!-- Event Detail Slide Over -->
         <router-view v-slot="{ Component }">
             <AppSlideOver
-            :show="detailSlideOver.show"
-            @close="detailSlideOver.close"
+                :show="detailSlideOver.show"
+                @close="detailSlideOver.close"
             >
-                <component :is="Component" :slide-over-stage="detailSlideOver" />
+                <component
+                    :is="Component"
+                    :slide-over-stage="detailSlideOver"
+                    @cancel-event="confirmDeleteModal.show"
+                />
             </AppSlideOver>
         </router-view>
-
+        <app-modal :show="confirmDeleteModal.state" :type="'confirm'">
+            <template #header>
+                <h1 class="text-lg font-semibold">Delete</h1>
+            </template>
+            <template #body>
+                <p class="font-medium">Do you want to cancel this event?</p>
+            </template>
+            <template #footer>
+                <div class="flex justify-center gap-2">
+                    <app-button
+                        btn-type="outline-danger"
+                        @click="confirmDeleteModal.onCancel"
+                        >No</app-button
+                    >
+                    <app-button
+                        btn-type="success"
+                        @click="confirmDeleteModal.onConfirm"
+                        >Yes</app-button
+                    >
+                </div>
+            </template>
+        </app-modal>
         <!-- <EventDetailSlideOver :slide-over-stage="detailSlideOver" /> -->
         <PageLoader v-if="isLoading" />
         <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
         <FilterBar :filter-setting="filterSettingProxy" />
-        <TransitionGroup
+        <ul id="event-list" 
+            class="h-full auto-rows-min grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4"
+        >
+            
+        
+        <!-- <TransitionGroup
             name="event-list"
             tag="ul"
             id="event-list"
             class="h-full auto-rows-min grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4"
-        >
+        > -->
             <EventCard
                 v-for="event in events"
                 :key="event.id"
                 :event="event"
                 @click-event-card="viewEventDetail(event.id)"
             />
-        </TransitionGroup>
+        <!-- </TransitionGroup> -->
+        </ul>
         <div class="flex justify-center" v-if="!pageInfo.last">
             <button class="font-semibold" @click="filterSettingProxy.page++">
                 <p class="">See More</p>
