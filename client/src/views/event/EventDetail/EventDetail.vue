@@ -28,8 +28,9 @@ const eventTemplate = {
     },
     notes: '',
     file:{
-        id: '',
+        id: 0,
         name: '',
+        size: ''
     },
     category: {
         id: 0,
@@ -66,7 +67,7 @@ const getEvent = async () => {
         const { data, status } = await apiEvent.getById(params.eventId)
         const cleanedObj = eventObjectCleaner(data)
         event.value = { ...cleanedObj }
-        if(data.fileName) return await getFileName()
+        // if(data.fileName) return await getFileName()
     } catch (error) {
         const res = error.response
         event.value = 'no'
@@ -82,14 +83,20 @@ const eventObjectCleaner = (data) => {
         eventNotes: 'notes',
         eventDuration: 'duration',
     }
+    const fileChangesMap = {
+        fileName: 'name',
+        fileSize: 'size',
+    }
+    if(data.file) objRenameKeys(data.file, fileChangesMap)
+    
     objRenameKeys(data, changesMap)
     //Change format
-    const { eventcategory, eventStartTime, fileName, ...updatedObject } = data
+    const { eventcategory: eventCategory, eventStartTime, ...updatedObject } = data
     const addedField = {
         category: {
-            id: eventcategory.id,
-            name: eventcategory.eventCategoryName,
-            desc: eventcategory.eventCategoryDescription
+            id: eventCategory.id,
+            name: eventCategory.eventCategoryName,
+            desc: eventCategory.eventCategoryDescription
         },
         startTime: {
             raw: eventStartTime,
@@ -97,24 +104,23 @@ const eventObjectCleaner = (data) => {
             date: formatDatetime.dayMonthYear(eventStartTime),
             time: formatDatetime.hourTime(eventStartTime),
         },
-        file: {
-            id: fileName
-        }
     }
+    // console.log(file);
+    
     Object.assign(updatedObject, addedField);
     return updatedObject
 }
 
-const getFileName = async () => {
-    try {
-        const { data, status } = await getFile(event.value.file.id)
-        event.value.file.name = data
-    } catch (error) {
-        const res = error.response
-        console.log(res.status)
-        console.log('error ', error.message)
-    }
-}
+// const getFileName = async () => {
+//     try {
+//         const { data, status } = await getFile(event.value.file.id)
+//         event.value.file.name = data
+//     } catch (error) {
+//         const res = error.response
+//         console.log(res.status)
+//         console.log('error ', error.message)
+//     }
+// }
 
 const cancelEvent = async () => {
     props.slideOverStage.close()
@@ -172,10 +178,14 @@ onBeforeMount(async () => {
                 <span class="basis-28 text-gray-500">Duration</span>
                 <span class="flex-1">{{ event.duration }} Minutes</span>
             </div>
-            <div class="flex" v-if="event.file.id">
+            <div class="flex" v-if="event.file">
                 <span class="basis-28 text-gray-500">File</span>
                 <span class="flex-1">
-                    <a :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`" class="underline text-blue-500">{{ event.file.name }}</a>
+                    <a :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`" 
+                        class="underline text-blue-500"
+                    >
+                        {{ event.file.name }}
+                    </a>
                 </span>
             </div>
         </div>
@@ -191,7 +201,7 @@ onBeforeMount(async () => {
             </div>
             <div class="flex">
                 <span class="basis-28 text-gray-500">Description</span>
-                <span class="flex-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit officia, optio, nam modi nobis distinctio tempora ducimus vero at inventore, architecto suscipit totam officiis?</span>
+                <span class="flex-1">{{event.category.desc}}</span>
             </div>
         </div>
     </div>
