@@ -72,6 +72,9 @@ const editEvent = async (submitEvent) => {
     // console.log('eventData', eventData);
     const {id, ...event} = submitEvent
     const eventFormData = serialize(event);
+    const filet = new File([''], 'empty')
+    if(eventFormData.get('file') === '') eventFormData.set('file', filet)
+
   try {
     const res = await apiEvent.patch(id, eventFormData)
     const data = await res.data
