@@ -8,6 +8,6 @@ import sit.int221.oasipserver.entities.File;
 public interface FileRepository extends JpaRepository<File, String> {
 
     @Modifying
-    @Query(value = "DELETE FROM Files WHERE fileID = ?1", nativeQuery = true)
+    @Query(value = "DELETE FROM files WHERE fileID = ?1", nativeQuery = true)
     public void deleteById(String id);
 }
