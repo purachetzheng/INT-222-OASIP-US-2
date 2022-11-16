@@ -93,7 +93,7 @@ const eventObjectCleaner = (data) => {
     
     objRenameKeys(data, changesMap)
     //Change format
-    const { eventcategory: eventCategory, eventStartTime, ...updatedObject } = data
+    const { eventCategory, eventStartTime, ...updatedObject } = data
     const addedField = {
         category: {
             id: eventCategory.id,
