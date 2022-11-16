@@ -1,6 +1,6 @@
 <script setup>
 import { ErrorMessage, Field, useField } from 'vee-validate'
-import { computed, ref } from 'vue'
+import { computed, onUpdated, ref } from 'vue'
 
 defineEmits([])
 const props = defineProps({
@@ -8,6 +8,9 @@ const props = defineProps({
     //     type: String,
     //     require: true,
     // },
+    file: {
+        
+    }
 })
 const nameRef = ref('file')
 const { value, errorMessage, handleChange, handleBlur, setValue } = useField(
@@ -78,11 +81,19 @@ const removeFile = () => {
     file.value = undefined
     inputCoolDown.value = true
     setTimeout(()=> inputCoolDown.value = false, 200)
+    if(!(file instanceof File)) return setValue(null)
     setValue(undefined)
 }
 
 const onInput = (e) => addFile(e.target.files[0])
 
+const setFile = (objFile) =>{
+    file.value = objFile
+    setValue(objFile)
+}
+defineExpose({
+    setFile
+})
 </script>
 
 <template>
@@ -114,6 +125,7 @@ const onInput = (e) => addFile(e.target.files[0])
                 </button>
             </div>
             <input id="dropzone-file" class="hidden" type="file" :disabled="inputCoolDown" @change.prevent="onInput" />
+            
         </label>
     </div>
 </template>

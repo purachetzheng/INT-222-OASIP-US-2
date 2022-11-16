@@ -1,8 +1,9 @@
 <script setup>
-import { useForm } from 'vee-validate'
+import { Field, useForm } from 'vee-validate'
 import { onBeforeMount, onUpdated, ref } from 'vue'
 import schema from '../../../services/validation/schema/EditEventSchema'
 import { datetimeCheck, formatDatetime } from '../../../utils/dateTime';
+import FileField from './FileField.vue';
 const emits = defineEmits([])
 const props = defineProps({
     modalState: {
@@ -27,7 +28,7 @@ const { handleSubmit, values, resetForm, meta, setFieldValue,setFieldError, setV
         initialValues: { ...formTemplate },
     })
 
-const onSubmit = handleSubmit(({ id, notes, datetime }) => {
+const onSubmit = handleSubmit(({ id, notes, datetime, file }) => {
     // console.log(id, notes, datetime);
     const isFuture = datetimeCheck.isFuture(formatDatetime.jsonDatetime(datetime.date, datetime.time))
     if(!isFuture) {
@@ -38,26 +39,31 @@ const onSubmit = handleSubmit(({ id, notes, datetime }) => {
         eventStartTime: formatDatetime.jsonDatetime(datetime.date, datetime.time)
     }
     if (!!notes) event.eventNotes = notes.trim()
-    // console.log(event);
+    const isNotDefault = file instanceof File
+    if(isNotDefault || file == null) {
+        event.file = file
+    }
+    console.log(event);
     props.modalState.onSubmit(event)
 })
 // const dateInput = ref()
 // const timeInput = ref()
+const inputFile = ref()
 onUpdated(() => {
     if(props.modalState.visible){
         // const event = props.modalState.event
-        const {id,  notes, startTime } = props.modalState.event
+        const {id,  notes, startTime, file } = props.modalState.event
         setValues({
             id: id,
             notes: notes || '',
             datetime: {
                 date: formatDatetime.inputDate(startTime.datetime),
                 time: formatDatetime.inputTime(startTime.datetime),
-            }
+            },
         })
+        if(file) inputFile.value.setFile({...file, default: 1})
         return
     }
-    
 })
 // const event = ref({
 //   categoryId: props.categoryID,
@@ -82,12 +88,14 @@ onUpdated(() => {
                     <app-vee-input name="datetime.date" type="date" label="Date" />
                     <app-vee-input name="datetime.time" type="time" label="Time" />
                 </div>
+            
             <app-vee-textarea
             name="notes"
             :max="500"
             label="Notes"
             
             />
+            <FileField ref="inputFile" />
         </div>
             
         </template>

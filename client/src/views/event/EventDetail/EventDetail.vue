@@ -1,23 +1,24 @@
 <script setup>
-import { onBeforeMount, reactive, ref } from 'vue';
+import { serialize } from 'object-to-formdata'
+import { onBeforeMount, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { apiEvent } from '../../../services/api/lib';
-import { getFile } from '../../../services/api/lib/file';
-import { formatDatetime } from '../../../utils/dateTime';
-import { objRenameKeys } from '../../../utils/ObjectUtils';
-import EditEventModal from '../EventDetail/EditEventModal.vue';
+import { apiEvent } from '../../../services/api/lib'
+import { getFile } from '../../../services/api/lib/file'
+import { formatDatetime } from '../../../utils/dateTime'
+import { objRenameKeys } from '../../../utils/ObjectUtils'
+import EditEventModal from '../EventDetail/EditEventModal.vue'
 const { params } = useRoute()
 const router = useRouter()
-const emits = defineEmits(['cancel-event', 'submit-edit'])
+const emits = defineEmits(['cancel-event', 'submit-edit', 'update-events-edit'])
 const props = defineProps({
-  closeSlideOver: {
-    type: Function,
-    default: () => {}
-  },
-  slideOverStage: {
-    type: Object,
-    default: {}
-  },
+    closeSlideOver: {
+        type: Function,
+        default: () => {},
+    },
+    slideOverStage: {
+        type: Object,
+        default: {},
+    },
 })
 const eventTemplate = {
     name: '',
@@ -26,43 +27,63 @@ const eventTemplate = {
     startTime: {
         datetime: '',
         date: '',
-        time: ''
+        time: '',
     },
     notes: '',
-    file:{
+    file: {
         id: 0,
         name: '',
-        size: ''
+        size: '',
     },
     category: {
         id: 0,
         name: '',
-        desc: ''
-    }
+        desc: '',
+    },
 }
-const event = ref({...eventTemplate})
+const event = ref({ ...eventTemplate })
 
 const editingEventTemplate = {
-  id: null,
-  eventCategoryName: '',
-  eventCategoryDescription: '',
-  eventDuration: null,
+    id: null,
+    eventCategoryName: '',
+    eventCategoryDescription: '',
+    eventDuration: null,
 }
 
 const editModal = reactive({
-  visible: false,
-  event: { ...eventTemplate }, 
-  show: () => {
-    editModal.event = event.value
-    editModal.visible = true
-  },
-  close: () => {
-    editModal.visible = false
-  },
-  onSubmit: (event) => {
-    emits('submit-edit', event)
-  }
+    visible: false,
+    event: { ...eventTemplate },
+    show: () => {
+        editModal.event = event.value
+        editModal.visible = true
+    },
+    close: () => {
+        editModal.visible = false
+    },
+    onSubmit: (event) => {
+        // emits('submit-edit', event)
+        editEvent(event)
+        editModal.close()
+        emits('update-events-edit')
+    },
 })
+
+const editEvent = async (submitEvent) => {
+    // console.log('eventData', eventData);
+    const {id, ...event} = submitEvent
+    const eventFormData = serialize(event);
+  try {
+    const res = await apiEvent.patch(id, eventFormData)
+    const data = await res.data
+    console.log(res)
+    getEvent()
+    alert('Edit complete')
+  } catch (error) {
+    alert(error.message)
+    // const { data, status } = error.response
+    // alert(data.message)
+  }
+}
 
 const getEvent = async () => {
     try {
@@ -89,8 +110,8 @@ const eventObjectCleaner = (data) => {
         fileName: 'name',
         fileSize: 'size',
     }
-    if(data.file) objRenameKeys(data.file, fileChangesMap)
-    
+    if (data.file) objRenameKeys(data.file, fileChangesMap)
+
     objRenameKeys(data, changesMap)
     //Change format
     const { eventCategory, eventStartTime, ...updatedObject } = data
@@ -98,7 +119,7 @@ const eventObjectCleaner = (data) => {
         category: {
             id: eventCategory.id,
             name: eventCategory.eventCategoryName,
-            desc: eventCategory.eventCategoryDescription
+            desc: eventCategory.eventCategoryDescription,
         },
         startTime: {
             raw: eventStartTime,
@@ -108,8 +129,8 @@ const eventObjectCleaner = (data) => {
         },
     }
     // console.log(file);
-    
-    Object.assign(updatedObject, addedField);
+
+    Object.assign(updatedObject, addedField)
     return updatedObject
 }
 
@@ -127,17 +148,16 @@ const eventObjectCleaner = (data) => {
 const cancelEvent = async () => {
     props.slideOverStage.close()
     // props.closeSlideOver()
-//   try {
-//     const res = await apiEvent.delete(params.eventId)
-//     console.log(res.data)
-//     alert('Cancel successfully')
-//   } catch (error) {
-//     console.log(error.message)
-//     const { data, status } = error.response
-//     alert(data.message)
-//   }
+    //   try {
+    //     const res = await apiEvent.delete(params.eventId)
+    //     console.log(res.data)
+    //     alert('Cancel successfully')
+    //   } catch (error) {
+    //     console.log(error.message)
+    //     const { data, status } = error.response
+    //     alert(data.message)
+    //   }
 }
-
 
 onBeforeMount(async () => {
     getEvent()
@@ -147,83 +167,87 @@ const editingMode = reactive({
     on: () => {
         editingMode.state = true
     },
-    off: () => editingMode.state = false
+    off: () => (editingMode.state = false),
 })
-
-
 </script>
- 
+
 <template>
- <div class="p-8 flex flex-col gap-4 overflow-y-auto">
-    <!-- {{params.eventId}} -->
-    <EditEventModal :modal-state="editModal"  />
-    <header class="flex justify-between items-center">
-        <p class="text-xl font-semibold">Event Detail </p>
-        <div class="flex gap-2">
-            <app-button btn-size="sm" @click="editModal.show">Edit</app-button>
-            <app-button btn-type="danger" btn-size="sm" @click="$emit('cancel-event', params.eventId)">Cancel</app-button>
-        </div>
-    </header>
-    
-    <div class="font-medium">
-        <p class="">Information</p>
-        <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="flex flex-col gap-2 text-sm">
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Name</span>
-                <span class="flex-1">{{ event.name }}</span>
+    <div class="p-8 flex flex-col gap-4 overflow-y-auto">
+        <!-- {{params.eventId}} -->
+        <EditEventModal :modal-state="editModal" />
+        <header class="flex justify-between items-center">
+            <p class="text-xl font-semibold">Event Detail</p>
+            <div class="flex gap-2">
+                <app-button btn-size="sm" @click="editModal.show"
+                    >Edit</app-button
+                >
+                <app-button
+                    btn-type="danger"
+                    btn-size="sm"
+                    @click="$emit('cancel-event', params.eventId)"
+                    >Cancel</app-button
+                >
             </div>
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Email</span>
-                <span class="flex-1">{{ event.email }}</span>
-            </div>
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Date</span>
-                <span class="flex-1">{{ event.startTime.date }}</span>
-            </div>
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Time</span>
-                <span class="flex-1">{{ event.startTime.time }}</span>
-            </div>
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Duration</span>
-                <span class="flex-1">{{ event.duration }} Minutes</span>
-            </div>
-            <div class="flex" v-if="event.file">
-                <span class="basis-28 text-gray-500">File</span>
-                <span class="flex-1">
-                    <a :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`" 
-                        class="underline text-blue-500"
-                    >
-                        {{ event.file.name }}
-                    </a>
-                </span>
-            </div>
-        </div>
-    </div>
+        </header>
 
-    <div class="font-medium">
-        <p class="">Category</p>
-        <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="flex flex-col gap-2 text-sm">
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Name</span>
-                <span class="flex-1">{{ event.category.name }}</span>
-            </div>
-            <div class="flex">
-                <span class="basis-28 text-gray-500">Description</span>
-                <span class="flex-1">{{event.category.desc}}</span>
+        <div class="font-medium">
+            <p class="">Information</p>
+            <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700" />
+            <div class="flex flex-col gap-2 text-sm">
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Name</span>
+                    <span class="flex-1">{{ event.name }}</span>
+                </div>
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Email</span>
+                    <span class="flex-1">{{ event.email }}</span>
+                </div>
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Date</span>
+                    <span class="flex-1">{{ event.startTime.date }}</span>
+                </div>
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Time</span>
+                    <span class="flex-1">{{ event.startTime.time }}</span>
+                </div>
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Duration</span>
+                    <span class="flex-1">{{ event.duration }} Minutes</span>
+                </div>
+                <div class="flex" v-if="event.file">
+                    <span class="basis-28 text-gray-500">File</span>
+                    <span class="flex-1">
+                        <a
+                            :href="`https://intproj21.sit.kmutt.ac.th/us2/api/file/${event.file.id}`"
+                            class="underline text-blue-500"
+                        >
+                            {{ event.file.name }}
+                        </a>
+                    </span>
+                </div>
             </div>
         </div>
+
+        <div class="font-medium">
+            <p class="">Category</p>
+            <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700" />
+            <div class="flex flex-col gap-2 text-sm">
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Name</span>
+                    <span class="flex-1">{{ event.category.name }}</span>
+                </div>
+                <div class="flex">
+                    <span class="basis-28 text-gray-500">Description</span>
+                    <span class="flex-1">{{ event.category.desc }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="font-medium">
+            <p class="">Note</p>
+            <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700" />
+            <div class="text-sm">{{ event.notes }}</div>
+        </div>
     </div>
-    <div class="font-medium">
-        <p class="">Note</p>
-        <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700">
-        <div class="text-sm">{{ event.notes }}</div>
-    </div>
- </div>
 </template>
- 
-<style>
 
-</style>
+<style></style>

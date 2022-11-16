@@ -9,6 +9,7 @@ import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 import EventDetailSlideOver from './EventDetailSlideOver.vue'
 import AppSlideOver from '../../../components/App/AppSlideOver.vue'
+import { serialize } from 'object-to-formdata'
 
 const router = useRouter()
 
@@ -95,21 +96,7 @@ const confirmDeleteModal = reactive({
     },
 })
 
-const editEvent = async (submitEvent) => {
-    // console.log('eventData', eventData);
-    const {id, ...event} = submitEvent
-  try {
-    const res = await apiEvent.patch(id, event)
-    const data = await res.data
-    console.log(res)
-    getEvents()
-    alert('Edit complete')
-  } catch (error) {
-    alert(error.message)
-    // const { data, status } = error.response
-    // alert(data.message)
-  }
-}
+
 
 onBeforeMount(async () => {
     getEvents()
@@ -158,7 +145,7 @@ const viewEventDetail = async (id) => {
                     :is="Component"
                     :slide-over-stage="detailSlideOver"
                     @cancel-event="confirmDeleteModal.show"
-                    @submit-edit="editEvent"
+                    @update-events-edit="getEvents"
                 />
             </AppSlideOver>
         </router-view>
