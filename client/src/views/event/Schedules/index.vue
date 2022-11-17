@@ -87,10 +87,13 @@ const confirmDeleteModal = reactive({
     show: (id) => {
         confirmDeleteModal.state = true
         confirmDeleteModal.selectedId = id
-        detailSlideOver.close()
+        
     },
     close: () => (confirmDeleteModal.state = false),
-    onConfirm: () => cancelEvent(confirmDeleteModal.selectedId),
+    onConfirm: () => {
+        cancelEvent(confirmDeleteModal.selectedId),
+        detailSlideOver.close()
+    },
     onCancel: () => {
         confirmDeleteModal.close()
     },
