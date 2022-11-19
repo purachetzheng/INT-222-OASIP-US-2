@@ -12,6 +12,7 @@ import AppButton from './components/App/AppButton.vue'
 import AppInput from './components/App/AppInput.vue'
 import AppVeeTextArea from './components/App/AppVeeTextArea.vue'
 import AppVeeInput from './components/App/AppVeeInput.vue'
+import AppLoadingScreen from './components/App/AppLoadingScreen.vue'
 // import AppInput from './components/App/AppInput.vue'
 const pinia = createPinia()
 const app = createApp(App)
@@ -24,6 +25,7 @@ app
   .component('app-input', AppInput)
   .component('app-vee-input', AppVeeInput)
   .component('app-vee-textarea', AppVeeTextArea)
+  .component('app-loading-screen', AppLoadingScreen)
 
 fontawesome.init(app)
 app.use(pinia)

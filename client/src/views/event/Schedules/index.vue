@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 import apiEvent, { getEvent, deleteEvent } from '../../../services/api/lib/event'
 import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue'
-import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 import AppSlideOver from '../../../components/App/AppSlideOver.vue'
 import { serialize } from 'object-to-formdata'
@@ -138,6 +137,7 @@ const viewEventDetail = async (id) => {
     class="my-container h-full flex flex-col py-8 gap-8 justify-between test"
   > -->
     <PageWrapper :enable-scroll="!detailSlideOver.visible">
+        <app-loading-screen v-if="isLoading" />
         <!-- Event Detail Slide Over -->
         <router-view v-slot="{ Component }">
             <AppSlideOver
@@ -154,7 +154,6 @@ const viewEventDetail = async (id) => {
         </router-view>
         <!----------------------------->
         <DeleteEventModal :modal-state="confirmDeleteModal" />
-        <PageLoader v-if="isLoading" />
         <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
         <FilterBar :filter-setting="filterSettingProxy" />
         <ul id="event-list" 
