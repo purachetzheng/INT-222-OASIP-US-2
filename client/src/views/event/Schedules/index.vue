@@ -7,9 +7,9 @@ import FilterBar from './components/FilterBar.vue'
 import EventCard from './components/EventCard.vue'
 import PageLoader from '../../../components/shared/Loading/PageLoader.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-import EventDetailSlideOver from './EventDetailSlideOver.vue'
 import AppSlideOver from '../../../components/App/AppSlideOver.vue'
 import { serialize } from 'object-to-formdata'
+import DeleteEventModal from './DeleteEventModal.vue'
 
 const router = useRouter()
 
@@ -144,7 +144,7 @@ const viewEventDetail = async (id) => {
                 :show="detailSlideOver.show"
                 @close="detailSlideOver.close"
             >
-                <component
+                <component 
                     :is="Component"
                     :slide-over-stage="detailSlideOver"
                     @cancel-event="confirmDeleteModal.show"
@@ -152,29 +152,8 @@ const viewEventDetail = async (id) => {
                 />
             </AppSlideOver>
         </router-view>
-        <app-modal :show="confirmDeleteModal.state" :type="'confirm'">
-            <template #header>
-                <h1 class="text-lg font-semibold">Delete</h1>
-            </template>
-            <template #body>
-                <p class="font-medium">Do you want to cancel this event?</p>
-            </template>
-            <template #footer>
-                <div class="flex justify-center gap-2">
-                    <app-button
-                        btn-type="outline-danger"
-                        @click="confirmDeleteModal.onCancel"
-                        >No</app-button
-                    >
-                    <app-button
-                        btn-type="success"
-                        @click="confirmDeleteModal.onConfirm"
-                        >Yes</app-button
-                    >
-                </div>
-            </template>
-        </app-modal>
-        <!-- <EventDetailSlideOver :slide-over-stage="detailSlideOver" /> -->
+        <!----------------------------->
+        <DeleteEventModal :modal-state="confirmDeleteModal" />
         <PageLoader v-if="isLoading" />
         <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
         <FilterBar :filter-setting="filterSettingProxy" />
