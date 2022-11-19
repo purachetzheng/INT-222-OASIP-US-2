@@ -241,14 +241,15 @@ const editingMode = reactive({
                 </div>
                 <div class="flex">
                     <span class="basis-28 text-gray-500">Description</span>
-                    <span class="flex-1">{{ event.category.desc }}</span>
+                    <span class="flex-1">{{ event.category.desc || '-' }}</span>
                 </div>
             </div>
         </div>
         <div class="font-medium">
             <p class="">Note</p>
             <hr class="my-2 h-0.5 bg-gray-200 border-0 dark:bg-gray-700" />
-            <div class="text-sm">{{ event.notes }}</div>
+            <div v-if="event.notes" class="text-sm">{{ event.notes }}</div>
+            <div v-else class="text-sm text-gray-500">No notes</div>
         </div>
     </div>
 </template>
