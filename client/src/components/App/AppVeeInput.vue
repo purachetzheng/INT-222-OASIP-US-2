@@ -16,10 +16,8 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  required: {
-    type: Boolean,
-    default: false,
-  },
+  required: Boolean,
+  counter: Boolean,
   max: {
     type: Number,
     default: 999,
@@ -59,7 +57,7 @@ const validationListeners = computed(() => {
 <template>
   <div class="">
     <label :for="name" class="">
-      <label :for="name" class="text-sm leading-3">{{ label }}</label>
+      <label :for="name" class="text-sm font-medium leading-3">{{ label }}</label>
       <span v-show="required" class="text-sm text-red-500"> *</span></label
     >
     <input
@@ -74,10 +72,10 @@ const validationListeners = computed(() => {
         ' border-red-500 focus:ring-red-500 focus:border-red-500 focus:outline-none focus:ring-opacity-50'
       "
     />
-    <div class="flex justify-between pt-0.5">
-      <span class="text-red-500 text-sm">{{ errorMessage || '&nbsp' }}</span>
-      <span v-if="type === 'text' || type === 'email'" class="text-gray-500 text-sm">
-        {{ value.trim().length }}/{{ max }}
+    <div class="flex justify-between pt-0.5 text-sm font-medium">
+      <span class="text-red-500 ">{{ errorMessage || '&nbsp' }}</span>
+      <span v-if="counter" class="text-gray-500">
+        {{ value.trim().length }} / {{ max }}
       </span>
     </div>
   </div>

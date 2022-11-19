@@ -12,6 +12,9 @@ const props = defineProps({
   btnSize: {
     type: String,
     default: 'md',
+    validator(value){
+      return ['sm','md','lg','xl'].includes(value)
+    }
   }
 })
 </script>
@@ -25,19 +28,19 @@ const props = defineProps({
 
 <style scoped>
 .btn {
-  @apply border-2 rounded-lg font-semibold select-none duration-300 flex items-center;
+  @apply border-2 rounded-md box-border font-medium select-none duration-300 flex items-center;
 }
 .btn-sm{
-  @apply px-2.5 py-1 text-sm
+  @apply px-2.5 h-8 text-sm
 }
 .btn-md{
-  @apply px-3 py-1
+  @apply px-3.5 h-9
 }
 .btn-lg{
-  @apply px-4 py-1.5
+  @apply px-4 h-10
 }
 .btn-xl{
-  @apply px-4 py-2
+  @apply px-5 h-12 text-lg
 }
 .btn:disabled {
   @apply text-white bg-gray-400 border-gray-400;
@@ -49,10 +52,10 @@ const props = defineProps({
   @apply bg-indigo-600 border-indigo-600;
 }
 .secondary{
-  @apply bg-gray-300 border-gray-300
+  @apply bg-gray-100 border-gray-100
 }
 .secondary:enabled:hover{
-  @apply bg-gray-400 border-gray-400
+  @apply bg-gray-200 border-gray-200
 }
 .success{
   @apply text-white bg-green-500 border-green-500 
