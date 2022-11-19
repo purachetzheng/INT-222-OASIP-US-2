@@ -78,7 +78,12 @@ const props = defineProps({
 .muted{
 
 }
-
+.outline-primary {
+  @apply text-indigo-500 border-indigo-500 
+}
+.outline-primary:enabled:hover {
+  @apply text-white bg-indigo-600 border-indigo-600
+}
 .outline-danger {
   @apply text-red-500 border-red-500 
 }

@@ -1,5 +1,5 @@
 <script setup>
-const emits = defineEmits(['close'])
+const emits = defineEmits(['cancel', 'confirm', 'close'])
 const props = defineProps({
     show: {
         type: Boolean,
@@ -9,6 +9,14 @@ const props = defineProps({
         type: String,
         default: 'blank',
     },
+    header: {
+        type: String,
+        default: 'default header'
+    },
+    desc: {
+        type: String,
+        default: 'default body'
+    }
 })
 </script>
 
@@ -20,11 +28,15 @@ const props = defineProps({
                     class="modal-container p-8 bg-gray-50 rounded-md flex flex-col gap-4"
                 >
                     <div class="modal-header">
-                        <slot name="header">default header</slot>
+                        <slot name="header">
+                            <p class="text-lg font-semibold">{{header}}</p>
+                        </slot>
                     </div>
 
                     <div class="modal-body">
-                        <slot name="body">default body</slot>
+                        <slot name="body">
+                            <p class="font-medium">{{desc}}</p>
+                        </slot>
                     </div>
 
                     <slot name="footer">
@@ -34,8 +46,8 @@ const props = defineProps({
                             v-if="type === 'confirm'"
                         >
                             <div class="flex justify-center gap-2">
-                                <app-button btn-type="outline-danger">No</app-button>
-                                <app-button btn-type="success">Yes</app-button>
+                                <app-button btn-type="outline-danger" @click="$emit('cancel')">No</app-button>
+                                <app-button btn-type="success" @click="$emit('confirm')">Yes</app-button>
                             </div>
                         </div>
 
