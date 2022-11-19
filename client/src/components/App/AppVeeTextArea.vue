@@ -15,6 +15,8 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  required: Boolean,
+  counter: Boolean,
 })
 const nameRef = toRef(props, 'name')
 const { value, errorMessage, handleChange } = useField(nameRef, () => {}, {
@@ -45,8 +47,8 @@ const validationListeners = computed(() => {
 <template>
   <div class="">
     <label :for="name" class="">
-      <label :for="name" class="text-sm leading-3">{{ label }}</label>
-      <!-- <span v-show="required" class="text-sm text-red-500"> *</span> -->
+      <label :for="name" class="text-sm font-medium leading-3">{{ label }}</label>
+      <span v-show="required" class="text-sm text-red-500"> *</span>
     </label>
     <textarea
       :id="name"
@@ -57,11 +59,11 @@ const validationListeners = computed(() => {
       v-model="value"
       rows="6"
     ></textarea>
-    <div class="flex justify-between pt-0.5">
-      <span class="text-red-500 text-sm">{{ errorMessage || '&nbsp' }}</span>
-      <span v-if="typeof value === 'string'" class="text-gray-500 text-sm"
-        >{{ value.trim().length }} / {{ max }}</span
-      >
+    <div class="flex justify-between pt-0.5 text-sm font-medium">
+      <span class="text-red-500">{{ errorMessage || '&nbsp' }}</span>
+      <span v-if="counter" class="text-gray-500">
+        {{ value.trim().length }} / {{ max }}
+      </span>
     </div>
   </div>
 </template>

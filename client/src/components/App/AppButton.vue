@@ -34,7 +34,7 @@ const props = defineProps({
   @apply px-2.5 h-8 text-sm
 }
 .btn-md{
-  @apply px-3.5 h-9
+  @apply px-3.5 h-9 text-sm
 }
 .btn-lg{
   @apply px-4 h-10
