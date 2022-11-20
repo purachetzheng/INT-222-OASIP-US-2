@@ -1,7 +1,7 @@
-import { faGithub, faLinkedin, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
+import { faGithub, faLinkedin, faLinkedinIn, faMicrosoft } from '@fortawesome/free-brands-svg-icons'
 
 const brandsIconsList = [
-    faGithub, faLinkedin, faLinkedinIn
+    faGithub, faLinkedin, faLinkedinIn, faMicrosoft
 ]
 
 export default brandsIconsList
