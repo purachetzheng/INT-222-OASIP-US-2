@@ -1,12 +1,13 @@
 import { PublicClientApplication } from '@azure/msal-browser'
+console.log('env', import.meta.env.VITE_MS_REDIRECT_URI);
 const msalConfig = {
     auth: {
         clientId: 'd3ed05f4-9759-4fab-b56c-18876a098ddc',
         authority:
             'https://login.microsoftonline.com/6f4432dc-20d2-441d-b1db-ac3380ba633d',
         // redirectUri: '/',
-        redirectUri: 'http://localhost:4000/us2/',
-        // redirectUri: 'https://intproj21.sit.kmutt.ac.th/us2/authentication',
+        redirectUri: import.meta.env.VITE_MS_REDIRECT_URI,
+        // redirectUri: 'http://localhost:4000/us2/',
         // redirectUri: 'https://intproj21.sit.kmutt.ac.th/us2/authentication',
         postLogoutRedirectUri: '/' // Must be registered as a SPA redirectURI on your app registration
     },
