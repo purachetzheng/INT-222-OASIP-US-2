@@ -3,12 +3,18 @@ import { ref, computed } from 'vue'
 import { apiAuth, apiUser } from '../../services/api/lib'
 import router from '../../router'
 
+import { useMsal } from '../../composition-api/useMsal'
+import { loginRequest } from "../../authConfig";
+
+
 const userTemplate = {
   name: '',
   email: '',
   role: ''
 }
 export const useUserStore = defineStore('user', () => {
+  const { instance } = useMsal()
+
   const user = ref({...userTemplate})
   const isLoading = ref(false)
   const isAuth = computed(() => Boolean(user.value.auth))
@@ -55,7 +61,18 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   const loginUser = (user) => (user.value = user)
-  return { user, isAuth, role, loginUser, getUserInfo, logout, login }
+
+  const signInMS = async () => {
+    const res = await instance.loginPopup(loginRequest)
+    const name = res.account.name
+    const email = res.account.username
+    const role = res.idTokenClaims.roles[0]
+    user.value = {name,email,role,auth: 1}
+    console.log(user.value);
+    // localStorage.setItem('accessToken', res.accessToken)
+    router.push({ name: 'Home'})
+  }
+  return { user, isAuth, role, loginUser, getUserInfo, logout, login, signInMS }
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

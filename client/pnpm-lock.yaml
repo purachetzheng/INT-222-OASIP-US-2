@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@azure/msal-browser': ^2.31.0
   '@fortawesome/fontawesome-svg-core': ^6.1.2
   '@fortawesome/free-brands-svg-icons': ^6.1.2
   '@fortawesome/free-regular-svg-icons': ^6.1.2
@@ -23,6 +24,7 @@ specifiers:
   yup: ^0.32.11
 
 dependencies:
+  '@azure/msal-browser': 2.31.0
   '@fortawesome/fontawesome-svg-core': 6.1.2
   '@fortawesome/free-brands-svg-icons': 6.1.2
   '@fortawesome/free-regular-svg-icons': 6.1.2
@@ -47,6 +49,18 @@ devDependencies:
   vite: 3.0.5
 
 packages:
+
+  /@azure/msal-browser/2.31.0:
+    resolution: {integrity: sha512-PaGA7VjjUH9LCL7tbHO3lDW5rH7VQdbe3A6roYEJ7ieWP/0HNwzqKQCNrI/4rCyXO501ABhE9clSx8/mHbmVYw==}
+    engines: {node: '>=0.8.0'}
+    dependencies:
+      '@azure/msal-common': 8.0.0
+    dev: false
+
+  /@azure/msal-common/8.0.0:
+    resolution: {integrity: sha512-KLGVmWoDcpWl/SKb4TZUjWm+l3lim4tUwAAvCM8N8rSHu8r0NtMTySMWBv7d3G8as1SvC4nr3eTae1+9hTp4wg==}
+    engines: {node: '>=0.8.0'}
+    dev: false
 
   /@babel/helper-string-parser/7.18.10:
     resolution: {integrity: sha512-XtIfWmeNY3i4t7t4D2t02q50HvqHybPqW2ki1kosnvWCwuCMeo81Jf0gwr85jy/neUdg5XDdeFE/80DXiO+njw==}

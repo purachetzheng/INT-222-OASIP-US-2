@@ -14,6 +14,9 @@ import AppVeeTextArea from './components/App/AppVeeTextArea.vue'
 import AppVeeInput from './components/App/AppVeeInput.vue'
 import AppLoadingScreen from './components/App/AppLoadingScreen.vue'
 // import AppInput from './components/App/AppInput.vue'
+
+import { msalPlugin } from './plugins/msalPlugin';
+import { msalInstance } from "./authConfig";
 const pinia = createPinia()
 const app = createApp(App)
 
@@ -31,4 +34,5 @@ fontawesome.init(app)
 app.use(pinia)
 app.use(router)
 app.use(i18n)
+app.use(msalPlugin, msalInstance);
 app.mount('#app')

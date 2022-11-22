@@ -1,10 +1,38 @@
 <script setup>
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import InputField from '../../../components/base/form/InputField.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
 import { apiUser } from '../../../services/api/lib'
 import { useUserStore } from '../../../stores/'
 import { useRouter } from 'vue-router'
+
+import { useIsAuthenticated } from '../../../composition-api/useIsAuthenticated'
+import { useMsalAuthentication } from "../../../composition-api/useMsalAuthentication";
+import { callMsGraph } from '../../../composition-api/MsGraphApiCall'
+import { useMsal } from '../../../composition-api/useMsal';
+import { InteractionType } from "@azure/msal-browser";
+
+import SignInMS from './SignInMS.vue'
+import SignOutMS from './SignOutMS.vue'
+import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser'
+import { loginRequest } from '../../../authConfig'
+
+const isAuthenticated = useIsAuthenticated()
+const { accounts,  instance, inProgress,   } = useMsal();
+// const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect, loginRequest);
+
+const name = computed(() => {
+    if (accounts.value.length > 0) {
+        const name = accounts.value[0].name;
+        console.log(accounts.value[0]);
+        if (name) {
+            return name.split(" ")[0];
+        }
+    }
+    return "";
+});
+
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -85,14 +113,15 @@ const signInUser = async (user) => {
                 Sign in
             </app-button>
             <p class="">or</p>
-            <app-button
-                btn-type="primary"
-                @click=""
-                btn-size="lg"
-                :btn-icon="['fab', 'microsoft']"
-                >
-                Sign in with Microsoft
-            </app-button>
+            <SignInMS />
+        </div>
+        <SignOutMS />
+        <app-button @click="">Test</app-button>
+        <div class="flex flex-col">
+            <p>isAuthenticated: {{isAuthenticated}}</p>
+            <p>inProgress: {{inProgress}}</p>
+            <p>name: {{name}}</p>
+            <!-- {{accounts}} -->
         </div>
     </div>
 </template>
