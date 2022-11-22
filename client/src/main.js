@@ -15,8 +15,8 @@ import AppVeeInput from './components/App/AppVeeInput.vue'
 import AppLoadingScreen from './components/App/AppLoadingScreen.vue'
 // import AppInput from './components/App/AppInput.vue'
 
-import { msalPlugin } from './plugins/msalPlugin';
-import { msalInstance } from "./authConfig";
+import { msalPlugin } from './services/MSAL/plugins/msalPlugin'
+import { msalInstance } from './authConfig'
 const pinia = createPinia()
 const app = createApp(App)
 

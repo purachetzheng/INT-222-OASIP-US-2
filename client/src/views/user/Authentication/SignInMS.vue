@@ -1,5 +1,5 @@
 <script setup>
-import { useMsal } from '../../../composition-api/useMsal'
+import { useMsal } from '../../../services/MSAL/composition-api/useMsal'
 import { loginRequest } from "../../../authConfig";
 import { useUserStore } from '../../../stores';
 

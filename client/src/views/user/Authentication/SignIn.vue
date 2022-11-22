@@ -7,20 +7,18 @@ import { apiUser } from '../../../services/api/lib'
 import { useUserStore } from '../../../stores/'
 import { useRouter } from 'vue-router'
 
-import { useIsAuthenticated } from '../../../composition-api/useIsAuthenticated'
-import { useMsalAuthentication } from "../../../composition-api/useMsalAuthentication";
-import { callMsGraph } from '../../../composition-api/MsGraphApiCall'
-import { useMsal } from '../../../composition-api/useMsal';
-import { InteractionType } from "@azure/msal-browser";
+import { useIsAuthenticated } from '../../../services/MSAL/composition-api/useIsAuthenticated'
+import {useMsalAuthentication } from '../../../services/MSAL/composition-api/useMsalAuthentication'
+// import { useMsal } from '../../../composition-api/useMsal';
 
 import SignInMS from './SignInMS.vue'
 import SignOutMS from './SignOutMS.vue'
 import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser'
 import { loginRequest } from '../../../authConfig'
+import { useMsal } from '../../../services/MSAL/composition-api/useMsal'
 
 const isAuthenticated = useIsAuthenticated()
 const { accounts,  instance, inProgress,   } = useMsal();
-// const { result, acquireToken } = useMsalAuthentication(InteractionType.Redirect, loginRequest);
 
 const name = computed(() => {
     if (accounts.value.length > 0) {
