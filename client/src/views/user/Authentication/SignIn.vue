@@ -65,7 +65,7 @@ const signInUser = async (user) => {
         if (status === 404) setFieldError('email', message)
     }
 }
-
+const getA = () => console.log(accounts.value[0]);
 // const getUser = async() => {
 //   try{
 //     const {data} = await apiUser.getById(1)
@@ -77,6 +77,7 @@ const signInUser = async (user) => {
 //     console.log(error);
 //   }
 // }
+
 </script>
 
 <template>
@@ -114,13 +115,13 @@ const signInUser = async (user) => {
             <SignInMS />
         </div>
         <SignOutMS />
-        <app-button @click="">Test</app-button>
+        <!-- <app-button @click="">Test</app-button>
         <div class="flex flex-col">
             <p>isAuthenticated: {{isAuthenticated}}</p>
             <p>inProgress: {{inProgress}}</p>
             <p>name: {{name}}</p>
-            <!-- {{accounts}} -->
         </div>
+        <app-button class="" @click="getA">Get accounts</app-button> -->
     </div>
 </template>
 

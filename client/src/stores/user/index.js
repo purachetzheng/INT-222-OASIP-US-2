@@ -5,7 +5,7 @@ import router from '../../router'
 
 import { useMsal } from '../../services/MSAL/composition-api/useMsal';
 import { loginRequest } from "../../authConfig";
-
+import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
 
 const userTemplate = {
   name: '',
@@ -13,8 +13,8 @@ const userTemplate = {
   role: ''
 }
 export const useUserStore = defineStore('user', () => {
-  const { instance } = useMsal()
-
+  const { instance, accounts } = useMsal()
+  const loginWithMS = useIsAuthenticated()
   const user = ref({...userTemplate})
   const isLoading = ref(false)
   const isAuth = computed(() => Boolean(user.value.auth))
@@ -22,7 +22,27 @@ export const useUserStore = defineStore('user', () => {
   // const checkUser = () => {
     
   // }
+
+  const init = async () => {
+    const accessToken = localStorage.getItem('accessToken')
+    if(loginWithMS.value) 
+      return getMSInfo()
+
+    if(accessToken) 
+      return getUserInfo();
+  }
+  const getMSInfo = async() => {
+    console.log('login with MS');
+    const account = accounts.value[0]
+    const name = account.name
+    const email = account.username
+    const {roles} =account.idTokenClaims
+    console.log(account.idTokenClaims);
+    const role = roles ? roles[0] : 'guest'
+    user.value = {name,email,role,auth: 1}
+  }
   const getUserInfo = async () => {
+    
     const accessToken = localStorage.getItem('accessToken')
     if(!accessToken) return
     try{
@@ -38,6 +58,7 @@ export const useUserStore = defineStore('user', () => {
       console.log(error);
     }
   }
+  
   const login = async (user) => {
     try{
       const { data } = await apiAuth.login(user)
@@ -49,6 +70,13 @@ export const useUserStore = defineStore('user', () => {
     }
   }
   const logout = async () => {
+    if(loginWithMS.value){
+      instance.logoutPopup({ 
+        mainWindowRedirectUri: "/"
+      });
+        // return router.push({ name: 'Authentication'})
+        return
+    }
     try{
       const {data} = await apiAuth.logout()
       localStorage.removeItem("accessToken")
@@ -66,13 +94,16 @@ export const useUserStore = defineStore('user', () => {
     const res = await instance.loginPopup(loginRequest)
     const name = res.account.name
     const email = res.account.username
-    const role = res.idTokenClaims.roles[0]
+    const {roles} = res.idTokenClaims
+
+    const role = roles ? roles[0] : 'guest'
+    console.log('role', role);
     user.value = {name,email,role,auth: 1}
     console.log(user.value);
     // localStorage.setItem('accessToken', res.accessToken)
     router.push({ name: 'Home'})
   }
-  return { user, isAuth, role, loginUser, getUserInfo, logout, login, signInMS }
+  return { user, init, isAuth, role, loginUser, getUserInfo, logout, login, signInMS }
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))

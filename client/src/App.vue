@@ -5,7 +5,8 @@ import { storeToRefs } from 'pinia'
 const myDarkmode = useDarkmode()
 const userStore = useUserStore()
 myDarkmode.init()
-userStore.getUserInfo()
+// userStore.getUserInfo()
+userStore.init()
 </script>
  
 <template>
