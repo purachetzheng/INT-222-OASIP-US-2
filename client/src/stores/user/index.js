@@ -72,7 +72,7 @@ export const useUserStore = defineStore('user', () => {
   const logout = async () => {
     if(loginWithMS.value){
       instance.logoutPopup({ 
-        mainWindowRedirectUri: "/"
+        mainWindowRedirectUri: import.meta.env.VITE_MS_LOGOUT_REDIRECT_URI
       });
         // return router.push({ name: 'Authentication'})
         return
