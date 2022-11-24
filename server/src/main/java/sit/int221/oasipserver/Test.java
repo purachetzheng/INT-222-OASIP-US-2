@@ -8,6 +8,7 @@ import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.enums.UserRole;
 import sit.int221.oasipserver.repo.EventRepository;
 import sit.int221.oasipserver.repo.EventcategoryRepository;
+import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.EventcategoryService;
 
 import java.lang.reflect.Field;
@@ -19,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Test {
+    @Autowired
+    UserRepository userRepository;
     public static boolean findByName(String name) {
         for (UserRole role : UserRole.values()) {
             if(role.name().equals(name))
@@ -28,25 +31,26 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        ChronoUnit minutes = ChronoUnit.MINUTES;
-        LocalDate localDate = LocalDate.parse("2022-01-01");
-        LocalDateTime localDateTime = localDate.atStartOfDay();
-//        Instant instant = localDateTime.toInstant(ZoneOffset.of("Asia/Bangkok"));
-        Instant instant = Instant.parse("2022-12-30T12:00:00.000Z");
-        System.out.println(instant);
-        Instant testz = instant.plus(40, minutes);
-        System.out.println(testz);
-        ZoneId systemZone = ZoneId.of("Asia/Bangkok"); // my timezone
-        ZoneOffset currentOffsetForMyZone = systemZone.getRules().getOffset(instant);
-        instant.atOffset(currentOffsetForMyZone);
-        Date myDate = Date.from(instant);
-        Date test = Date.from(testz);
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy hh:mm");
-        System.out.println(formatter.format(myDate));
-        System.out.println(formatter.format(test));
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.get(Calendar.MONTH);
+
+//        ChronoUnit minutes = ChronoUnit.MINUTES;
+//        LocalDate localDate = LocalDate.parse("2022-01-01");
+//        LocalDateTime localDateTime = localDate.atStartOfDay();
+////        Instant instant = localDateTime.toInstant(ZoneOffset.of("Asia/Bangkok"));
+//        Instant instant = Instant.parse("2022-12-30T12:00:00.000Z");
+//        System.out.println(instant);
+//        Instant testz = instant.plus(40, minutes);
+//        System.out.println(testz);
+//        ZoneId systemZone = ZoneId.of("Asia/Bangkok"); // my timezone
+//        ZoneOffset currentOffsetForMyZone = systemZone.getRules().getOffset(instant);
+//        instant.atOffset(currentOffsetForMyZone);
+//        Date myDate = Date.from(instant);
+//        Date test = Date.from(testz);
+//        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy hh:mm");
+//        System.out.println(formatter.format(myDate));
+//        System.out.println(formatter.format(test));
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(new Date());
+//        cal.get(Calendar.MONTH);
 
 
 

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.UserRepository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,9 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("Email: " + email);
         if(jwtUserRepository.existsByEmail(email)){
             sit.int221.oasipserver.entities.User jwtUser = jwtUserRepository.findByEmail(email);
-            return new User(jwtUser.getEmail(), jwtUser.getPassword(), getAuthority(jwtUser));
+            return new User(jwtUser.getEmail(), "test", getAuthority(jwtUser));
         } else {
             throw new ApiNotFoundException("Email does not exist");
         }

@@ -4,6 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+import io.jsonwebtoken.impl.crypto.RsaProvider;
+import org.bouncycastle.math.ec.rfc8032.Ed25519;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +15,10 @@ import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +37,7 @@ public class JwtUtil {
     @Autowired
     UserRepository userRepository;
 
+
 //    private String SECRET_KEY = "secret";
 
     public String getUsernameFromToken(String token) {
@@ -40,6 +48,7 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -56,7 +65,16 @@ public class JwtUtil {
     }
     private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+//        Claims claims;
+//
+//        claims = Jwts.parser()
+//                .setSigningKey(publicKey)
+//                .parseClaimsJws(token)
+//                .getBody();
+//
+//        return claims;
     }
+
 
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
