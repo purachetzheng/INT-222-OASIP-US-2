@@ -21,6 +21,6 @@ public class EventDto {
     private Integer eventDuration;
     private Instant eventStartTime;
     private String eventNotes;
-    private Eventcategory eventcategory;
+    private Eventcategory eventCategory;
     private File file;
 }
