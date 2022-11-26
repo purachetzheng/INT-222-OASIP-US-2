@@ -27,7 +27,7 @@ const loginRedirect = () => {
 <template>
     <app-button
         btn-type="primary"
-        @click="userStore.signInMS"
+        @click="userStore.msalSignIn"
         btn-size="lg"
         :btn-icon="['fab', 'microsoft']"
     >

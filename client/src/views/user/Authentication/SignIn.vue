@@ -12,7 +12,6 @@ import {useMsalAuthentication } from '../../../services/MSAL/composition-api/use
 // import { useMsal } from '../../../composition-api/useMsal';
 
 import SignInMS from './SignInMS.vue'
-import SignOutMS from './SignOutMS.vue'
 import { InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser'
 import { loginRequest } from '../../../authConfig'
 import { useMsal } from '../../../services/MSAL/composition-api/useMsal'
@@ -114,7 +113,6 @@ const getA = () => console.log(accounts.value[0]);
             <p class="">or</p>
             <SignInMS />
         </div>
-        <SignOutMS />
         <!-- <app-button @click="">Test</app-button>
         <div class="flex flex-col">
             <p>isAuthenticated: {{isAuthenticated}}</p>
