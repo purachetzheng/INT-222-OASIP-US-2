@@ -24,7 +24,7 @@ export const useUserStore = defineStore('user', () => {
     const isLoading = ref(false)
 
     const { instance, accounts } = useMsal()
-
+    
     const isAuth = computed(() => Boolean(user.value.auth))
 
     const loginWithMS = useIsAuthenticated()

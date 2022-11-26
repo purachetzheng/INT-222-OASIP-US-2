@@ -23,7 +23,9 @@ export const msalInstance = new PublicClientApplication(msalConfig)
 export const loginRequest = {
     scopes: ['User.Read'],
 }
-
+export const tokenRequest = {
+    scopes: ["api://d3ed05f4-9759-4fab-b56c-18876a098ddc/access_as_user"],
+};
 // Add here the endpoints for MS Graph API services you would like to use.
 export const graphConfig = {
     // graphMeEndpoint: 'https://graph.microsoft.com/v1.0/me',
