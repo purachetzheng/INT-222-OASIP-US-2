@@ -74,7 +74,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS users (
   userID INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(100) UNIQUE NOT NULL,
-  password VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NULL,
   email VARCHAR(50) UNIQUE NOT NULL,
   role enum('admin', 'lecturer', 'student') NOT NULL DEFAULT 'student',
   createdOn DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
