@@ -8,13 +8,15 @@ export default [
         path: '/schedules',
         name: 'Schedules',
         component: () => import('../views/event/Schedules/index.vue'),
+        meta: { requiresAuth: true, allowedRole: ['admin', 'lecturer', 'student'] },
         children: [
             {
                 name: 'EventDetail',
-                path:':eventId',
-                component: () => import('../views/event/EventDetail/EventDetail.vue')
-            }
-        ]
+                path: ':eventId',
+                component: () =>
+                    import('../views/event/EventDetail/EventDetail.vue'),
+            },
+        ],
     },
     // {
     //     path: '/schedules/:eventId',
@@ -24,6 +26,7 @@ export default [
     {
         path: '/users',
         name: 'Users',
+        meta: { requiresAuth: true, allowedRole: ['admin'] },
         component: () => import('../views/user/Users/index.vue'),
     },
     {
@@ -39,12 +42,15 @@ export default [
     {
         path: '/about',
         name: 'About',
-        component: () => import(/* webpackChunkName: "about" */'../views/About/index.vue'),
+        component: () =>
+            import(/* webpackChunkName: "about" */ '../views/About/index.vue'),
     },
     {
         path: '/event-category-list',
         name: 'EventCategoryList',
-        component: () => import('../views/eventCategory/eventCategoryList/index.vue'),
+        meta: { requiresAuth: true, allowedRole: ['admin', 'lecturer', 'student'] },
+        component: () =>
+            import('../views/eventCategory/eventCategoryList/index.vue'),
     },
     {
         path: '/add-event',
@@ -56,4 +62,4 @@ export default [
         name: 'EventDetailNew',
         component: () => import('../views/event/DetailNew/EventDetail.vue'),
     },
-];
+]
