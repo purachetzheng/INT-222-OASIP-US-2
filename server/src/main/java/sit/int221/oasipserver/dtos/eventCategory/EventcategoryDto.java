@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,5 +26,7 @@ public class EventcategoryDto {
     @Range(min = 1, max = 480, message = "duration must be between 1 and 480")
     @NotNull(message = "must not be null")
     private Integer eventDuration;
+
+    private Set<Integer> userOwners;
 
 }
