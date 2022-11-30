@@ -13,10 +13,10 @@ router.beforeEach((to, from, next) => {
 
     if (!to.meta.requiresAuth) 
         next()
-    else if (!userStore.authWith) 
-        next({ name: 'Authentication' })
-    else if (!to.meta.allowedRole.some((role) => role == userStore.role))
-        next({ name: 'Home' })
+    // else if (!userStore.authWith) 
+    //     next({ name: 'Authentication' })
+    // else if (!to.meta.allowedRole.some((role) => role == userStore.role))
+    //     next({ name: 'Home' })
     else 
         next()
 })
