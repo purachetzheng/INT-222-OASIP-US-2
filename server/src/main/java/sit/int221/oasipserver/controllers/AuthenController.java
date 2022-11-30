@@ -54,10 +54,16 @@ public class AuthenController {
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response){
 //        Cookie refreshJwtCookie = WebUtils.getCookie(request, "refreshToken");
 //        refreshJwtCookie.setMaxAge(0);
+        //ลบ refreshCookie
         Cookie deleteRefreshCookie = new Cookie("refreshToken", null);
         deleteRefreshCookie.setPath("/");
         deleteRefreshCookie.setMaxAge(0);
         response.addCookie(deleteRefreshCookie);
+        //ลบ JSESSIONID cookie
+        Cookie deleteJSESSIONID = new Cookie("JSESSIONID", null);
+        deleteJSESSIONID.setPath("/");
+        deleteJSESSIONID.setMaxAge(0);
+        response.addCookie(deleteJSESSIONID);
         return ResponseEntity.ok("Logout");
     }
 

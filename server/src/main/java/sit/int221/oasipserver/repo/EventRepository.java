@@ -34,9 +34,9 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     public void updateFileToNull(Integer id);
 
     @Query(
-            value = "select * from events where (:email is null or bookingemail = :email)" +
+            value = "select * from events where (:email is null or bookingEmail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
-            countQuery = "select count(*) from events where (:email is null or bookingemail = :email)" +
+            countQuery = "select count(*) from events where (:email is null or bookingEmail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             nativeQuery=true
     )
@@ -49,12 +49,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     String FILTERALL_VALUE ="select * from events where" +
             "(:id is null or eventCategoryId = :id)" +
             "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
-            "and (:email is null or bookingemail = :email)" +
+            "and (:email is null or bookingEmail = :email)" +
             "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))";
     String FILTERALL_COUNT = "select count(*) from events where" +
             "(:id is null or eventCategoryId = :id)" +
             "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
-            "and (:email is null or bookingemail = :email)" +
+            "and (:email is null or bookingEmail = :email)" +
             "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))";
     @Query(value = FILTERALL_VALUE, countQuery = FILTERALL_COUNT, nativeQuery=true)
     Page<Event> findAllFilter(
@@ -69,12 +69,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
                     "and (:id is null or eventCategoryId = :id)" +
                     "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
-                    "and (:email is null or bookingemail = :email)" +
+                    "and (:email is null or bookingEmail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) < now()" +
                     "and (:id is null or eventCategoryId = :id)" +
                     "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))" +
-                    "and (:email is null or bookingemail = :email)" +
+                    "and (:email is null or bookingEmail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             nativeQuery = true
     )
@@ -90,12 +90,12 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             value = "select * from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
                     "and (:id is null or eventCategoryId = :id)" +
                     "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
-                    "and (:email is null or bookingemail = :email)" +
+                    "and (:email is null or bookingEmail = :email)" +
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             countQuery = "select count(*) from events where DATE_ADD(eventStartTime, interval eventDuration minute) >= now()" +
                     "and (:id is null or eventCategoryId = :id)" +
                     "and (:date is null or DATE(eventStartTime) like concat(:date,'%'))"+
-                    "and (:email is null or bookingemail = :email)"+
+                    "and (:email is null or bookingEmail = :email)"+
                     "and (coalesce(:categoryIds) is null or eventCategoryId in (:categoryIds))",
             nativeQuery=true
     )
