@@ -1,5 +1,5 @@
 import { PublicClientApplication } from '@azure/msal-browser'
-console.log('env', import.meta.env.VITE_MS_REDIRECT_URI);
+// console.log('env', import.meta.env.VITE_MS_REDIRECT_URI);
 const msalConfig = {
     auth: {
         clientId: 'd3ed05f4-9759-4fab-b56c-18876a098ddc',

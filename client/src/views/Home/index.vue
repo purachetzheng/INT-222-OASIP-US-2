@@ -5,7 +5,7 @@ import PageWrapper from '../../components/Layout/PageWrapper.vue'
 
 const appStore = useAppStore()
 const userStore = useUserStore()
-const { authWith } = storeToRefs(userStore)
+const { authWith, isSignedIn } = storeToRefs(userStore)
 const {} = appStore
 // appStore.init()
 </script>
@@ -19,7 +19,8 @@ const {} = appStore
                 </h1>
             </div>
             <div class="">
-                <p class="">{{ authWith }}</p>
+                <p class="">authWith:</p>
+                <p class="">{{ isSignedIn }}</p>
             </div>
             <fa-icon icon="fa-solid fa-user-secret" />
             <fa-icon icon="coffee" />

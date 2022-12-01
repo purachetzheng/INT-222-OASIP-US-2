@@ -11,12 +11,11 @@ router.beforeEach((to, from, next) => {
     const userStore = useUserStore()
 
     console.log(`🚦 navigating to ${to.name} from ${from.name}`)
-    console.log('🚀 userStore authWith:', userStore.authWith);
+    // console.log('🚀 userStore authWith:', userStore.authWith);
     
     if (!to.meta.requiresAuth) 
         next()
-    else if (!userStore.authWith) {
-        console.log('👋🏻 !userStore.authWith = ', !userStore.authWith);
+    else if (!userStore.isSignedIn) {
         next({ name: 'Authentication' })
     }
     else if (!to.meta.allowedRole.some((role) => role == userStore.role))

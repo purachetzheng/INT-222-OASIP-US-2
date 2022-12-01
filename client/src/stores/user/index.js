@@ -8,12 +8,13 @@ import useAuthMsal from './authMsal'
 import { useMsal } from '../../services/MSAL/composition-api/useMsal'
 import { loginRequest } from '../../authConfig'
 import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
-import { removeToken, setToken } from './authToken'
+import { getToken, setToken, removeToken } from './authToken'
 
 const userTemplate = {
     name: '',
     email: '',
     role: '',
+    auth: false,
 }
 
 export const useUserStore = defineStore('user', () => {
@@ -26,9 +27,11 @@ export const useUserStore = defineStore('user', () => {
 
     const isLoading = ref(false)
 
+    const isSignedIn = computed(() => user.value.auth);
+
     const { instance, accounts } = useMsal()
-    
-    const isAuth = computed(() => Boolean(user.value.auth))
+
+    const isAuth = computed(() => user.value.auth)
 
     const loginWithMS = useIsAuthenticated()
     // const checkUser = () => {}
@@ -39,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
 
         if (loginWithMS.value) {
             console.log('🔑 you already sign in with MS account')
-            authMsal.msalSetUser()
+            authMsal.msalLoadUser()
             authMsal.msalGetToken()
             return
         }
@@ -49,13 +52,13 @@ export const useUserStore = defineStore('user', () => {
         }
     }
     const getUserInfo = async () => {
-        const accessToken = localStorage.getItem('accessToken')
-        if (!accessToken) return
+        const existToken = getToken()
+        if (!existToken) return
         try {
             // const {data} = await apiUser.getById(1)
             const { data } = await apiAuth.get()
             user.value = data
-            user.value.auth = 1
+            user.value.auth = true
             console.log(user.value)
         } catch (error) {
             // const { data, status } = error.response
@@ -74,6 +77,7 @@ export const useUserStore = defineStore('user', () => {
             return Promise.reject(error)
         }
     }
+    
     const logout = async () => {
         if (loginWithMS.value) return authMsal.msalSignOut()
         try {
@@ -89,7 +93,6 @@ export const useUserStore = defineStore('user', () => {
     }
 
     const registerUser = async () => {}
-    const getToken = async () => {}
     // const setToken = (token, type = 'oasip') => {
     //     localStorage.setItem('auth-with', type)
     //     localStorage.setItem('accessToken', token)
@@ -103,6 +106,7 @@ export const useUserStore = defineStore('user', () => {
     return {
         user,
         authWith,
+        isSignedIn,
         init,
         isAuth,
         role,
@@ -110,6 +114,7 @@ export const useUserStore = defineStore('user', () => {
         logout,
         login,
         setUser,
+        getToken,
         ...authMsal,
     }
 })

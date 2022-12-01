@@ -36,11 +36,11 @@ export default function useAuthMsal(instance, accounts) {
         // console.log(accessToken);
     }
 
-    const msalSetUser = async () => {
+    const msalLoadUser = async () => {
         const account = accounts.value[0].idTokenClaims
         const { name, preferred_username: email, roles } = account
         const role = roles ? roles[0] : 'guest'
-        userStore.setUser({ name, email, role, auth: 1 })
+        userStore.setUser({ name, email, role, auth: true })
     }
 
     const msalSignOut = async () => {
@@ -55,7 +55,7 @@ export default function useAuthMsal(instance, accounts) {
         console.log('sign in with MS account')
         try {
             const res = await instance.loginPopup(loginRequest)
-            msalSetUser()
+            msalLoadUser()
             msalGetToken()
             router.push({ name: 'Home' })
         } catch (error) {
@@ -63,5 +63,5 @@ export default function useAuthMsal(instance, accounts) {
         }
     }
     // const
-    return { msalSetUser, msalSignIn, msalSignOut, msalGetToken }
+    return { msalLoadUser, msalSignIn, msalSignOut, msalGetToken }
 }
