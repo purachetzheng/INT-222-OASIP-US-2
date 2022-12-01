@@ -1,6 +1,6 @@
 <script setup>
 import IcSunny from '@/assets/icons/weather-icons/IcSunny.vue'
-import { useDarkmode } from '../../../stores'
+import { useAppStore } from '../../../stores'
 import { storeToRefs } from 'pinia'
 defineEmits([])
 const props = defineProps({
@@ -9,17 +9,16 @@ const props = defineProps({
     require: true,
   },
 })
-const myDarkmode = useDarkmode()
-const { darkmode } = storeToRefs(myDarkmode)
+const appStore = useAppStore()
 </script>
 
 <template>
   <div
     class="flex p-1.5 bg-white dark:bg-gray-600 rounded-full cursor-pointer duration-300"
-    @click="myDarkmode.toggleMode()"
+    @click="appStore.darkMode.toggle()"
   >
     <Transition name="switch">
-      <IcSunny v-if="!darkmode" class="icon" />
+      <IcSunny v-if="!appStore.darkMode.stage" class="icon" />
       <fa-icon v-else :icon="['far', 'moon']" class="icon text-white" />
     </Transition>
   </div>
