@@ -9,8 +9,8 @@ export default function useAuthMsal(instance, accounts) {
     const userStore = useUserStore()
 
     const msalGetToken = async () => {
-        console.log(tokenRequest)
-        console.log(accounts.value)
+        // console.log(tokenRequest)
+        // console.log(accounts.value)
         instance.setActiveAccount(accounts.value[0])
         const {accessToken, ...rest} = await instance
             .acquireTokenSilent(tokenRequest)
@@ -33,7 +33,7 @@ export default function useAuthMsal(instance, accounts) {
                 // }
             })
         setToken(accessToken, 'msal')
-        console.log(accessToken);
+        // console.log(accessToken);
     }
 
     const msalSetUser = async () => {

@@ -18,7 +18,7 @@ const props = defineProps({
   }
 })
 const show = ref(false)
-console.log(!props.default);
+// console.log(!props.default);
 // const selected = ref(!props.default ? props.options[0].name : props.default)
 const selected = ref(!props.default ? props.options[0].name : {name: props.default})
 

@@ -10,9 +10,9 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
-console.log(navItemList)
-console.log(route.name)
-console.log(user)
+// console.log(navItemList)
+// console.log(route.name)
+// console.log(user)
 const allowedNavItems = computed(() =>
   navItemList.filter(
     (item) =>

@@ -9,14 +9,18 @@ const router = createRouter({ history, routes })
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore()
-    console.log(`🚦 navigating to ${to.name} from ${from.name}`)
 
+    console.log(`🚦 navigating to ${to.name} from ${from.name}`)
+    console.log('🚀 userStore authWith:', userStore.authWith);
+    
     if (!to.meta.requiresAuth) 
         next()
-    // else if (!userStore.authWith) 
-    //     next({ name: 'Authentication' })
-    // else if (!to.meta.allowedRole.some((role) => role == userStore.role))
-    //     next({ name: 'Home' })
+    else if (!userStore.authWith) {
+        console.log('👋🏻 !userStore.authWith = ', !userStore.authWith);
+        next({ name: 'Authentication' })
+    }
+    else if (!to.meta.allowedRole.some((role) => role == userStore.role))
+        next({ name: 'Home' })
     else 
         next()
 })

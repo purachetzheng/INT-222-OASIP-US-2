@@ -38,13 +38,13 @@ export const useUserStore = defineStore('user', () => {
         const accessToken = localStorage.getItem('accessToken')
 
         if (loginWithMS.value) {
-            console.log('you already sign in with MS account')
+            console.log('🔑 you already sign in with MS account')
             authMsal.msalSetUser()
             authMsal.msalGetToken()
             return
         }
         if (accessToken) {
-            console.log('you already sign in with OASIP account')
+            console.log('🔑 you already sign in with OASIP account')
             getUserInfo()
         }
     }
