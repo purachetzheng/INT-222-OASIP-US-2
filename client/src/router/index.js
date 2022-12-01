@@ -10,7 +10,7 @@ const router = createRouter({ history, routes })
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore()
 
-    console.log(`🚦 navigating to ${to.name} from ${from.name}`)
+    console.log(`🚦 Navigating from ${from.name} to ${to.name}`)
     // console.log('🚀 userStore authWith:', userStore.authWith);
     
     if (!to.meta.requiresAuth) 
