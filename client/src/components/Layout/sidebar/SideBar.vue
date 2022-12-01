@@ -1,15 +1,21 @@
 <script setup>
-import { collapsed, toggleSidebar, sidebarWidth } from './state'
+// import { collapsed, toggleSidebar, sidebarWidth } from './state'
 import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import navItemList from './navItemList'
-import { useUserStore } from '../../../stores'
+import { useUserStore, useAppStore } from '../../../stores'
 import { storeToRefs } from 'pinia'
 import UserPanel from './UserPanel.vue'
 const router = useRouter()
 const route = useRoute()
+
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
+
+const appStore = useAppStore()
+const { sidebarCollapsed } = storeToRefs(appStore)
+const { appSidebar } = appStore
+
 // console.log(navItemList)
 // console.log(route.name)
 // console.log(user)
@@ -24,10 +30,10 @@ const allowedNavItems = computed(() =>
 
 <template>
   <aside class="h-screen bg-slate-200">
-    <div class="sidebar px-3 py-3" :class="[collapsed ? 'w-[5rem]' : 'w-56']">
+    <div class="sidebar px-3 py-3" :class="[appSidebar.collapsed ? 'w-[5rem]' : 'w-56']">
       <div id="sidebar-wrapper" class="flex flex-col h-full justify-between divide-y-2 divide-gray-500">
         <div class="sidebar-logo">
-          <div class="w-max py-3 px-2.5" @click="toggleSidebar">
+          <div class="w-max py-3 px-2.5" @click="appSidebar.toggle">
             <div class="w-32">
               <h1 class="font-bold">US-2</h1>
             </div>
@@ -35,7 +41,7 @@ const allowedNavItems = computed(() =>
         </div>
         <!-- <hr> -->
         <div class="py-3">
-          <user-panel :collapsed="collapsed" />
+          <user-panel :collapsed="appSidebar.collapsed" />
         </div>
         <!-- <hr class=" h-px border-0 bg-gray-700"> -->
         <nav id="sidebar-body" class="grow ">
@@ -54,7 +60,7 @@ const allowedNavItems = computed(() =>
                 </div>
                 <div
                   class="font-medium relative w-0 whitespace-nowrap"
-                  :class="[collapsed ? 'text-collapsed' : 'max-w-full']"
+                  :class="[appSidebar.collapsed ? 'text-collapsed' : 'max-w-full']"
                 >
                   {{ mainItem.name }}
                   <!-- <div class="flex w-36 justify-between pr-3.5">

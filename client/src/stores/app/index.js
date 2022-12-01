@@ -1,29 +1,24 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import useDarkMode from './darkMode'
+import useSidebar from './sidebar'
 
 export const useAppStore = defineStore('app', () => {
-
     const darkMode = useDarkMode()
-
-    // const darkMode = ref(false)
-    const sidebarExpanded  = ref(true)
+    const appSidebar = useSidebar()
 
     const init = () => {
-      darkMode.init()
+        darkMode.init()
     }
 
-    // const darkModeToggle = () => darkMode.value = !darkMode.value
-    const sidebarToggle = () => sidebarExpanded.value = !sidebarExpanded.value
-  
-    return { 
-        darkMode, 
-        sidebarExpanded, 
+    return {
+        darkMode,
+        appSidebar,
         init,
-        sidebarToggle,
+
     }
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useAppStore, import.meta.hot))
+    import.meta.hot.accept(acceptHMRUpdate(useAppStore, import.meta.hot))
 }
