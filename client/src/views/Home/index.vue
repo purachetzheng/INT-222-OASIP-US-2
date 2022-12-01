@@ -1,10 +1,12 @@
 <script setup>
-import { useDarkmode } from '../../stores'
+import { useUserStore, useAppStore } from '../../stores'
 import { storeToRefs } from 'pinia'
 import PageWrapper from '../../components/Layout/PageWrapper.vue';
-const myDarkmode = useDarkmode()
-const { darkmode } = storeToRefs(myDarkmode)
-// myDarkmode.init()
+
+const appStore = useAppStore()
+const {  } = appStore
+// appStore.init()
+
 </script>
 
 <template>
@@ -14,9 +16,8 @@ const { darkmode } = storeToRefs(myDarkmode)
       <h1 class="text-3xl font-bold underline ">
         {{ $t('hello') }}
       </h1>
-      <button @click="myDarkmode.toggleMode()">toggle</button>
     </div>
-    <h1>{{ darkmode }}</h1>
+
     <fa-icon icon="fa-solid fa-user-secret" />
     <fa-icon icon="coffee" />
     <fa-icon icon="times" />

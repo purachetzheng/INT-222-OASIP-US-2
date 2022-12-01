@@ -1,12 +1,16 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
-import { useDarkmode,useUserStore } from '../../../stores'
+import { useUserStore, useAppStore } from '../../../stores'
 import { storeToRefs } from 'pinia'
 import UserMenu from './UserMenu.vue'
 const router = useRouter()
 const route = useRoute()
-const myDarkmode = useDarkmode()
-const { darkmode } = storeToRefs(myDarkmode)
+
+
+const appStore = useAppStore()
+// const { appDarkMode } = appStore
+// const { darkMode } = storeToRefs(appStore)
+
 const userStore = useUserStore()
 const { user, isAuth } = storeToRefs(userStore)
 </script>
@@ -23,9 +27,9 @@ const { user, isAuth } = storeToRefs(userStore)
                 <img src="../../../assets/images/flags/united-kingdom.png" alt="h-full w-full">
             </div>
             
-            <button class="flex p-2 rounded-full hover:bg-gray-200 relative h-10 w-10" @click="myDarkmode.toggleMode()">
+            <button class="flex p-2 rounded-full hover:bg-gray-200 relative h-10 w-10" @click="appStore.darkMode.toggle()">
                 <Transition name="switch">
-                    <fa-icon :icon="['far', 'sun']" class="h-full w-full" v-if="!darkmode" />
+                    <fa-icon :icon="['far', 'sun']" class="h-full w-full" v-if="!appStore.darkMode.stage" />
                     <fa-icon :icon="['far', 'moon']" class="h-full w-full" v-else />
                 </Transition>
             </button>
