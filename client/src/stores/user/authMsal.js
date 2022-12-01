@@ -3,7 +3,7 @@ import { loginRequest, tokenRequest } from '../../authConfig'
 import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
 import { useUserStore } from '.'
 import { storeToRefs } from 'pinia'
-import { removeToken, setToken } from './authToken'
+import { deleteToken, setToken } from './authToken'
 import { ref } from 'vue'
 export default function useAuthMsal(instance, accounts) {
     const loginWithMS = ref(useIsAuthenticated())
@@ -49,7 +49,7 @@ export default function useAuthMsal(instance, accounts) {
             mainWindowRedirectUri: import.meta.env.VITE_MS_LOGOUT_REDIRECT_URI,
         })
         // return router.push({ name: 'Authentication'})
-        removeToken()
+        deleteToken()
     }
 
     const msalSignIn = async () => {

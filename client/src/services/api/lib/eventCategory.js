@@ -10,7 +10,7 @@ export const apiPatchEventCategory = ({ id, data }) =>
   apiClient.put(`${endpoint}/${id}`, data)
 
 const apiEventCategory = {
-  get: () => apiClient.get('/api/eventcategories'),
+  get: () => apiClient.get('/api/eventcategories', {requiresAuth: false}),
 
   //   get({page, pageSize, sortBy, filter, eventCategoryID, keyword} = {}) {
   //     return apiClient.get('/events', { params: {

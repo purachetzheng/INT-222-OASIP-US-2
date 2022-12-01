@@ -5,7 +5,7 @@ const apiAuth = {
         return apiClient.get(`/api/auth/profile`)
     },
     login(data){
-        return apiClient.post(`/api/auth/login`, data)
+        return apiClient.post(`/api/auth/login`, data, {requiresAuth: false})
     },
     logout(){
         return apiClient.post(`/api/auth/logout`)

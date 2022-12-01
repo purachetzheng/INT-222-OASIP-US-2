@@ -53,11 +53,11 @@ const onSubmit = handleSubmit(({ email, password }) => {
 const signInUser = async (user) => {
     try {
         await userStore.login(user)
-        console.log('ok')
         alert('Password Matched')
         userStore.loadUser()
         router.push({ name: 'Home' })
     } catch (error) {
+        console.log(error.message);
         const { data, status } = error.response
         const { details, message } = data
         if (status === 401) setFieldError('password', message)

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import router from '../../router'
+import { deleteToken, getToken, setToken } from '../../stores/user/authToken'
 
 const defaultOptions = {
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -9,6 +10,8 @@ const defaultOptions = {
     'Content-Type': 'application/json',
     // withCredentials: true,
   },
+  //used to config header auth
+  requiresAuth: true
 }
 
 // const setAuthToken = token => {
@@ -21,17 +24,12 @@ const defaultOptions = {
 
 const apiClient = axios.create(defaultOptions)
 apiClient.interceptors.request.use(async (config) => {
-  const token = localStorage.getItem('accessToken')
-  // const refreshToken = localStorage.getItem('refreshToken')
+  const token = getToken()
 
-  // console.log(config.method);
-  // console.log(config.url);
-  // console.log(config.headers);
-  // config.headers.Authorization =  token ? `Bearer ${token}` : '';
-  if (isAuthRequired(config)) {
-    // console.log(config.url + ' is auth');
+  if(config.requiresAuth) {
     config.headers.auth = token ? `Bearer ${token}` : ''
   }
+
   return config
 })
 const noAuthRequired = [
@@ -58,16 +56,28 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { config, response, message } = error
-    if (!config || config.retry) {
-      return Promise.reject(error)
-    }
-    if (config.url == '/api/users/refresh') {
-      console.log(config.url == '/api/users/refresh')
-      return Promise.reject(error)
-    }
 
-    // config && response && response.status === 401
-    if (response && response.status === 401) {
+    const notRequiresRetryCondition = [
+      !config,
+      config.retry,
+      config.url == '/api/users/refresh',
+      !config.requiresAuth,
+      !response,
+    ]
+
+    if(notRequiresRetryCondition.some(condition => condition))
+      return Promise.reject(error)
+    // if (!config || config.retry) {
+    //   return Promise.reject(error)
+    // }
+    // if (config.url == '/api/users/refresh') {
+    //   return Promise.reject(error)
+    // }
+    // if (!config.requiresAuth){
+    //   return Promise.reject(error)
+    // }
+    
+    if (response.status === 401) {
       await refreshToken()
       config.retry = 1
       console.log('retry')
@@ -81,12 +91,12 @@ apiClient.interceptors.response.use(
 const refreshToken = async () => {
   try {
     const { data } = await apiClient.get(`/api/auth/refresh`, { retry: 1 })
-    localStorage.setItem('accessToken', data.accessToken)
+    setToken(data.accessToken)
   } catch (error) {
     const res = error.response
     const { status } = res
     if (status === 401) {
-      localStorage.removeItem('accessToken')
+      deleteToken()
       alert('Session Expired\nPlease sign in again.')
       return router.push({ name: 'Authentication' })
     }

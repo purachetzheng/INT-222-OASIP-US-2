@@ -8,7 +8,7 @@ import useAuthMsal from './authMsal'
 import { useMsal } from '../../services/MSAL/composition-api/useMsal'
 import { loginRequest } from '../../authConfig'
 import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
-import { getToken, setToken, removeToken } from './authToken'
+import { getToken, setToken, deleteToken } from './authToken'
 
 const userTemplate = {
     name: '',
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
     const login = async (user) => {
         try {
             const { data } = await apiAuth.login(user)
-            setToken(data.accessToken)
+            setToken(data.accessToken, 'oasip')
             // localStorage.setItem('accessToken', data.accessToken)
             loadUser()
         } catch (error) {
@@ -78,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
         if (loginWithMS.value) return authMsal.msalSignOut()
         try {
             const { data } = await apiAuth.logout()
-            removeToken()
+            deleteToken()
             // localStorage.removeItem('accessToken')
             user.value = { ...userTemplate }
             alert('sign out')
@@ -93,7 +93,7 @@ export const useUserStore = defineStore('user', () => {
     //     localStorage.setItem('auth-with', type)
     //     localStorage.setItem('accessToken', token)
     // }
-    // const removeToken = () => {
+    // const deleteToken = () => {
     //     localStorage.removeItem('auth-with')
     //     localStorage.removeItem('accessToken')
     // }
