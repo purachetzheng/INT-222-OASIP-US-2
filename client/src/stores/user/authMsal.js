@@ -4,8 +4,9 @@ import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAut
 import { useUserStore } from '.'
 import { storeToRefs } from 'pinia'
 import { removeToken, setToken } from './authToken'
+import { ref } from 'vue'
 export default function useAuthMsal(instance, accounts) {
-    const loginWithMS = useIsAuthenticated()
+    const loginWithMS = ref(useIsAuthenticated())
     const userStore = useUserStore()
 
     const msalGetToken = async () => {

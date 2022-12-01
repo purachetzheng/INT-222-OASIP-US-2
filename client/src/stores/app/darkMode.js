@@ -1,8 +1,9 @@
 import { ref } from 'vue'
 
 export default function useDarkMode() {
-    const stage = ref(localStorage.getItem('theme') === 'true')
+    const stage = ref(false)
     const init = () => {
+        stage.value = localStorage.getItem('theme') === 'true'
         document.documentElement.classList.add(stage.value ? 'dark' : 'light')
     }
 
