@@ -125,15 +125,24 @@ public class UserService {
         String name = newUser.getName();
         String email = newUser.getEmail();
         String password = newUser.getPassword();
+        String hashPassword = null;
         if(name != null)
             newUser.setName(newUser.getName().trim());
         if(email != null)
             newUser.setEmail(newUser.getEmail().trim());
         if(password != null){
-            String hashPassword = argon2.hash(2, 150, 1, newUser.getPassword());
+            hashPassword = argon2.hash(2, 150, 1, newUser.getPassword());
             newUser.setPassword(hashPassword);
         }
 
+        List<User> AzureUsers = repository.findAllAzureUser();
+        for(User azureUser : AzureUsers) {
+            if(newUser.getEmail().equals(azureUser.getEmail())) { //ถ้า newEmail == azureEmail ที่มีอยู่แล้ว
+                azureUser.setPassword(hashPassword);
+                User patchedAzureUser = repository.saveAndFlush(azureUser);
+                return modelMapper.map(patchedAzureUser, UserDto.class);
+            }
+        }
         if (repository.existsByName(newUser.getName()))
             result.addError(nameErrorObj);
         if (repository.existsByEmail(newUser.getEmail()))

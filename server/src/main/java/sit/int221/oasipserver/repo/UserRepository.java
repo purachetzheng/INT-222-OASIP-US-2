@@ -24,6 +24,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     public User findByEmail(String email);
 
+    @Query( value = "select * from users where password is null"
+            ,nativeQuery = true)
+    public List<User> findAllAzureUser();
+
     @Query("SELECT id FROM User WHERE email = ?1")
     public Integer findUserIdByEmail(String email);
 
