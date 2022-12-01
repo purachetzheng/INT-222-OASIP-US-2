@@ -21,10 +21,6 @@ export const useUserStore = defineStore('user', () => {
     const user = ref({ ...userTemplate })
     const setUser = (userInfo) => (user.value = userInfo)
 
-    const role = computed(() => user.value.role)
-
-    const authWith = computed(() => localStorage.getItem('auth-with'))
-
     const isLoading = ref(false)
 
     const isSignedIn = computed(() => user.value.auth);
@@ -48,10 +44,10 @@ export const useUserStore = defineStore('user', () => {
         }
         if (accessToken) {
             console.log('🔑 you already sign in with OASIP account')
-            getUserInfo()
+            loadUser()
         }
     }
-    const getUserInfo = async () => {
+    const loadUser = async () => {
         const existToken = getToken()
         if (!existToken) return
         try {
@@ -72,7 +68,7 @@ export const useUserStore = defineStore('user', () => {
             const { data } = await apiAuth.login(user)
             setToken(data.accessToken)
             // localStorage.setItem('accessToken', data.accessToken)
-            getUserInfo()
+            loadUser()
         } catch (error) {
             return Promise.reject(error)
         }
@@ -105,12 +101,11 @@ export const useUserStore = defineStore('user', () => {
 
     return {
         user,
-        authWith,
         isSignedIn,
         init,
         isAuth,
-        role,
-        getUserInfo,
+
+        loadUser,
         logout,
         login,
         setUser,

@@ -55,7 +55,7 @@ const signInUser = async (user) => {
         await userStore.login(user)
         console.log('ok')
         alert('Password Matched')
-        userStore.getUserInfo()
+        userStore.loadUser()
         router.push({ name: 'Home' })
     } catch (error) {
         const { data, status } = error.response

@@ -1,3 +1,4 @@
+import { storeToRefs } from 'pinia'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '../stores/user'
 
@@ -9,16 +10,16 @@ const router = createRouter({ history, routes })
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore()
+    const { user } = storeToRefs(userStore)
 
     console.log(`🚦 Navigating from ${from.name} to ${to.name}`)
     // console.log('🚀 userStore authWith:', userStore.authWith);
     
     if (!to.meta.requiresAuth) 
         next()
-    else if (!userStore.isSignedIn) {
+    else if (!userStore.isSignedIn) 
         next({ name: 'Authentication' })
-    }
-    else if (!to.meta.allowedRole.some((role) => role == userStore.role))
+    else if (!to.meta.allowedRole.some((role) => role == user.value.role))
         next({ name: 'Home' })
     else 
         next()
