@@ -7,10 +7,7 @@ const userStore = useUserStore()
 // userStore.getUserInfo()
 userStore.init()
 appStore.init()
-// appStore.expandSidebar()
-console.log(appStore.sidebarCollapsed);
-// console.log(Boolean(appStore.getSidebarCollapsed()));
-// console.log();
+
 </script>
  
 <template>
