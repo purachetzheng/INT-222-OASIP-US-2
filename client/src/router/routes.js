@@ -30,9 +30,9 @@ export default [
         component: () => import('../views/user/Users/index.vue'),
     },
     {
-        path: '/test',
-        name: 'Test',
-        component: () => import('../views/test/index.vue'),
+        path: '/dev',
+        name: 'DevTest',
+        component: () => import('../views/DevTest/DevTest.vue'),
     },
     {
         path: '/authentication',

@@ -64,6 +64,14 @@ const navItemList = [
       icon: ['fas', 'info'],
     },
   },
+  ,
+  {
+    mainItem: {
+      name: 'Dev Test',
+      route: 'DevTest',
+      icon: ['fas', 'circle-plus'],
+    },
+  },
   
 ]
 export default navItemList

@@ -52,10 +52,10 @@ const props = defineProps({
   @apply bg-indigo-600 border-indigo-600;
 }
 .secondary{
-  @apply bg-gray-100 border-gray-100
+  @apply bg-gray-200 border-gray-200
 }
 .secondary:enabled:hover{
-  @apply bg-gray-200 border-gray-200
+  @apply bg-gray-300 border-gray-300
 }
 .success{
   @apply text-white bg-green-500 border-green-500 
