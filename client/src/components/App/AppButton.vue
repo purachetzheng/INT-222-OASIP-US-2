@@ -28,7 +28,7 @@ const props = defineProps({
 
 <style scoped>
 .btn {
-  @apply border-2 rounded-md box-border font-medium select-none duration-300 flex items-center;
+  @apply border-2 rounded-md box-border font-medium select-none duration-300 items-center;
 }
 .btn-sm{
   @apply px-2.5 h-8 text-sm

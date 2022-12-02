@@ -63,6 +63,11 @@ export default [
         component: () => import('../views/event/DetailNew/EventDetail.vue'),
     },
     {
+        path: '/login',
+        name: 'SignIn',
+        component: () => import('../views/Authentication/SignIn/SignIn.vue')
+    },
+    {
         path: '/:catchNotMatchPath(.*)',
         name: 'NotFound',
         component: () => import('../views/NotFound.vue'),
