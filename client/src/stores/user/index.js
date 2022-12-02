@@ -63,7 +63,7 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    const login = async (user) => {
+    const signIn = async (user) => {
         try {
             const { data } = await apiAuth.login(user)
             setToken(data.accessToken, 'oasip')
@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
         }
     }
     
-    const logout = async () => {
+    const signOut = async () => {
         if (loginWithMS.value) return authMsal.msalSignOut()
         try {
             const { data } = await apiAuth.logout()
@@ -106,8 +106,7 @@ export const useUserStore = defineStore('user', () => {
         isAuth,
 
         loadUser,
-        logout,
-        login,
+        signIn, signOut,
         setUser,
         getToken,
         ...authMsal,
