@@ -62,4 +62,9 @@ export default [
         name: 'EventDetailNew',
         component: () => import('../views/event/DetailNew/EventDetail.vue'),
     },
+    {
+        path: '/:catchNotMatchPath(.*)',
+        name: 'NotFound',
+        component: () => import('../views/NotFound.vue'),
+    }
 ]

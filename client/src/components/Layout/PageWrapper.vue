@@ -7,15 +7,16 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
+    noLayout: Boolean
 })
 
 </script>
 
 <template>
   <div class="app-wrapper">
-    <SideBar class="" />
-    <div class="app-container relative"  >
-      <NavBar />
+    <SideBar v-if="!noLayout" />
+    <div class="app-container relative">
+      <NavBar v-if="!noLayout" />
       <div class="app-content " :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
         <slot />
       </div>
