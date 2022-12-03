@@ -69,6 +69,7 @@ export const useUserStore = defineStore('user', () => {
             setToken(data.accessToken, 'oasip')
             // localStorage.setItem('accessToken', data.accessToken)
             loadUser()
+            router.push({ name: 'Home' })
         } catch (error) {
             return Promise.reject(error)
         }
