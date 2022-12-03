@@ -83,13 +83,23 @@ export const useUserStore = defineStore('user', () => {
             // localStorage.removeItem('accessToken')
             user.value = { ...userTemplate }
             alert('sign out')
-            return router.push({ name: 'Authentication' })
+            router.push({ name: 'SignIn' })
+            return 
         } catch (error) {
             return Promise.reject(error)
         }
     }
 
-    const registerUser = async () => {}
+    const signUp = async (registerData) => {
+        try{
+            const { data } = await apiUser.post(registerData)
+            alert('Your user has been registered')
+            router.push({ name: 'SignIn'})
+        }
+        catch (error) {
+            return Promise.reject(error)
+        }
+    }
     // const setToken = (token, type = 'oasip') => {
     //     localStorage.setItem('auth-with', type)
     //     localStorage.setItem('accessToken', token)
@@ -107,7 +117,7 @@ export const useUserStore = defineStore('user', () => {
         isAuth,
 
         loadUser,
-        signIn, signOut,
+        signIn, signUp, signOut,
         setUser,
         getToken,
         ...authMsal,

@@ -26,9 +26,15 @@ const props = defineProps({
                     class="flex flex-col justify-center max-w-md grow h-full gap-10 p-4"
                 >
                     <div class="text-center">
-                        <div class="text-2xl font-bold">Welcome Back</div>
-                        <div class="font-medium text-gray-600">
-                            Please sign in to continue
+                        <div class="text-2xl font-bold">
+                            <slot name="header">
+                                This is Header
+                            </slot>
+                        </div>
+                        <div class="font-medium text-gray-500">
+                            <slot name="desc">
+                                Lorem ipsum dolor sit amet consectetur.
+                            </slot>
                         </div>
                     </div>
 

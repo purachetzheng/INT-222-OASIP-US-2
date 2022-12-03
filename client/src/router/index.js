@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
     if (!to.meta.requiresAuth) 
         next()
     else if (!userStore.isSignedIn) 
-        next({ name: 'Authentication' })
+        next({ name: 'SignIn' })
     else if (!to.meta.allowedRole.some((role) => role == user.value.role))
         next({ name: 'Home' })
     else 

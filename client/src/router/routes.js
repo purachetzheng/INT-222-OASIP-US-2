@@ -65,7 +65,12 @@ export default [
     {
         path: '/login',
         name: 'SignIn',
-        component: () => import('../views/Authentication/SignIn/SignIn.vue')
+        component: () => import('../views/Authentication/SignIn.vue')
+    },
+    {
+        path: '/register',
+        name: 'SignUp',
+        component: () => import('../views/Authentication/SignUp.vue')
     },
     {
         path: '/:catchNotMatchPath(.*)',

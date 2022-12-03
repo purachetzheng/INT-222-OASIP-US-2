@@ -1,8 +1,8 @@
 <script setup>
-import AuthPageTemplate from '../AuthPageTemplate.vue'
+import AuthPageTemplate from './AuthPageTemplate.vue'
 import schema from '@/services/validation/schema/SignInUserSchema'
 import { useForm } from 'vee-validate'
-import { useUserStore } from '../../../stores';
+import { useUserStore } from '../../stores';
 
 
 const userStore = useUserStore()
@@ -39,12 +39,15 @@ const signInUser = async (user) => {
 
 <template>
     <AuthPageTemplate>
+        <template #header>Welcome Back</template>
+        <template #desc>Please sign in to continue</template>
         <template #img>
             <img
-                src="../../../assets/images/illustrations/login-illustration.svg"
+                src="../../assets/images/illustrations/login-illustration.svg"
                 alt=""
             />
         </template>
+
         <app-vee-input name="email" type="email" :placeholder="'Email'" />
         <app-vee-input name="password" type="password" :placeholder="'Password'" />
 
@@ -52,9 +55,9 @@ const signInUser = async (user) => {
 
         <div class="text-center mt-4">
             <div class="text-sm font-medium">
-                <span class="">Don't have Account? </span>
+                <span class="text-gray-500">Don't have Account? </span>
                 <router-link
-                    :to="{ name: 'Home' }"
+                    :to="{ name: 'SignUp' }"
                     class="text-indigo-500 underline"
                 >
                     Create account
@@ -68,7 +71,7 @@ const signInUser = async (user) => {
         </div>
         <app-button
             btn-type="outline-primary"
-            @click=""
+            @click="userStore.msalSignIn"
             btn-size="lg"
             :btn-icon="['fab', 'microsoft']"
         >
