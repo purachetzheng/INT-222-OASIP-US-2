@@ -65,13 +65,6 @@ const navItemList = [
     },
   },
   ,
-  {
-    mainItem: {
-      name: 'Dev Test',
-      route: 'DevTest',
-      icon: ['fas', 'circle-plus'],
-    },
-  },
   
 ]
 export default navItemList
