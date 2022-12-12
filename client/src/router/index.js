@@ -10,15 +10,15 @@ const router = createRouter({ history, routes })
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore()
-    const { user } = storeToRefs(userStore)
+    const { user, isSignedIn } = storeToRefs(userStore)
 
     console.log(`🚦 Navigating from ${from.name} to ${to.name}`)
-    // console.log('🚀 userStore authWith:', userStore.authWith);
+    console.log('🚀 userStore isSignedIn:', user.value.name);
     
     if (!to.meta.requiresAuth) 
         next()
-    else if (!userStore.isSignedIn) 
-        next({ name: 'SignIn' })
+    // else if (!isSignedIn.value) 
+    //     next({ name: 'SignIn' })
     else if (!to.meta.allowedRole.some((role) => role == user.value.role))
         next({ name: 'Home' })
     else 

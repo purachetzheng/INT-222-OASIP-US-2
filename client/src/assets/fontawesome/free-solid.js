@@ -6,6 +6,7 @@ import
     faChevronDown,
     faPlus, faX, faXmark, faPlusCircle, faEllipsis, faFilter, faSliders, faInfo, faGear, faTags,
     faUser,
+    faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons'
 
 const solidIconsList = [
@@ -14,6 +15,7 @@ const solidIconsList = [
     faChevronDown,
     faPlus,faX, faXmark,faPlusCircle,faEllipsis,faFilter, faSliders, faInfo, faGear, faTags,
     faUser,
+    faTriangleExclamation,
 ]
 
 export default solidIconsList

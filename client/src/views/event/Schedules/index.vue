@@ -8,7 +8,6 @@ import EventCard from './components/EventCard.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 import AppSlideOver from '../../../components/App/AppSlideOver.vue'
 import { serialize } from 'object-to-formdata'
-import DeleteEventModal from './DeleteEventModal.vue'
 
 const router = useRouter()
 
@@ -63,7 +62,7 @@ const getEvents = async (params) => {
 }
 
 const cancelEvent = async (id) => {
-    console.log(id);
+    console.log(id)
     try {
         const res = await deleteEvent(id)
         console.log(res.data)
@@ -75,7 +74,6 @@ const cancelEvent = async (id) => {
         alert(error.message)
         // const { data, status } = error.response
     } finally {
-        
         confirmDeleteModal.close()
     }
 }
@@ -86,19 +84,15 @@ const confirmDeleteModal = reactive({
     show: (id) => {
         confirmDeleteModal.state = true
         confirmDeleteModal.selectedId = id
-        
     },
     close: () => (confirmDeleteModal.state = false),
     onConfirm: () => {
-        cancelEvent(confirmDeleteModal.selectedId),
-        detailSlideOver.close()
+        cancelEvent(confirmDeleteModal.selectedId), detailSlideOver.close()
     },
     onCancel: () => {
         confirmDeleteModal.close()
     },
 })
-
-
 
 onBeforeMount(async () => {
     getEvents()
@@ -140,11 +134,8 @@ const viewEventDetail = async (id) => {
         <app-loading-screen v-if="isLoading" />
         <!-- Event Detail Slide Over -->
         <router-view v-slot="{ Component }">
-            <AppSlideOver
-                :show="detailSlideOver.show"
-                @close="detailSlideOver.close"
-            >
-                <component 
+            <AppSlideOver :show="detailSlideOver.show" @close="detailSlideOver.close">
+                <component
                     :is="Component"
                     :slide-over-stage="detailSlideOver"
                     @cancel-event="confirmDeleteModal.show"
@@ -153,15 +144,22 @@ const viewEventDetail = async (id) => {
             </AppSlideOver>
         </router-view>
         <!----------------------------->
-        <DeleteEventModal :modal-state="confirmDeleteModal" />
+        <app-modal
+            :show="confirmDeleteModal.state"
+            type="confirm"
+            @cancel="confirmDeleteModal.onCancel"
+            @confirm="confirmDeleteModal.onConfirm"
+        >
+            <template #title> Cancel Event </template>
+            <template #desc> Are you sure to cancel this event? </template>
+        </app-modal>
         <!-- <h1 class="text-center text-3xl font-bold">Booking</h1> -->
         <FilterBar :filter-setting="filterSettingProxy" />
-        <ul id="event-list" 
+        <ul
+            id="event-list"
             class="h-full auto-rows-min grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4"
         >
-            
-        
-        <!-- <TransitionGroup
+            <!-- <TransitionGroup
             name="event-list"
             tag="ul"
             id="event-list"
@@ -173,7 +171,7 @@ const viewEventDetail = async (id) => {
                 :event="event"
                 @click-event-card="viewEventDetail(event.id)"
             />
-        <!-- </TransitionGroup> -->
+            <!-- </TransitionGroup> -->
         </ul>
         <div class="flex justify-center" v-if="!pageInfo.last">
             <button class="font-semibold" @click="filterSettingProxy.page++">
