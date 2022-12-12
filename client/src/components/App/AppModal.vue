@@ -44,11 +44,11 @@ const props = defineProps({
 
                     <div class="modal-body">
                         <slot name="body">
-                            <div v-if="type === 'confirm'" class="flex flex-col gap-2 max-w-xs">
-                                <h1 class="text-lg font-semibold text-center">
+                            <div v-if="type === 'confirm'" class="flex flex-col gap-2 max-w-sm">
+                                <h1 class="text-xl font-semibold text-center">
                                     <slot name="title"> Cancel Event </slot>
                                 </h1>
-                                <p class="font-medium">
+                                <p class="font-medium text-center">
                                     <slot name="desc"> Are you sure to cancel this event? </slot>
                                 </p>
                             </div>

@@ -43,7 +43,7 @@
     @apply text-white !important;
 }
 .btn-ghost.secondary {
-    @apply text-gray-500 !important;
+    @apply text-gray-900 !important;
 }
 .btn-ghost.secondary:enabled:hover {
     @apply text-white !important;
