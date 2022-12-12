@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', () => {
 
     const init = async () => {
         const accessToken = localStorage.getItem('accessToken')
-
+        console.log('init auth');
         if (loginWithMS.value) {
             console.log('🔑 you already sign in with MS account')
             authMsal.msalLoadUser()
@@ -44,7 +44,7 @@ export const useUserStore = defineStore('user', () => {
         }
         if (accessToken) {
             console.log('🔑 you already sign in with OASIP account')
-            loadUser()
+            await loadUser()
         }
     }
     const loadUser = async () => {
@@ -55,7 +55,7 @@ export const useUserStore = defineStore('user', () => {
             const { data } = await apiAuth.get()
             user.value = data
             user.value.auth = true
-            console.log(user.value)
+            // console.log(user.value)
         } catch (error) {
             // const { data, status } = error.response
             // console.log(data);

@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 const appStore = useAppStore()
 const userStore = useUserStore()
 // userStore.getUserInfo()
-userStore.init()
+// userStore.init()
 appStore.init()
 
 </script>

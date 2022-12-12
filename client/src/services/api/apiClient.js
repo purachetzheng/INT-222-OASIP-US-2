@@ -98,7 +98,7 @@ const refreshToken = async () => {
     if (status === 401) {
       deleteToken()
       alert('Session Expired\nPlease sign in again.')
-      return router.push({ name: 'Authentication' })
+      return router.push({ name: 'SignIn' })
     }
     return Promise.reject(error)
   }
