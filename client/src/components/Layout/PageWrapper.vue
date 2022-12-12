@@ -7,7 +7,10 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
-    noLayout: Boolean
+    noLayout: Boolean,
+    pageTitle: {
+        type: String,
+    },
 })
 
 </script>
@@ -16,7 +19,7 @@ const props = defineProps({
   <div class="app-wrapper">
     <SideBar v-if="!noLayout" />
     <div class="app-container relative">
-      <NavBar v-if="!noLayout" />
+      <NavBar v-if="!noLayout" :pageTitle="pageTitle" />
       <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden', noLayout && 'no-layout']">
         <slot />
       </div>

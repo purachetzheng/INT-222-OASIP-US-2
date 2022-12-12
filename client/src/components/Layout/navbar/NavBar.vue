@@ -3,6 +3,12 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore, useAppStore } from '../../../stores'
 import { storeToRefs } from 'pinia'
 import UserMenu from './UserMenu.vue'
+
+const props = defineProps({
+    pageTitle: {
+        type: String,
+    },
+})
 const router = useRouter()
 const route = useRoute()
 
@@ -19,7 +25,7 @@ const { user, isAuth } = storeToRefs(userStore)
 <header class="py-2 bg-slate-200 dark:bg-gray-700">
     <div class="flex justify-between items-center px-6">
         <div class="">
-            <p class="font-semibold text-lg">{{route.name}}</p>
+            <p class="font-semibold text-lg">{{pageTitle || route.name}}</p>
         </div>
         <div class="flex gap-4 items-center">
             <div class="flex p-2 rounded-full hover:bg-gray-200 h-10 w-10">
