@@ -36,6 +36,7 @@ const confirmDeleteModal = reactive({
     close: () => (confirmDeleteModal.state = false),
     onConfirm: () => {
         deleteUser(confirmDeleteModal.user.id)
+        confirmDeleteModal.close()
     },
     onCancel: () => {
         confirmDeleteModal.close()
