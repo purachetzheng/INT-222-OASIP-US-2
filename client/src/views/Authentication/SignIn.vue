@@ -70,10 +70,11 @@ const signInUser = async (user) => {
             <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
         </div>
         <app-button
-            btn-type="outline-primary"
+            btn-type="primary"
             @click="userStore.msalSignIn"
             btn-size="lg"
             :btn-icon="['fab', 'microsoft']"
+            outline
         >
             Sign in with Microsoft
         </app-button>

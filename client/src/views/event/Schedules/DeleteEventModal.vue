@@ -12,16 +12,17 @@ const props = defineProps({
         :show="modalState.state"
     >
         <template #header>
-            <h1 class="text-lg font-semibold">Delete</h1>
+            <h1 class="text-lg font-semibold">Cancel Event</h1>
         </template>
         <template #body>
-            <p class="font-medium">Do you want to cancel this event?</p>
+            <p class="font-medium">Are you sure to cancel this event ?</p>
         </template>
         <template #footer>
             <div class="flex justify-end gap-2">
                 <app-button
-                    btn-type="outline-primary"
+                    btn-type="secondary"
                     @click="modalState.onCancel"
+                    ghost
                     >No</app-button
                 >
                 <app-button

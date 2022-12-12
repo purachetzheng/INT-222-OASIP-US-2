@@ -16,20 +16,15 @@ const props = defineProps({
       return ['sm','md','lg','xl'].includes(value)
     }
   },
-  outline: Boolean
+  outline: Boolean,
+  ghost: Boolean
 })
 </script>
 
 <template>
-  <button class="" :class="[`btn ${btnType} btn-${btnSize}`, props.outline && 'btn-outline']">
+  <button class="" :class="[`btn ${btnType} btn-${btnSize}`, props.outline && 'btn-outline', props.ghost && 'btn-ghost']" >
     <fa-icon :icon="props.btnIcon" v-if="props.btnIcon !== null" class="pr-2" />
     <slot></slot>
-    <div v-if="0" class="px-4 py-2 bg-indigo-50 outline-none border border-indigo-100 rounded text-indigo-500 font-medium 
-    active:scale-95 
-    hover:bg-indigo-400 hover:text-white 
-    focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 
-    disabled:bg-gray-400/80 disabled:shadow-none disabled:cursor-not-allowed 
-    transition-colors duration-200"></div>
   </button>
 </template>
 
@@ -45,7 +40,7 @@ const props = defineProps({
 }
 .btn:disabled {
   /* @apply text-white bg-gray-400 border-gray-400; */
-  @apply bg-gray-400/80 shadow-none cursor-not-allowed;
+  @apply bg-gray-400/80 shadow-none cursor-not-allowed !important;
 }
 /* .btn:focus{
   @apply bg-indigo-600 ring-2 ring-indigo-600 ring-offset-2
@@ -54,6 +49,12 @@ const props = defineProps({
   @apply py-1.5 border-2 bg-transparent !important;
 }
 .btn-outline:hover{
+  @apply border-transparent !important;
+}
+.btn-ghost{
+  @apply bg-transparent !important;
+}
+.btn-ghost:hover{
   @apply border-transparent !important;
 }
 /* [class*="outline"]{

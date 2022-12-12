@@ -10,8 +10,14 @@
 .btn-outline.primary:enabled:hover {
     @apply text-white !important;
 }
+.btn-ghost.primary {
+    @apply text-indigo-500 !important;
+}
+.btn-ghost.primary:enabled:hover {
+    @apply text-white !important;
+}
 
-.secondary {
+/* .secondary {
     @apply bg-indigo-50 text-indigo-500 !important;
 }
 .secondary:enabled:hover {
@@ -21,6 +27,25 @@
     @apply border-indigo-200 text-indigo-400 !important;
 }
 .btn-outline.secondary:enabled:hover {
+    @apply text-white !important;
+} */
+
+.secondary {
+    @apply bg-gray-500  !important;
+}
+.secondary:enabled:hover {
+    @apply bg-gray-600 !important;
+}
+.btn-outline.secondary {
+    @apply border-gray-400 text-gray-500 !important;
+}
+.btn-outline.secondary:enabled:hover {
+    @apply text-white !important;
+}
+.btn-ghost.secondary {
+    @apply text-gray-500 !important;
+}
+.btn-ghost.secondary:enabled:hover {
     @apply text-white !important;
 }
 
@@ -36,6 +61,12 @@
 .btn-outline.success:enabled:hover {
     @apply text-white !important;
 }
+.btn-ghost.success {
+    @apply text-green-500 !important;
+}
+.btn-ghost.success:enabled:hover {
+    @apply text-white !important;
+}
 
 .danger {
     @apply bg-red-500 !important;
@@ -47,6 +78,12 @@
     @apply border-red-400 text-red-500 !important;
 }
 .btn-outline.danger:enabled:hover {
+    @apply text-white !important;
+}
+.btn-ghost.danger {
+    @apply text-red-500 !important;
+}
+.btn-ghost.danger:enabled:hover {
     @apply text-white !important;
 }
 
@@ -62,6 +99,12 @@
 .btn-outline.warning:enabled:hover {
     @apply text-white !important;
 }
+.btn-ghost.warning {
+    @apply text-yellow-500 !important;
+}
+.btn-ghost.warning:enabled:hover {
+    @apply text-white !important;
+}
 
 .muted {
     @apply bg-gray-500 !important;
@@ -73,5 +116,11 @@
     @apply border-gray-400 text-gray-500 !important;
 }
 .btn-outline.muted:enabled:hover {
+    @apply text-white !important;
+}
+.btn-ghost.muted {
+    @apply text-gray-500 !important;
+}
+.btn-ghost.muted:enabled:hover {
     @apply text-white !important;
 }
