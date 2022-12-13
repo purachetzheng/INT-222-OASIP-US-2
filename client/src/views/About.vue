@@ -21,7 +21,7 @@ const members = [
           </p>
 
           <img
-            src="../../assets/images/about-us/About-us.png"
+            src="../assets/images/about-us/About-us.png"
             class="h-full"
             alt=""
           />
