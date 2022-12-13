@@ -53,9 +53,14 @@ export default [
             import('../views/eventCategory/eventCategoryList/index.vue'),
     },
     {
+        path: '/add-event-old',
+        name: 'AddEventOld',
+        component: () => import('../views/event/Add-Event/AddEvent.vue'),
+    },
+    {
         path: '/add-event',
         name: 'AddEvent',
-        component: () => import('../views/event/Add-Event/AddEvent.vue'),
+        component: () => import('../views/event/AddEvent/AddEvent.vue'),
     },
     {
         path: '/schedules-new/:eventId',
