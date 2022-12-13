@@ -90,7 +90,7 @@ apiClient.interceptors.response.use(
 
 const refreshToken = async () => {
   try {
-    const { data } = await apiClient.get(`/api/auth/refresh`, { retry: 1 })
+    const { data } = await apiClient.get(`/api/auth/refresh`, { retry: 1, requiresAuth: false})
     setToken(data.accessToken)
   } catch (error) {
     const res = error.response
