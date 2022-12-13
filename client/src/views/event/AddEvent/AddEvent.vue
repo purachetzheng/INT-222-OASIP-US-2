@@ -8,7 +8,7 @@ import BookingStepTemplate from './BookingStepTemplate.vue'
 import EventCategoryCard from './EventCategoryCard.vue'
 import { useUserStore } from '../../../stores'
 import { objRemoveEmpty, objRenameKeys } from '../../../utils/ObjectUtils'
-import Step2Form from './Step2Form.vue'
+
 import schema from '@/services/validation/schema/AddEventSchema'
 import { useForm } from 'vee-validate'
 import FillFormFileField from './FillFormFileField.vue'

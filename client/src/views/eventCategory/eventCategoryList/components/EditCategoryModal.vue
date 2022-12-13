@@ -6,6 +6,7 @@ import InputField from '../../../../components/App/AppVeeInput.vue'
 import { useForm, ErrorMessage, Field } from 'vee-validate'
 import { computed, onBeforeMount, onUpdated, ref } from 'vue'
 import RoleSelectField from '../../../../components/user/RoleSelectField.vue'
+import AddCategoryOwner from './AddCategoryOwner.vue'
 
 const emits = defineEmits(['close', 'submit-edit-form'])
 const props = defineProps({
@@ -121,6 +122,7 @@ onUpdated(async () => {
                     :max="formConfig.description.maxLength"
                     label="Description"
                 />
+                <AddCategoryOwner />
             </div>
         </template>
         <template #footer>
@@ -128,7 +130,7 @@ onUpdated(async () => {
                 <app-button btn-type="success" @click="onSubmit"
                     >Submit</app-button
                 >
-                <app-button btn-type="secondary" @click="modalState.close"
+                <app-button btn-type="secondary" @click="modalState.close" ghost
                     >Cancel</app-button
                 >
             </div>

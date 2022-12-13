@@ -29,7 +29,8 @@ const disabled = computed(()=> props.thisStep-1 > props.completedSteps)
         <div class="px-6 py-4 flex justify-between cursor-pointer" @click="$emit('selectStep', thisStep)">
             <div class="">
                 <p class="font-semibold text-md">
-                    <slot name="step-title">Choose Category</slot> {{thisStep}} {{formStep}} {{completedSteps}}
+                    <slot name="step-title">Choose Category</slot> 
+                    <!-- {{thisStep}} {{formStep}} {{completedSteps}} -->
                 </p>
                 <p class="font- text-sm">
                     <slot name="step-desc">
