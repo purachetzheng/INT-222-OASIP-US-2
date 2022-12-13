@@ -43,7 +43,7 @@ export default [
         path: '/about',
         name: 'About',
         component: () =>
-            import(/* webpackChunkName: "about" */ '../views/About/index.vue'),
+            import(/* webpackChunkName: "about" */ '../views/About.vue'),
     },
     {
         path: '/event-category-list',

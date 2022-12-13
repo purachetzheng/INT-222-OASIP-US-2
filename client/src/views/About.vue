@@ -1,5 +1,5 @@
 <script setup>
-import PageWrapper from '../../components/Layout/PageWrapper.vue'
+import PageWrapper from '../components/Layout/PageWrapper.vue'
 
 const members = [
   { student_id: '63130500083', name: 'Purachet Zheng', role: 'Front End Developer', link: {github: 'https://github.com/purachetzheng'} },
