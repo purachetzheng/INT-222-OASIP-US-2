@@ -1,13 +1,16 @@
 name: deploy-on-docker
 
 on:
-    push:
-        branches: [dev]
-
+  push:
+    branches: [ dev ]
+    
 jobs:
-    build:
-        runs-on: self-hosted
-
-        steps:
-            - uses: actions/checkout@v2
-            - run: docker compose down
+  build:
+    runs-on: self-hosted
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    # Down Docker-compose container
+    - name: Down all docker-containers
+      run: docker compose down
