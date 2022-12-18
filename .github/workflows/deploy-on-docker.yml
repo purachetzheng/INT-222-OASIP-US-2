@@ -14,3 +14,7 @@ jobs:
     # Down Docker-compose container
     - name: Down all docker-containers
       run: docker compose down
+      
+    # Delete Docker Images (Frontend, Backend)
+    - name: Remove frontend, backend images
+      run: docker rmi int-222-oasip-us-2_backapp int-222-oasip-us-2_frontapp
