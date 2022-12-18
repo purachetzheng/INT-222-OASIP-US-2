@@ -25,7 +25,7 @@ jobs:
       
     # Pull from Github 
     - name: Pulling
-      run: git pull
+      run: git pull origin dev
           
     # Start Docker-compose
     - name: Starting Docker
