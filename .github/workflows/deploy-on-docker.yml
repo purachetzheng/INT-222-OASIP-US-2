@@ -32,11 +32,3 @@ jobs:
     # Start Docker-compose
     - name: Starting Docker
       run: docker compose up -d
-  
-    # Test dbsql doesn't start (down)
-    - name: Starting Docker
-      run: docker compose down
-      
-    # Test dbsql doesn't start (up)
-    - name: Starting Docker
-      run: docker compose up -d
