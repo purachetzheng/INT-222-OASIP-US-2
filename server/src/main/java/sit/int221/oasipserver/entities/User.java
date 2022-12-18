@@ -1,5 +1,6 @@
 package sit.int221.oasipserver.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,6 +24,7 @@ public class User {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @JsonIgnore
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
@@ -45,12 +47,13 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updatedOn", insertable = false)
     private Instant updatedOn;
+
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-
     @JoinTable(name = "eventcategoryowner",
             joinColumns = { @JoinColumn(name = "userId") },
             inverseJoinColumns = { @JoinColumn(name = "eventCategoryId") })

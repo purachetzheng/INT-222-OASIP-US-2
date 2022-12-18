@@ -13,6 +13,7 @@ import org.springframework.web.util.WebUtils;
 import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.enums.UserRole;
+import sit.int221.oasipserver.exception.BadRequestException;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.services.UserService;
 import sit.int221.oasipserver.token.AuthenticationResponse;
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {userService.delete(id);}
+    public void deleteUser(@PathVariable Integer id) throws BadRequestException {userService.delete(id);}
 
     @PatchMapping("/{id}")
     public UserDto updateUser(

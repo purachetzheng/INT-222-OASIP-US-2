@@ -47,7 +47,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 //    @Autowired JwtDecoder jwtDecoder;
 
-    private Cookie[] cookie;
+//    private Cookie[] cookie;
 
 //    @Override
 //    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -130,12 +130,15 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
     String username = null;
     String bearerToken = request.getHeader("auth");
     Cookie refreshCookie = WebUtils.getCookie(request, "refreshToken");
+    System.out.println("cookie: " + refreshCookie);
     String refreshToken = "";
     if(refreshCookie != null){
         refreshToken = refreshCookie.getValue();
+        System.out.println("token: " + refreshToken);
     }
     try {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            System.out.println(bearerToken);
             jwtToken = bearerToken.substring(7, bearerToken.length());
             DecodedJWT jwt = JWT.decode(jwtToken);
             System.out.println(jwt.getClaims());
@@ -176,7 +179,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
                 }
             }
 
-        } else if(!refreshToken.equals("") && !JWT.decode(refreshToken).getClaim("preferred_username").toString().equals("Missing Claim")) {
+        } else if(!refreshToken.equals("")) {
             System.out.println("refresh token filter");
             jwtToken = refreshToken;
             username = jwtUtil.extractUsername(jwtToken);

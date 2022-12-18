@@ -5,15 +5,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
+import sit.int221.oasipserver.entities.User;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventcategoryDto {
+public class EventcategoryDetailDto {
     private String id;
     @NotNull(message = "must not be null")
     @Pattern(regexp = "^(?=\\S).*[^\\s]$", message = "should be trimmed")
@@ -28,6 +31,6 @@ public class EventcategoryDto {
     private Integer eventDuration;
 
 //    private Set<Integer> userOwners;
-    private Integer userOwners;
+    private Set<User> users;
 
 }

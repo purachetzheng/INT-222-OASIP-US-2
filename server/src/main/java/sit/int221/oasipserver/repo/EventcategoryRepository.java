@@ -16,6 +16,10 @@ public interface EventcategoryRepository extends JpaRepository<Eventcategory, In
 
     public Eventcategory findEventcategoryById(Integer id);
 
+    @Query( value = "SELECT COUNT(*) FROM eventcategoryowner where eventCategoryId = ?1"
+            ,nativeQuery = true)
+    public Integer countCategoryUsers(Integer categoryId);
+
 
     public List<Eventcategory> findEventcategoriesByUsersLike(User user);
 

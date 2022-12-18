@@ -64,7 +64,7 @@ public class JwtUtil {
         return claim;
     }
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+//        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 //        Claims claims;
 //
 //        claims = Jwts.parser()
@@ -73,6 +73,7 @@ public class JwtUtil {
 //                .getBody();
 //
 //        return claims;
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
 

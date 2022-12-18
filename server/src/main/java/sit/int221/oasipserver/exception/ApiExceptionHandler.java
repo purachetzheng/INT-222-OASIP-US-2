@@ -88,5 +88,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiException, forbidden);
     }
 
+    @ExceptionHandler(value = BadRequestException.class)
+    public ResponseEntity<Object> badRequest(ForbiddenException e) {
+        HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+        ApiException apiException = new ApiException(
+                "Bad Request",
+                HttpStatus.BAD_REQUEST,
+                ZonedDateTime.now(ZoneId.of("Z"))
+        );
+        return new ResponseEntity<>(apiException, badRequest);
+    }
+
 }
 //https://www.youtube.com/watch?v=PzK4ZXa2Tbc

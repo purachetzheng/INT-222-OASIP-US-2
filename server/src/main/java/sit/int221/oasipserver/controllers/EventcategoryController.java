@@ -3,6 +3,7 @@ package sit.int221.oasipserver.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sit.int221.oasipserver.dtos.eventCategory.EventcategoryDetailDto;
 import sit.int221.oasipserver.dtos.eventCategory.EventcategoryDto;
 import sit.int221.oasipserver.dtos.eventCategory.PageEventCategoryDto;
 import sit.int221.oasipserver.entities.Eventcategory;
@@ -31,8 +32,8 @@ public class EventcategoryController {
     }
 
     @GetMapping("{id}")
-    public EventcategoryDto getEventcategoryById(@PathVariable Integer id) {
-        return modelMapper.map(eventcategoryService.getById(id), EventcategoryDto.class);
+    public EventcategoryDetailDto getEventcategoryById(@PathVariable Integer id) {
+        return modelMapper.map(eventcategoryService.getById(id), EventcategoryDetailDto.class);
     }
 
     @PostMapping("")
@@ -46,7 +47,7 @@ public class EventcategoryController {
     }
 
     @PutMapping("/{id}")
-    public EventcategoryDto updateEventcategory(
+    public EventcategoryDetailDto updateEventcategory(
             @Valid @RequestBody EventcategoryDto eventcategoryDto,
             @PathVariable Integer id) {
         return eventcategoryService.update(eventcategoryDto, id);
