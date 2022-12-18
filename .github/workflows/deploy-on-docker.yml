@@ -10,4 +10,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
-    - run: docker compose down
+    
+    # Down Docker-compose container
+    - name: Down all docker-containers
+      run: docker compose down
