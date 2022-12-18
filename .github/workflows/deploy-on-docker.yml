@@ -14,7 +14,7 @@ jobs:
         clean: false
     
     # Down Docker-compose container
-    - name: Down Docker
+    - name: Docker Stopping
       run: docker compose down
       
     # Delete Docker Images (Frontend, Backend)
@@ -22,13 +22,13 @@ jobs:
       run: docker rmi int-222-oasip-us-2_backapp int-222-oasip-us-2_frontapp
 
     # Fetch latest version from branch dev 
-    - name: Fetching
+    - name: Fetching Latest Data
       run: git fetch
       
     # Pull from Github 
-    - name: Pulling
+    - name: Pulling Latest Data
       run: git pull origin dev
           
     # Start Docker-compose
-    - name: Starting Docker
+    - name: Starting Docker Container
       run: docker compose up -d
