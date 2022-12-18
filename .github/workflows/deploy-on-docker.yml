@@ -12,9 +12,21 @@ jobs:
     - uses: actions/checkout@v2
     
     # Down Docker-compose container
-    - name: Down all docker-containers
+    - name: Down Docker
       run: docker compose down
       
     # Delete Docker Images (Frontend, Backend)
-    - name: Remove frontend, backend images
+    - name: Remove Docker frontend and backend images
       run: docker rmi int-222-oasip-us-2_backapp int-222-oasip-us-2_frontapp
+
+    # Fetch latest version from branch dev 
+    - name: Fetching
+      run: git fetch
+      
+    # Pull from Github 
+    - name: Pulling
+      run: git pull
+          
+    # Start Docker-compose
+    - name: Starting Docker
+      run: docker compose up -d
