@@ -173,7 +173,7 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
                 @next="onSubmit"
             >
                 <template #step-title>Fill Information</template>
-                <template #step-desc>Lorem ipsum dolor sit amet consectetur adipisicing.</template>
+                <template #step-desc>Fill your information to create the event.</template>
                 <template #next-button-name>Book</template>
                 <!-- {{infoFormMeta.valid}} -->
                 <div class="mx-auto max-w-2xl">

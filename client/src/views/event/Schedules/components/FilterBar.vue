@@ -74,8 +74,8 @@ const subFilterBar = reactive({
 
       <div ref="test" class="overflow-x-hidden">
         <ul class="flex gap-2 whitespace-nowrap">
-          <li class="rounded-md duration-100 hover:text-white hover:bg-gray-300" :class="[
-            filterSetting.eventCategoryId === category.id && 'bg-blue-500 text-white',
+          <li class="rounded-md duration-100 border-2 hover:text-white hover:bg-indigo-500" :class="[
+            filterSetting.eventCategoryId === category.id ? 'bg-indigo-500 text-white': 'bg-white',
           ]" v-for="category in categories">
             <button class="h-10 px-3" @click="setCategoryId(category.id)">
               {{ category.eventCategoryName }}

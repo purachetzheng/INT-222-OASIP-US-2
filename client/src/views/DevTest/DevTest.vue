@@ -87,6 +87,12 @@ import PageWrapper from '../../components/Layout/PageWrapper.vue'
                 <app-button btn-type="warning">Warning</app-button>
                 <app-button btn-type="muted">Muted</app-button>
             </div>
+            
+            <app-button btn-type="primary">Primary</app-button>
+            <app-button btn-type="secondary" btn-size="sm">Secondary</app-button>
+            <app-button btn-type="success" outline>Outline Success</app-button>
+            <app-button btn-type="danger" btn-size="lg" ghost>Outline Danger</app-button>
+            
             <div class="flex items-end gap-2">
                 <app-button btn-type="primary" outline>Outline Primary</app-button>
                 <app-button btn-type="secondary" outline>Outline Secondary</app-button>
