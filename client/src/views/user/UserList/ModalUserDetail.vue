@@ -88,8 +88,8 @@ onUpdated(() => {
         </template>
         <template v-if="viewDetailModal.editingMode" #body>
             <div class="flex flex-col">
-                <app-vee-input name="name" type="text" label="Name" />
-                <app-vee-input name="email" type="text" label="Email" />
+                <app-vee-input name="name" type="text" label="Name" :max="100" counter required />
+                <app-vee-input name="email" type="text" label="Email" :max="100" counter required />
                 <RoleSelectField />
             </div>
         </template>

@@ -2,7 +2,7 @@
 import { Field, useForm } from 'vee-validate'
 import { onBeforeMount, onUpdated, ref } from 'vue'
 import schema from '../../../services/validation/schema/EditEventSchema'
-import { datetimeCheck, formatDatetime } from '../../../utils/dateTime';
+import { datetimeCheck, formatDatetime, datetimeForInput } from '../../../utils/dateTime';
 import FileField from './FileField.vue';
 const emits = defineEmits([])
 const props = defineProps({
@@ -85,15 +85,15 @@ onUpdated(() => {
 
                 <!-- {{ modalState.event }} -->
                 <div class="grid grid-cols-2 gap-4">
-                    <app-vee-input name="datetime.date" type="date" label="Date" />
-                    <app-vee-input name="datetime.time" type="time" label="Time" />
+                    <app-vee-input name="datetime.date" type="date" label="Date" required :min="datetimeForInput.getNow()" />
+                    <app-vee-input name="datetime.time" type="time" label="Time" required />
                 </div>
             
             <app-vee-textarea
             name="notes"
             :max="500"
             label="Notes"
-            
+            counter
             />
             <FileField ref="inputFile" />
         </div>

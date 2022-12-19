@@ -120,6 +120,7 @@ onUpdated(async () => {
                     name="description"
                     :max="formConfig.description.maxLength"
                     label="Description"
+                    counter
                 />
                 <!-- <AddCategoryOwner /> -->
             </div>

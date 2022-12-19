@@ -19,8 +19,9 @@ const { user, isAuth } = storeToRefs(userStore)
           :name="user.name"
           :role="user.role"
         />
+        <app-button class="ml-2" btn-size="sm" btn-type="secondary" outline @click="userStore.signOut">Sign out</app-button>
       </div>
-      <ul
+      <!-- <ul
         id="user-menu"
         class="absolute hidden group-hover:flex bg-white py-2 top-11 rounded-md shadow-md"
       >
@@ -29,7 +30,7 @@ const { user, isAuth } = storeToRefs(userStore)
             <p class="whitespace-nowrap">Sign Out</p>
           </button>
         </li>
-      </ul>
+      </ul> -->
     </div>
     <router-link :to="{ name: 'SignIn' }" v-else>
       <app-button button-type="primary" >Sign In</app-button>

@@ -62,7 +62,7 @@ const validationListeners = computed(() => {
     <div class="flex justify-between pt-0.5 text-sm font-medium">
       <span class="text-red-500">{{ errorMessage || '&nbsp' }}</span>
       <span v-if="counter" class="text-gray-500">
-        {{ value.trim().length }} / {{ max }}
+        {{ value?.trim().length }} / {{ max }}
       </span>
     </div>
   </div>

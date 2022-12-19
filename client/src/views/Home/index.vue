@@ -12,7 +12,11 @@ const { } = appStore
 
 <template>
     <PageWrapper>
+
         <div class="">
+            <h1 class="text-3xl font-semibold">Welcome To OASIP - US</h1>
+        </div>
+        <!-- <div class="">
             <div>
                 <h1 class="text-3xl font-bold underline">
                     {{ $t('hello') }}
@@ -43,7 +47,7 @@ const { } = appStore
                 <fa-icon :icon="['fas', 'filter']" class="text-red-500" />
                 <fa-icon :icon="['fas', 'filter']" class="fa-2xs" inverse />
             </fa-layer>
-        </div>
+        </div> -->
     </PageWrapper>
 </template>
 

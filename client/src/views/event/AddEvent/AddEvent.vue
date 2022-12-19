@@ -2,7 +2,7 @@
 import { computed, onBeforeMount, reactive, ref, onUpdated, watch } from 'vue'
 import { apiEvent, apiEventCategory } from '../../../services/api/lib'
 import { serialize } from 'object-to-formdata'
-import { formatDatetime } from '../../../utils/dateTime'
+import { formatDatetime,datetimeForInput } from '../../../utils/dateTime'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue'
 import BookingStepTemplate from './BookingStepTemplate.vue'
 import EventCategoryCard from './EventCategoryCard.vue'
@@ -22,7 +22,7 @@ const { handleSubmit, resetForm, setValues, setFieldValue, meta: infoFormMeta } 
     initialValues: {
         name: '',
         email: '',
-        note: '',
+        notes: '',
     },
 })
 
@@ -191,16 +191,16 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
                             disabled
                         />
                     </div>
-                    <app-vee-input name="name" type="text" :max="100" label="Name" />
-                    <app-vee-input name="email" type="text" :max="100" label="Email" />
+                    <app-vee-input name="name" type="text" :max="100" label="Name" counter required />
+                    <app-vee-input name="email" type="text" :max="100" label="Email" counter required />
                     
                     <div class="grid grid-cols-2 gap-4"></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <app-vee-input name="datetime.date" type="date" label="Date" />
-                        <app-vee-input name="datetime.time" type="time" label="Time" />
+                        <app-vee-input name="datetime.date" type="date" label="Date" :min="datetimeForInput.getNow()" required />
+                        <app-vee-input name="datetime.time" type="time" label="Time" required />
                     </div>
                     <FillFormFileField />
-                    <app-vee-textarea name="notes" :max="500" label="Notes" />
+                    <app-vee-textarea name="notes" :max="500" label="Notes" counter  />
                 </div>
             </BookingStepTemplate>
         </div>

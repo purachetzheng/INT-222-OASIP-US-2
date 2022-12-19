@@ -2,7 +2,8 @@ export default [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home/index.vue'),
+        redirect: { name: 'About'}
+        // component: () => import('../views/Home/index.vue'),
     },
     {
         path: '/schedules',

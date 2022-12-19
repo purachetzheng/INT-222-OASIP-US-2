@@ -48,7 +48,7 @@ const signInUser = async (user) => {
         <app-vee-input name="email" type="email" :placeholder="'Email'" />
         <app-vee-input name="password" type="password" :placeholder="'Password'" />
 
-        <app-button class="mt-4" btn-size="lg" @click="onSubmit"> Sign In </app-button>
+        <app-button class="mt-4" @click="onSubmit"> Sign In </app-button>
 
         <div class="text-center mt-4">
             <div class="text-sm font-medium">
@@ -63,7 +63,7 @@ const signInUser = async (user) => {
             <p>OR</p>
             <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
         </div>
-        <app-button btn-type="primary" @click="userStore.msalSignIn" btn-size="lg" :btn-icon="['fab', 'microsoft']"
+        <app-button btn-type="primary" @click="userStore.msalSignIn" :btn-icon="['fab', 'microsoft']"
             outline>
             Sign in with Microsoft
         </app-button>

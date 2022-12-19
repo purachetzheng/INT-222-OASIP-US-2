@@ -19,8 +19,10 @@ const props = defineProps({
   required: Boolean,
   counter: Boolean,
   max: {
-    type: Number,
-    default: 999,
+    require: false,
+  },
+  min: {
+    require: false,
   },
   attr: {
     type: Object,
@@ -71,6 +73,7 @@ const validationListeners = computed(() => {
       v-on="validationListeners"
       v-model="value"
       class="form-control"
+      :min="min"
       :class="
         errorMessage &&
         ' border-red-500 focus:ring-red-500 focus:border-red-500 focus:outline-none focus:ring-opacity-50'
@@ -79,7 +82,7 @@ const validationListeners = computed(() => {
     <div class="flex justify-between pt-0.5 text-sm font-medium">
       <span class="text-red-500 ">{{ errorMessage || '&nbsp' }}</span>
       <span v-if="counter" class="text-gray-500">
-        {{ value.trim().length }} / {{ max }}
+        {{ value?.trim().length }} / {{ max }}
       </span>
     </div>
   </div>
