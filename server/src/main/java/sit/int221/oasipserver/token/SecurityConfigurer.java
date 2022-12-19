@@ -83,7 +83,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/events").hasRole("lecturer")
                 // .antMatchers(HttpMethod.POST, "/api/users")
                 // .antMatchers(HttpMethod.POST, "/us2/api/users").permitAll()
-                .anyRequest().authenticated().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(new AADB2CJwtBearerTokenAuthenticationConverter());
+//                .anyRequest().authenticated().and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(new AADB2CJwtBearerTokenAuthenticationConverter());
+                .anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 
 

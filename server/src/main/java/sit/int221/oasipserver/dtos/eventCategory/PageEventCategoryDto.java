@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PageEventCategoryDto {
-    private List<EventcategoryDto> content;
+    private List<EventcategoryDetailDto> content;
     private int number;
     private int size;
     private int totalPages;

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.server.ResponseStatusException;
+import sit.int221.oasipserver.dtos.eventCategory.EventcategoryDetailDto;
 import sit.int221.oasipserver.dtos.eventCategory.EventcategoryDto;
 import sit.int221.oasipserver.dtos.eventCategory.PageEventCategoryDto;
 import sit.int221.oasipserver.entities.Eventcategory;
@@ -66,12 +67,13 @@ public class EventcategoryService {
         repository.deleteById(id);
     }
 
-    public EventcategoryDto update(EventcategoryDto eventcategoryDto, Integer id) {
+    public EventcategoryDetailDto update(EventcategoryDto eventcategoryDto, Integer id) {
         Eventcategory eventcategory = mapEventcategory(getById(id), eventcategoryDto);
         if(eventcategoryDto.getUserOwners() != null) {
+            System.out.println("begin map");
             mapCategoryOwner(eventcategoryDto, eventcategory);
         }
-        return modelMapper.map(repository.saveAndFlush(eventcategory),EventcategoryDto.class);
+        return modelMapper.map(repository.saveAndFlush(eventcategory),EventcategoryDetailDto.class);
     }
 
     private Eventcategory mapEventcategory(Eventcategory eventcategory, EventcategoryDto eventcategoryDto) {
@@ -83,12 +85,14 @@ public class EventcategoryService {
 
     @PreAuthorize("hasRole('ROLE_admin')")
     private Eventcategory mapCategoryOwner(EventcategoryDto updateCategory, Eventcategory eventcategory) {
-        Set<User> userCategoriesOwner = new HashSet<>(); //สร้าง Set ไว้สำหรับ patch เข้าไป DB
+        Set<User> userCategoriesOwner = new HashSet<>(eventcategory.getUsers()); //สร้าง Set ไว้สำหรับ patch เข้าไป DB
         if(updateCategory.getUserOwners() != null) { //ถ้ามีส่งมา
-            for(Integer userId : updateCategory.getUserOwners()) { //forEach แต่ละ id ที่ส่งมา
-                System.out.println("This is id: " + userId + " to patched");
-                userCategoriesOwner.add(userRepository.findById(userId).orElseThrow()); //add object แต่ละ id เข้าไปใน Set
-            }
+            System.out.println("begin set");
+            userCategoriesOwner.add(userRepository.findById(updateCategory.getUserOwners()).orElseThrow());
+//            for(Integer user : updateCategory.getUserOwners()) { //forEach แต่ละ userId ที่ส่งมา
+//                System.out.println("This is id: " + user + " to patched");
+//                userCategoriesOwner.add(userRepository.findById(user).orElseThrow()); //add object แต่ละ id เข้าไปใน Set
+//            }
             eventcategory.setUsers(userCategoriesOwner); //set object ว่า category นี้มี user ไหนบ้าง (ของ Lecturer)
             for(User user : eventcategory.getUsers()) {
                 System.out.println(user.getId() + ": " + user.getEmail());

@@ -27,6 +27,7 @@ import sit.int221.oasipserver.dtos.user.*;
 import sit.int221.oasipserver.entities.Event;
 import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.entities.User;
+import sit.int221.oasipserver.exception.BadRequestException;
 import sit.int221.oasipserver.exception.PasswordException;
 import sit.int221.oasipserver.exception.type.ApiNotFoundException;
 import sit.int221.oasipserver.repo.EventRepository;
@@ -107,10 +108,20 @@ public class UserService {
     }
 
     //Delete
-    public void delete(Integer id) {
-        List<Event> events = eventRepository.findAllByBookingEmail(getById(id).getEmail());
-        if(events != null)
-            eventRepository.deleteAll(events);
+    public void delete(Integer id) throws BadRequestException {
+        if(getById(id).getRole() == UserRole.lecturer) { //lecturer user
+            for(Eventcategory category : eventcategoryRepository.findAllByUsersId(id)){ //loop all categories of this lec
+                if(eventcategoryRepository.countCategoryUsers(category.getId()) <= 1) {
+                    System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer less than 1");
+                    throw new BadRequestException(category.getEventCategoryName() + " cannot be owned less than 1 lecturer");
+                } else {
+                    System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer more than 1");
+                }
+            }
+        }
+//        List<Event> events = eventRepository.findAllByBookingEmail(getById(id).getEmail());
+//        if(events != null)
+//            eventRepository.deleteAll(events);
 
         repository.delete(getById(id));
     }

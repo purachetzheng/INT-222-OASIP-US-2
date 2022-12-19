@@ -11,8 +11,10 @@ import sit.int221.oasipserver.dtos.user.MatchUserDto;
 import sit.int221.oasipserver.dtos.user.UserDetailDto;
 import sit.int221.oasipserver.dtos.user.UserDetailDtoImpl;
 import sit.int221.oasipserver.dtos.user.refreshDto;
+import sit.int221.oasipserver.entities.Eventcategory;
 import sit.int221.oasipserver.entities.User;
 import sit.int221.oasipserver.exception.PasswordException;
+import sit.int221.oasipserver.repo.EventcategoryRepository;
 import sit.int221.oasipserver.repo.UserRepository;
 import sit.int221.oasipserver.services.UserService;
 import sit.int221.oasipserver.token.CustomUserDetailsService;
@@ -41,6 +43,9 @@ public class AuthenController {
 
     @Autowired
     CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    EventcategoryRepository eventcategoryRepository;
 
 
 //    private Cookie[] cookie;
@@ -113,26 +118,35 @@ public class AuthenController {
     }
 
     @GetMapping("/test")
-    public String test(TimeZone timeZone, HttpServletRequest request){
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
-        formatter.setTimeZone(timeZone);
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH).withZone(ZoneId.of("Asia/Bangkok"));
+    public Integer test(TimeZone timeZone, HttpServletRequest request){
+//        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH);
+//        formatter.setTimeZone(timeZone);
+//        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("EEE MMM dd, yyyy HH:mm", Locale.ENGLISH).withZone(ZoneId.of("Asia/Bangkok"));
+//
+//        String zoneId = timeZone.getID();
+//        System.out.println(timeZone.getID());
+//
+//        Instant instant = Instant.now();
+//        System.out.println("Instant UTC: " + instant.atZone(ZoneId.of("UTC")));
+//        System.out.println("Instant NOW: " + instant);
+//
+//        ZonedDateTime bkTime = instant.atZone(ZoneId.of(zoneId));
+//        System.out.println("Instant LOCAL: " + bkTime);
+//        System.out.println("Instant LOCAL: " + bkTime.toInstant());
+//        System.out.println(formatter.format(Date.from(bkTime.toInstant())));
 
-        String zoneId = timeZone.getID();
-        System.out.println(timeZone.getID());
-
-        Instant instant = Instant.now();
-        System.out.println("Instant UTC: " + instant.atZone(ZoneId.of("UTC")));
-        System.out.println("Instant NOW: " + instant);
-
-        ZonedDateTime bkTime = instant.atZone(ZoneId.of(zoneId));
-        System.out.println("Instant LOCAL: " + bkTime);
-        System.out.println("Instant LOCAL: " + bkTime.toInstant());
-        System.out.println(formatter.format(Date.from(bkTime.toInstant())));
+        for(Eventcategory category : eventcategoryRepository.findAllByUsersId(6)){
+            if(eventcategoryRepository.countCategoryUsers(category.getId()) <= 1) {
+                System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer less than 1");
+            } else {
+                System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer more than 1");
+            }
+        }
 
 
+        return eventcategoryRepository.countCategoryUsers(1);
 
 
-        return timeZone.toString();
+//        return timeZone.toString();
     }
 }

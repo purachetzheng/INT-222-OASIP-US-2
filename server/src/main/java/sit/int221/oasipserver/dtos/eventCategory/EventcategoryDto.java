@@ -27,6 +27,7 @@ public class EventcategoryDto {
     @NotNull(message = "must not be null")
     private Integer eventDuration;
 
-    private Set<Integer> userOwners;
+//    private Set<Integer> userOwners;
+    private Integer userOwners;
 
 }

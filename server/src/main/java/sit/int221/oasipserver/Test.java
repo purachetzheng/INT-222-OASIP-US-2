@@ -31,6 +31,14 @@ public class Test {
     }
 
     public static void main(String[] args) {
+        String test = "hewkaw";
+        String testz = "hewkawz";
+
+        if(!"hewkaw".equals("hew") && !test.equals("hewkawz")) {
+            System.out.println("true");
+        } else {
+            System.out.println("false");
+        }
 
 //        ChronoUnit minutes = ChronoUnit.MINUTES;
 //        LocalDate localDate = LocalDate.parse("2022-01-01");
