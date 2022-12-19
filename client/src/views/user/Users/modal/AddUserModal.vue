@@ -95,15 +95,17 @@ onUpdated(() => {
                     btn-size="md"
                     :disabled="!meta.valid"
                     @click="onSubmit"
-                    >Create</app-button
                 >
+                    Create
+                </app-button>
                 <app-button
                     btn-type="secondary"
                     ghost
                     btn-size="md"
                     @click="$emit('close')"
-                    >Close</app-button
                 >
+                    Close
+                </app-button>
             </div>
         </template>
     </app-modal>

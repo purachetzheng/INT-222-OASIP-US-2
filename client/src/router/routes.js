@@ -24,10 +24,16 @@ export default [
     //     component: () => import('../views/event/Detail/index.vue'),
     // },
     {
+        path: '/users-old',
+        name: 'UsersOld',
+        meta: { requiresAuth: true, allowedRole: ['admin'] },
+        component: () => import('../views/user/Users/index.vue'),
+    },
+    {
         path: '/users',
         name: 'Users',
         meta: { requiresAuth: true, allowedRole: ['admin'] },
-        component: () => import('../views/user/Users/index.vue'),
+        component: () => import('../views/user/UserList/index.vue'),
     },
     {
         path: '/dev',
