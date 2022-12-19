@@ -11,12 +11,12 @@ const props = defineProps({
     },
     header: {
         type: String,
-        default: 'default header'
+        default: 'default header',
     },
     desc: {
         type: String,
-        default: 'default body'
-    }
+        default: 'default body',
+    },
 })
 </script>
 
@@ -24,31 +24,46 @@ const props = defineProps({
     <Teleport to="body">
         <Transition name="modal">
             <div v-if="show" class="modal-mask">
-                <div
-                    class="modal-container p-8 bg-gray-50 rounded-md flex flex-col gap-4"
-                >
+                <div class="modal-container p-6 bg-gray-50 rounded-md flex flex-col gap-4">
                     <div class="modal-header">
                         <slot name="header">
-                            <p class="text-lg font-semibold">{{header}}</p>
+                            <p v-if="type === 'blank'" class="text-lg font-semibold">
+                                {{ header }}
+                            </p>
+                            <div
+                                v-if="type === 'confirm'"
+                                class="p-4 bg-red-100 flex rounded-full w-min mx-auto"
+                            >
+                                <fa-icon
+                                    :icon="['fas', 'triangle-exclamation']"
+                                    class="text-red-500 fa-xl"
+                                />
+                            </div>
                         </slot>
                     </div>
 
                     <div class="modal-body">
                         <slot name="body">
-                            <p class="font-medium">{{desc}}</p>
+                            <div v-if="type === 'confirm'" class="flex flex-col gap-2 max-w-sm">
+                                <h1 class="text-xl font-semibold text-center">
+                                    <slot name="title"> Cancel Event </slot>
+                                </h1>
+                                <p class="font-medium text-center">
+                                    <slot name="desc"> Are you sure to cancel this event? </slot>
+                                </p>
+                            </div>
+                            <p v-else class="font-medium">{{ desc }}</p>
                         </slot>
                     </div>
 
                     <slot name="footer">
                         <div class="modal-footer" v-if="type === 'info'"></div>
-                        <div
-                            class="modal-footer"
-                            v-if="type === 'confirm'"
-                        >
-                            <div class="flex justify-center gap-2">
-                                <app-button btn-type="outline-danger" @click="$emit('cancel')">No</app-button>
-                                <app-button btn-type="success" @click="$emit('confirm')">Yes</app-button>
-                            </div>
+
+                        <div v-if="type === 'confirm'" class="grid grid-cols-2 gap-2">
+                            <app-button btn-type="secondary" ghost @click="$emit('cancel')"
+                                >No</app-button
+                            >
+                            <app-button btn-type="danger" @click="$emit('confirm')">Yes</app-button>
                         </div>
 
                         <div class="modal-footer" v-else>

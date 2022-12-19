@@ -1,12 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin')
 module.exports = {
+
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
       spacing: {
         0.3: '0.1rem',
+        // 1.75: '0.4375rem',
         15: '3.75rem',
         18: '4.5rem',
         19: '4.75rem',

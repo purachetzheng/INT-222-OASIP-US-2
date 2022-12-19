@@ -63,7 +63,7 @@ const disPlayUpdated = (datetime) => {
             <fa-icon
               :icon="['far', 'trash-can']"
               class="fa-lg cursor-pointer hover:scale-125 text-gray-700 hover:text-red-500 duration-100"
-              @click="$emit('delete-user', user.id)"
+              @click="$emit('delete-user', user)"
             />
           </div>
         </div>

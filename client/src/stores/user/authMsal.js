@@ -3,14 +3,15 @@ import { loginRequest, tokenRequest } from '../../authConfig'
 import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
 import { useUserStore } from '.'
 import { storeToRefs } from 'pinia'
-import { removeToken, setToken } from './authToken'
+import { deleteToken, setToken } from './authToken'
+import { ref } from 'vue'
 export default function useAuthMsal(instance, accounts) {
-    const loginWithMS = useIsAuthenticated()
+    const loginWithMS = ref(useIsAuthenticated())
     const userStore = useUserStore()
 
     const msalGetToken = async () => {
-        console.log(tokenRequest)
-        console.log(accounts.value)
+        // console.log(tokenRequest)
+        // console.log(accounts.value)
         instance.setActiveAccount(accounts.value[0])
         const {accessToken, ...rest} = await instance
             .acquireTokenSilent(tokenRequest)
@@ -33,14 +34,14 @@ export default function useAuthMsal(instance, accounts) {
                 // }
             })
         setToken(accessToken, 'msal')
-        console.log(accessToken);
+        // console.log(accessToken);
     }
 
-    const msalSetUser = async () => {
+    const msalLoadUser = async () => {
         const account = accounts.value[0].idTokenClaims
         const { name, preferred_username: email, roles } = account
         const role = roles ? roles[0] : 'guest'
-        userStore.setUser({ name, email, role, auth: 1 })
+        userStore.setUser({ name, email, role, auth: true })
     }
 
     const msalSignOut = async () => {
@@ -48,14 +49,14 @@ export default function useAuthMsal(instance, accounts) {
             mainWindowRedirectUri: import.meta.env.VITE_MS_LOGOUT_REDIRECT_URI,
         })
         // return router.push({ name: 'Authentication'})
-        removeToken()
+        deleteToken()
     }
 
     const msalSignIn = async () => {
         console.log('sign in with MS account')
         try {
             const res = await instance.loginPopup(loginRequest)
-            msalSetUser()
+            msalLoadUser()
             msalGetToken()
             router.push({ name: 'Home' })
         } catch (error) {
@@ -63,5 +64,5 @@ export default function useAuthMsal(instance, accounts) {
         }
     }
     // const
-    return { msalSetUser, msalSignIn, msalSignOut, msalGetToken }
+    return { msalLoadUser, msalSignIn, msalSignOut, msalGetToken }
 }

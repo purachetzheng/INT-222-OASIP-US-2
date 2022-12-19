@@ -30,9 +30,9 @@ export default [
         component: () => import('../views/user/Users/index.vue'),
     },
     {
-        path: '/test',
-        name: 'Test',
-        component: () => import('../views/test/index.vue'),
+        path: '/dev',
+        name: 'DevTest',
+        component: () => import('../views/DevTest/DevTest.vue'),
     },
     {
         path: '/authentication',
@@ -43,7 +43,7 @@ export default [
         path: '/about',
         name: 'About',
         component: () =>
-            import(/* webpackChunkName: "about" */ '../views/About/index.vue'),
+            import(/* webpackChunkName: "about" */ '../views/About.vue'),
     },
     {
         path: '/event-category-list',
@@ -53,13 +53,28 @@ export default [
             import('../views/eventCategory/eventCategoryList/index.vue'),
     },
     {
-        path: '/add-event',
-        name: 'AddEvent',
+        path: '/add-event-old',
+        name: 'AddEventOld',
         component: () => import('../views/event/Add-Event/AddEvent.vue'),
     },
     {
-        path: '/schedules-new/:eventId',
-        name: 'EventDetailNew',
-        component: () => import('../views/event/DetailNew/EventDetail.vue'),
+        path: '/add-event',
+        name: 'AddEvent',
+        component: () => import('../views/event/AddEvent/AddEvent.vue'),
     },
+    {
+        path: '/login',
+        name: 'SignIn',
+        component: () => import('../views/Authentication/SignIn.vue')
+    },
+    {
+        path: '/register',
+        name: 'SignUp',
+        component: () => import('../views/Authentication/SignUp.vue')
+    },
+    {
+        path: '/:catchNotMatchPath(.*)',
+        name: 'NotFound',
+        component: () => import('../views/NotFound.vue'),
+    }
 ]

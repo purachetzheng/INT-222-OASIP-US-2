@@ -7,16 +7,20 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
+    noLayout: Boolean,
+    pageTitle: {
+        type: String,
+    },
 })
 
 </script>
 
 <template>
   <div class="app-wrapper">
-    <SideBar class="" />
-    <div class="app-container relative"  >
-      <NavBar />
-      <div class="app-content " :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden']">
+    <SideBar v-if="!noLayout" />
+    <div class="app-container relative">
+      <NavBar v-if="!noLayout" :pageTitle="pageTitle" />
+      <div class="app-content" :class="[enableScroll ? 'overflow-y-auto': 'overflow-y-hidden', noLayout && 'no-layout']">
         <slot />
       </div>
       <div id="sidebar-div"></div>
@@ -34,5 +38,8 @@ const props = defineProps({
 }
 .app-content {
   @apply py-6 px-6 h-full ;
+}
+.no-layout {
+  @apply py-0 px-0;
 }
 </style>

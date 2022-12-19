@@ -101,10 +101,10 @@ onUpdated(() => {
         </template>
         <template #footer>
             <div class="flex gap-4">
-                <app-button btn-type="success" @click="onSubmit"
+                <app-button btn-type="primary" @click="onSubmit"
                     >Save</app-button
                 >
-                <app-button btn-type="outline-danger" @click="modalState.close"
+                <app-button btn-type="secondary" @click="modalState.close" outline
                     >Cancel</app-button
                 >
             </div>

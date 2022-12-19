@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeMount, provide, readonly, ref } from 'vue'
+import { computed, onBeforeMount, provide, readonly, ref, reactive } from 'vue'
 import { apiUser } from '../../../services/api/lib'
 import UserTable from './UserTable.vue'
 import UserDetailModal from './modal/UserDetailModal.vue'
@@ -23,9 +23,27 @@ const getUsers = async (page) => {
 }
 
 const askForDelete = (id) => {
-    if (confirm('Do you really want to delete?')) deleteUsers(id)
+    if (confirm('Do you really want to delete?')) deleteUser(id)
 }
-const deleteUsers = async (id) => {
+
+const confirmDeleteModal = reactive({
+    state: false,
+    user: { id: null },
+    show: (user) => {
+        confirmDeleteModal.state = true
+        confirmDeleteModal.user = user
+    },
+    close: () => (confirmDeleteModal.state = false),
+    onConfirm: () => {
+        deleteUser(confirmDeleteModal.user.id)
+        confirmDeleteModal.close()
+    },
+    onCancel: () => {
+        confirmDeleteModal.close()
+    },
+})
+
+const deleteUser = async (id) => {
     try {
         const { data, status } = await apiUser.delete(id)
         // const { content, number, totalPages } = data
@@ -45,9 +63,7 @@ const deleteUsers = async (id) => {
 const updateUsers = async (id, modifyUser, setFieldError) => {
     try {
         const { data } = await apiUser.patch(id, modifyUser)
-        users.value = users.value.map((user) =>
-            user.id === data.id ? data : user
-        )
+        users.value = users.value.map((user) => (user.id === data.id ? data : user))
         selectedUser.value = data
         alert('ok')
     } catch (error) {
@@ -99,15 +115,24 @@ onBeforeMount(() => {
 
 <template>
     <PageWrapper>
+        <app-modal
+            :show="confirmDeleteModal.state"
+            type="confirm"
+            @cancel="confirmDeleteModal.onCancel"
+            @confirm="confirmDeleteModal.onConfirm"
+        >
+            <template #title> Delete User </template>
+            <template #desc>
+                Are you sure to delete
+                <span class="italic font-semibold">"{{ confirmDeleteModal.user.name }}"</span> user?
+            </template>
+        </app-modal>
         <main class="flex flex-col gap-0 justify-between">
             <header class="flex justify-between">
                 <h1 class="text-2xl font-bold">User</h1>
                 <div class="flex items-center gap-6">
                     <fa-icon :icon="['fas', 'ellipsis']" class="fa-xl" />
-                    <app-button
-                        btn-type="primary"
-                        btn-size="md"
-                        @click="openAddUserModal"
+                    <app-button btn-type="primary" btn-size="md" @click="openAddUserModal"
                         >Add User</app-button
                     >
                 </div>
@@ -115,7 +140,7 @@ onBeforeMount(() => {
 
             <UserTable
                 :users="users"
-                @delete-user="askForDelete"
+                @delete-user="confirmDeleteModal.show"
                 @view-detail="selectUser"
                 class="grow overflow-hidden"
             />

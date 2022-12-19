@@ -8,27 +8,26 @@ import useAuthMsal from './authMsal'
 import { useMsal } from '../../services/MSAL/composition-api/useMsal'
 import { loginRequest } from '../../authConfig'
 import { useIsAuthenticated } from '../../services/MSAL/composition-api/useIsAuthenticated'
-import { removeToken, setToken } from './authToken'
+import { getToken, setToken, deleteToken } from './authToken'
 
 const userTemplate = {
     name: '',
     email: '',
     role: '',
+    auth: false,
 }
 
 export const useUserStore = defineStore('user', () => {
     const user = ref({ ...userTemplate })
     const setUser = (userInfo) => (user.value = userInfo)
 
-    const role = computed(() => user.value.role)
-
-    const authWith = computed(() => localStorage.getItem('auth-with'))
-
     const isLoading = ref(false)
 
+    const isSignedIn = computed(() => user.value.auth);
+
     const { instance, accounts } = useMsal()
-    
-    const isAuth = computed(() => Boolean(user.value.auth))
+
+    const isAuth = computed(() => user.value.auth)
 
     const loginWithMS = useIsAuthenticated()
     // const checkUser = () => {}
@@ -36,27 +35,27 @@ export const useUserStore = defineStore('user', () => {
 
     const init = async () => {
         const accessToken = localStorage.getItem('accessToken')
-
+        console.log('init auth');
         if (loginWithMS.value) {
-            console.log('you already sign in with MS account')
-            authMsal.msalSetUser()
+            console.log('🔑 you already sign in with MS account')
+            authMsal.msalLoadUser()
             authMsal.msalGetToken()
             return
         }
         if (accessToken) {
-            console.log('you already sign in with OASIP account')
-            getUserInfo()
+            console.log('🔑 you already sign in with OASIP account')
+            await loadUser()
         }
     }
-    const getUserInfo = async () => {
-        const accessToken = localStorage.getItem('accessToken')
-        if (!accessToken) return
+    const loadUser = async () => {
+        const existToken = getToken()
+        if (!existToken) return
         try {
             // const {data} = await apiUser.getById(1)
             const { data } = await apiAuth.get()
             user.value = data
-            user.value.auth = 1
-            console.log(user.value)
+            user.value.auth = true
+            // console.log(user.value)
         } catch (error) {
             // const { data, status } = error.response
             // console.log(data);
@@ -64,37 +63,48 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
-    const login = async (user) => {
+    const signIn = async (user) => {
         try {
             const { data } = await apiAuth.login(user)
-            setToken(data.accessToken)
+            setToken(data.accessToken, 'oasip')
             // localStorage.setItem('accessToken', data.accessToken)
-            getUserInfo()
+            loadUser()
+            router.push({ name: 'Home' })
         } catch (error) {
             return Promise.reject(error)
         }
     }
-    const logout = async () => {
+    
+    const signOut = async () => {
         if (loginWithMS.value) return authMsal.msalSignOut()
         try {
             const { data } = await apiAuth.logout()
-            removeToken()
+            deleteToken()
             // localStorage.removeItem('accessToken')
             user.value = { ...userTemplate }
             alert('sign out')
-            return router.push({ name: 'Authentication' })
+            router.push({ name: 'SignIn' })
+            return 
         } catch (error) {
             return Promise.reject(error)
         }
     }
 
-    const registerUser = async () => {}
-    const getToken = async () => {}
+    const signUp = async (registerData) => {
+        try{
+            const { data } = await apiUser.post(registerData)
+            alert('Your user has been registered')
+            router.push({ name: 'SignIn'})
+        }
+        catch (error) {
+            return Promise.reject(error)
+        }
+    }
     // const setToken = (token, type = 'oasip') => {
     //     localStorage.setItem('auth-with', type)
     //     localStorage.setItem('accessToken', token)
     // }
-    // const removeToken = () => {
+    // const deleteToken = () => {
     //     localStorage.removeItem('auth-with')
     //     localStorage.removeItem('accessToken')
     // }
@@ -102,14 +112,14 @@ export const useUserStore = defineStore('user', () => {
 
     return {
         user,
-        authWith,
+        isSignedIn,
         init,
         isAuth,
-        role,
-        getUserInfo,
-        logout,
-        login,
+
+        loadUser,
+        signIn, signUp, signOut,
         setUser,
+        getToken,
         ...authMsal,
     }
 })

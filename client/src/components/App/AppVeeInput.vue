@@ -26,6 +26,9 @@ const props = defineProps({
     type: Object,
     default: {},
   },
+  placeholder:{
+    type: String
+  }
 })
 
 const nameRef = toRef(props, 'name')
@@ -64,6 +67,7 @@ const validationListeners = computed(() => {
       :id="name"
       :name="name"
       :type="type"
+      :placeholder="placeholder"
       v-on="validationListeners"
       v-model="value"
       class="form-control"

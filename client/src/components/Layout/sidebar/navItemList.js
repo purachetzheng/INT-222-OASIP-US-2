@@ -64,6 +64,7 @@ const navItemList = [
       icon: ['fas', 'info'],
     },
   },
+  ,
   
 ]
 export default navItemList

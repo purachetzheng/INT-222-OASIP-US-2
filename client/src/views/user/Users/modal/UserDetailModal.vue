@@ -122,20 +122,23 @@ onUpdated(() => {
 
     <template #footer>
       <div class="flex justify-center gap-4">
-        <PrimaryButton
+        <app-button
+          btn-type="primary"
           type="submit"
           class="btn btn-indigo duration-300 submit-btn"
           :disabled="0"
           @click="editingOn"
-          >Edit</PrimaryButton
+          >Edit</app-button
         >
-        <SecondaryButton
+        <app-button
+          btn-type="secondary"
+          ghost
           type="button"
           class="btn btn-gray duration-300"
           @click="$emit('close')"
         >
           Close
-        </SecondaryButton>
+        </app-button>
       </div>
     </template>
   </BaseModal>
@@ -168,20 +171,22 @@ onUpdated(() => {
 
     <template #footer>
       <div class="flex justify-center gap-4">
-        <PrimaryButton
+        <app-button
+          btn-type="success"
           class="btn btn-indigo duration-300 submit-btn"
           @click="onSubmitEdit"
           :disabled="!meta.valid"
         >
           Save
-        </PrimaryButton>
-        <SecondaryButton
+        </app-button>
+        <app-button
+          btn-type="secondary"
           type="button"
           class="btn btn-gray duration-300"
           @click="editingOff"
         >
           Cancel
-        </SecondaryButton>
+        </app-button>
       </div>
     </template>
   </BaseModal>
