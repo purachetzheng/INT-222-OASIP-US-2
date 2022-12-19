@@ -39,13 +39,10 @@ const signInUser = async (user) => {
 
 <template>
     <AuthPageTemplate>
-        <template #header>Welcome Back</template>
+        <template #header>Welcome Back !</template>
         <template #desc>Please sign in to continue</template>
         <template #img>
-            <img
-                src="../../assets/images/illustrations/login-illustration.svg"
-                alt=""
-            />
+            <img src="../../assets/images/illustrations/login-illustration.svg" alt="" />
         </template>
 
         <app-vee-input name="email" type="email" :placeholder="'Email'" />
@@ -56,10 +53,7 @@ const signInUser = async (user) => {
         <div class="text-center mt-4">
             <div class="text-sm font-medium">
                 <span class="text-gray-500">Don't have Account? </span>
-                <router-link
-                    :to="{ name: 'SignUp' }"
-                    class="text-indigo-500 underline"
-                >
+                <router-link :to="{ name: 'SignUp' }" class="text-indigo-500 underline">
                     Create account
                 </router-link>
             </div>
@@ -69,16 +63,13 @@ const signInUser = async (user) => {
             <p>OR</p>
             <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
         </div>
-        <app-button
-            btn-type="primary"
-            @click="userStore.msalSignIn"
-            btn-size="lg"
-            :btn-icon="['fab', 'microsoft']"
-            outline
-        >
+        <app-button btn-type="primary" @click="userStore.msalSignIn" btn-size="lg" :btn-icon="['fab', 'microsoft']"
+            outline>
             Sign in with Microsoft
         </app-button>
     </AuthPageTemplate>
 </template>
 
-<style></style>
+<style>
+
+</style>
