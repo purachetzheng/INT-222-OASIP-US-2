@@ -1,13 +1,34 @@
 name: deploy-on-docker
 
 on:
-    push:
-        branches: [dev]
-
+  push:
+    branches: [ dev ]
+    
 jobs:
-    build:
-        runs-on: self-hosted
+  build:
+    runs-on: self-hosted
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        clean: false
+    
+    # Down Docker-compose container
+    - name: Docker Stopping
+      run: docker compose down
+      
+    # Delete Docker Images (Frontend, Backend)
+    - name: Remove Docker frontend and backend images
+      run: docker rmi int-222-oasip-us-2_backapp int-222-oasip-us-2_frontapp
 
-        steps:
-            - uses: actions/checkout@v2
-            - run: docker compose down
+    # Fetch latest version from branch dev 
+    - name: Fetching Latest Data
+      run: git fetch
+      
+    # Pull from Github 
+    - name: Pulling Latest Data
+      run: git pull origin dev
+          
+    # Start Docker-compose
+    - name: Starting Docker Container
+      run: docker compose up -d

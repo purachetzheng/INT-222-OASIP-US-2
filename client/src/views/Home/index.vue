@@ -6,7 +6,7 @@ import PageWrapper from '../../components/Layout/PageWrapper.vue'
 const appStore = useAppStore()
 const userStore = useUserStore()
 const { authWith, isSignedIn } = storeToRefs(userStore)
-const {} = appStore
+const { } = appStore
 // appStore.init()
 </script>
 
@@ -28,11 +28,7 @@ const {} = appStore
             <fa-icon :icon="['fas', 'circle']" class="text-red-500" />
             <fa-layer class="fa-4x">
                 <fa-icon :icon="['fas', 'circle']" class="text-red-500" />
-                <fa-icon
-                    :icon="['fas', 'times']"
-                    transform="shrink-8"
-                    inverse
-                />
+                <fa-icon :icon="['fas', 'times']" transform="shrink-8" inverse />
             </fa-layer>
             <fa-layer class="fa-xl">
                 <fa-icon :icon="['far', 'circle']" class="" />
@@ -40,54 +36,17 @@ const {} = appStore
             </fa-layer>
             <fa-layer class="fa-4x">
                 <fa-icon :icon="['fas', 'tag']" class="text-green-500" />
-                <fa-layer-text
-                    :icon="['fas', 'times']"
-                    value="NEW"
-                    transform="shrink-12 rotate--45"
-                    class="text-white"
-                    inverse
-                />
+                <fa-layer-text :icon="['fas', 'times']" value="NEW" transform="shrink-12 rotate--45" class="text-white"
+                    inverse />
             </fa-layer>
             <fa-layer class="fa-2xl">
                 <fa-icon :icon="['fas', 'filter']" class="text-red-500" />
                 <fa-icon :icon="['fas', 'filter']" class="fa-2xs" inverse />
             </fa-layer>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
-            <h1>1</h1>
         </div>
     </PageWrapper>
 </template>
 
-<style></style>
+<style>
+
+</style>
