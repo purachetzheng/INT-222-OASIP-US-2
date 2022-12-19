@@ -66,33 +66,37 @@ import PageWrapper from '../../components/Layout/PageWrapper.vue'
             <div class="flex items-end gap-2">
                 <!-- <app-button btn-size="xs">Button XS</app-button> -->
                 <app-button btn-size="sm">Button SM</app-button>
+                <app-button btn-size="sm" outline>Button SM</app-button>
                 <app-button>Button MD</app-button>
-                <app-button btn-size="lg">Button SM</app-button>
-                <app-button btn-size="xl">Button SM</app-button>
+                <app-button outline>Button MD</app-button>
+                <app-button btn-size="lg">Button LG</app-button>
+                <app-button btn-size="lg" outline>Button MD</app-button>
+                <!-- <app-button btn-size="xl">Button XL</app-button>
+                <app-button btn-size="xl" outline>Button XL</app-button> -->
             </div>
             <div class="flex items-end gap-2">
-                <app-button btn-size="lg" btn-type="primary">Primary</app-button>
-                <app-button btn-size="lg" btn-type="secondary">Secondary</app-button>
-                <app-button btn-size="lg" btn-type="success">Success</app-button>
-                <app-button btn-size="lg" btn-type="danger">Danger</app-button>
-                <app-button btn-size="lg" btn-type="warning">Warning</app-button>
-                <app-button btn-size="lg" btn-type="muted">Muted</app-button>
+                <app-button btn-type="primary">Primary</app-button>
+                <app-button btn-type="secondary">Secondary</app-button>
+                <app-button btn-type="success">Success</app-button>
+                <app-button btn-type="danger">Danger</app-button>
+                <app-button btn-type="warning">Warning</app-button>
+                <app-button btn-type="muted">Muted</app-button>
             </div>
             <div class="flex items-end gap-2">
-                <app-button btn-size="lg" btn-type="primary" outline>Outline Primary</app-button>
-                <app-button btn-size="lg" btn-type="secondary" outline>Outline Secondary</app-button>
-                <app-button btn-size="lg" btn-type="success" outline>Outline Success</app-button>
-                <app-button btn-size="lg" btn-type="danger" outline>Outline Danger</app-button>
-                <app-button btn-size="lg" btn-type="warning" outline>Outline Warning</app-button>
-                <app-button btn-size="lg" btn-type="muted" outline>Outline Muted</app-button>
+                <app-button btn-type="primary" outline>Outline Primary</app-button>
+                <app-button btn-type="secondary" outline>Outline Secondary</app-button>
+                <app-button btn-type="success" outline>Outline Success</app-button>
+                <app-button btn-type="danger" outline>Outline Danger</app-button>
+                <app-button btn-type="warning" outline>Outline Warning</app-button>
+                <app-button btn-type="muted" outline>Outline Muted</app-button>
             </div>
             <div class="flex items-end gap-2">
-                <app-button btn-size="lg" btn-type="primary" ghost>Ghost Primary</app-button>
-                <app-button btn-size="lg" btn-type="secondary" ghost>Ghost Secondary</app-button>
-                <app-button btn-size="lg" btn-type="success" ghost>Ghost Success</app-button>
-                <app-button btn-size="lg" btn-type="danger" ghost>Ghost Danger</app-button>
-                <app-button btn-size="lg" btn-type="warning" ghost>Ghost Warning</app-button>
-                <app-button btn-size="lg" btn-type="muted" ghost>Ghost Muted</app-button>
+                <app-button btn-type="primary" ghost>Ghost Primary</app-button>
+                <app-button btn-type="secondary" ghost>Ghost Secondary</app-button>
+                <app-button btn-type="success" ghost>Ghost Success</app-button>
+                <app-button btn-type="danger" ghost>Ghost Danger</app-button>
+                <app-button btn-type="warning" ghost>Ghost Warning</app-button>
+                <app-button btn-type="muted" ghost>Ghost Muted</app-button>
             </div>
         </div>
     </PageWrapper>
