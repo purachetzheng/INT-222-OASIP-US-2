@@ -120,7 +120,7 @@ const allowedNavItems = computed(() =>
   @apply flex items-center space-x-4 pl-4 py-3 text-gray-600 hover:bg-gray-200 rounded-md;
 }
 .sidebar-nav-item.active {
-  @apply bg-gradient-to-r from-sky-600 to-cyan-400 text-white;
+  @apply bg-gradient-to-r from-indigo-500 to-indigo-300 text-white;
 }
 .text-collapsed {
   @apply opacity-0 -translate-x-8;

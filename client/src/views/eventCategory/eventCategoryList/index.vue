@@ -59,7 +59,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <PageWrapper>
+  <PageWrapper pageTitle="Event Categories">
   <main class="flex flex-col gap-0 justify-between">
     <EditCategoryModal :modal-state="editModal" @submit-edit-form="patchCategory" />
     <CategoryTable class="" :categories="eventCategories" @edit-category="editModal.show" />

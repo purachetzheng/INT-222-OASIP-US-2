@@ -8,10 +8,13 @@ import BookingStepTemplate from './BookingStepTemplate.vue'
 import EventCategoryCard from './EventCategoryCard.vue'
 import { useUserStore } from '../../../stores'
 import { objRemoveEmpty, objRenameKeys } from '../../../utils/ObjectUtils'
-
+import {useRouter} from 'vue-router'
 import schema from '@/services/validation/schema/AddEventSchema'
 import { useForm } from 'vee-validate'
 import FillFormFileField from './FillFormFileField.vue'
+
+const router = useRouter()
+
 const userStore = useUserStore()
 
 const { handleSubmit, resetForm, setValues, setFieldValue, meta: infoFormMeta } = useForm({
@@ -122,7 +125,9 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
             ? await apiEvent.post(newEvent)
             : await postGuestsEvent(newEvent)
         console.log(data)
-        alert('ok')
+        alert('Added New Event Successful')
+        router.push({name:'Schedules'})
+        
     } catch (error) {
         console.log(error.message)
     }

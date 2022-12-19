@@ -121,7 +121,7 @@ onUpdated(async () => {
                     :max="formConfig.description.maxLength"
                     label="Description"
                 />
-                <AddCategoryOwner />
+                <!-- <AddCategoryOwner /> -->
             </div>
         </template>
         <template #footer>
