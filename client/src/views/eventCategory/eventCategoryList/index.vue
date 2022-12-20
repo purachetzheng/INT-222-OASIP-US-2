@@ -1,11 +1,12 @@
 <script setup>
 import { onBeforeMount, ref } from 'vue'
-import { apiGetEventCategory, apiPatchEventCategory } from '../../../services/api/lib/eventCategory'
+import { apiGetEventCategory, apiPatchEventCategory,apiGetCategoryOwners } from '../../../services/api/lib/eventCategory'
 import CategoryTable from './components/CategoryTable.vue'
 import EditCategoryModal from './components/EditCategoryModal.vue'
 import PageWrapper from '../../../components/Layout/PageWrapper.vue';
 const isLoading = ref(false)
 const eventCategories = ref([])
+const categoryOwners = ref([])
 
 const editingCategoryTemplate = {
   id: null,
@@ -53,8 +54,25 @@ const getEventCategory = async () => {
     console.log('error ', error.message)
   }
 }
+
+const getEventCategoryOwners = async () => {
+  try {
+    const { data, status } = await apiGetCategoryOwners()
+    console.log(data)
+    // const { content, number, totalPages } = data
+    // eventCategories.value = content
+
+  } catch (error) {
+    // console.log(error)
+    // console.log(error.response)
+    const res = error.response
+    console.log(res.status)
+    console.log('error ', error.message)
+  }
+}
 onBeforeMount(async () => {
   getEventCategory()
+  getEventCategoryOwners()
 })
 </script>
 

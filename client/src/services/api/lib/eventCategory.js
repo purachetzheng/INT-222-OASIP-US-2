@@ -9,6 +9,10 @@ export const apiGetEventCategory = (
 export const apiPatchEventCategory = ({ id, data }) =>
   apiClient.put(`${endpoint}/${id}`, data)
 
+export const apiGetCategoryOwners = (
+  params = { page: null, pageSize: null, sortBy: null }
+) => apiClient.get(`${endpoint}/categoryOwners`)
+
 const apiEventCategory = {
   get: () => apiClient.get('/api/eventcategories', {requiresAuth: false}),
 
