@@ -23,7 +23,12 @@ const test = (v) => console.log(v);
             @confirm="confirmDeleteModal.onConfirm"
         >
             <template #title> Delete User </template>
-            <template #desc>
+            <template v-if="confirmDeleteModal.modalText" #desc>
+                <p class="">{{ confirmDeleteModal.modalText }}</p>
+                <!-- Are you sure to delete
+                <span class="italic font-semibold">"{{ confirmDeleteModal.user.name }}"</span> user? -->
+            </template>
+            <template v-else #desc>
                 Are you sure to delete
                 <span class="italic font-semibold">"{{ confirmDeleteModal.user.name }}"</span> user?
             </template>

@@ -1,8 +1,10 @@
 <script setup>
 import { computed, onBeforeMount, provide, readonly, ref, reactive } from 'vue'
 import { apiUser } from '../../../services/api/lib'
+import { apiGetCategoryOwners, apiGetEventCategory } from '../../../services/api/lib/eventCategory'
 import { datetimeCalculate, datetimeCheck, formatDatetime } from '../../../utils/dateTime'
 const users = ref([''])
+const eventCategories = ref([])
 const getUsers = async (page) => {
     try {
         const { data, status } = await apiUser.get()
@@ -35,13 +37,12 @@ const createUser = async (user) => {
         alert(messageError)
     }
 }
-const updateUser = async ({id, modifyUser, setErr}) => {
+const updateUser = async ({ id, modifyUser, setErr }) => {
     try {
         const { data } = await apiUser.patch(id, modifyUser)
         users.value = users.value.map((user) => (user.id === data.id ? data : user))
         viewDetailModal.user = data
         viewDetailModal.onSuccess()
-        
     } catch (error) {
         const { data, status } = error.response
         const { details } = data
@@ -78,7 +79,6 @@ const addUserModal = reactive({
     close: () => (addUserModal.state = false),
     onCreate: (data) => {
         createUser(data)
-        
     },
     onCancel: () => {
         addUserModal.close()
@@ -86,7 +86,7 @@ const addUserModal = reactive({
     onSuccess: () => {
         addUserModal.close()
         alert('created successful')
-    }
+    },
     // editingOn: () => viewDetailModal.editingMode = true,
     // onEdit: (params) => updateUser(params),
     // onCancel: () => viewDetailModal.editingMode = false,
@@ -95,7 +95,6 @@ const addUserModal = reactive({
     //     alert('ok')
     // }
 })
-
 
 const viewDetailModal = reactive({
     state: false,
@@ -106,25 +105,74 @@ const viewDetailModal = reactive({
         viewDetailModal.user = user
     },
     close: () => (viewDetailModal.state = false),
-    editingOn: () => viewDetailModal.editingMode = true,
+    editingOn: () => (viewDetailModal.editingMode = true),
     onEdit: (params) => updateUser(params),
-    onCancel: () => viewDetailModal.editingMode = false,
+    onCancel: () => (viewDetailModal.editingMode = false),
     onSuccess: () => {
         viewDetailModal.close()
         alert('edited successful')
-    }
+    },
 })
 
 const confirmDeleteModal = reactive({
     state: false,
     user: { id: null },
+    modalText: null,
     show: (user) => {
+        confirmDeleteModal.modalText = null
+        if (
+            user.role == 'lecturer' &&
+            categoryOwner.value.filter((owner) => owner.userID == user.id).length
+        ) {
+            let alertDialog = ''
+
+            const categoriesOwner = []
+            categoryOwner.value
+                .filter((owner) => owner.userID == user.id)
+                .forEach((owner) => categoriesOwner.push(owner.eventCategoryId))
+            categoriesOwner.sort()
+
+            console.log(categoriesOwner)
+
+            let categoriesText = ''
+            categoriesOwner.forEach(
+                (category) =>
+                    (categoriesText +=
+                        eventCategories.value.find((eCategory) => eCategory.id == category)
+                            .eventCategoryName + ', ')
+            )
+            categoriesText = categoriesText.slice(0, -2)
+            alertDialog += `${user.name} is the owner of ${categoriesText}.`
+
+            const onlyOwner = []
+            const onlyOwnerName =[]
+            categoriesOwner.forEach((cOwner) => {
+                const otherOwner = categoryOwner.value.filter((category) => category.eventCategoryId == cOwner && category.userID != user.id)
+                if(!otherOwner.length){
+                    onlyOwner.push(eventCategories.value.find(eC => eC.id == cOwner).eventCategoryName)
+                }
+            })
+
+            if(onlyOwner.length){
+                alertDialog += `\n\nYou cannot delete this user account since ${user.name} is the only owner of ${onlyOwner.join(',')}.`
+                alertDialog += `\n\nAnother owner must be added to the event category(s) before this lecturer can be deleted.`
+                return alert(alertDialog)
+            }
+            else {
+                alertDialog += `\n\nDeletion of this user account will also remove this user from the event category(s). Do you still want to delete this account?"`
+                confirmDeleteModal.modalText = alertDialog
+                console.log(confirmDeleteModal.modalText);
+                // confirm(alertDialog)
+                // return 
+            }
+            
+        }
         confirmDeleteModal.state = true
         confirmDeleteModal.user = user
     },
     close: () => (confirmDeleteModal.state = false),
     onConfirm: () => {
-        console.log(confirmDeleteModal.user);
+        console.log(confirmDeleteModal.user)
         deleteUser(confirmDeleteModal.user.id)
         confirmDeleteModal.close()
     },
@@ -133,9 +181,42 @@ const confirmDeleteModal = reactive({
     },
 })
 
+const categoryOwner = ref([])
+const getEventCategoryOwners = async () => {
+    try {
+        const { data, status } = await apiGetCategoryOwners()
+        categoryOwner.value = data
+        // console.log(data)
+        // const { content, number, totalPages } = data
+        // eventCategories.value = content
+    } catch (error) {
+        // console.log(error)
+        // console.log(error.response)
+        const res = error.response
+        console.log(res.status)
+        console.log('error ', error.message)
+    }
+}
+const getEventCategory = async () => {
+    try {
+        const { data, status } = await apiGetEventCategory()
+        console.log(data)
+        const { content, number, totalPages } = data
+        eventCategories.value = content
+        return data.content
+    } catch (error) {
+        // console.log(error)
+        // console.log(error.response)
+        const res = error.response
+        console.log(res.status)
+        console.log('error ', error.message)
+    }
+}
 
 onBeforeMount(() => {
     getUsers()
+    getEventCategory()
+    getEventCategoryOwners()
 })
 const disPlayUpdated = (datetime) => {
     // if (datetimeCheck.isHourAgo(datetime)) return datetimeCalculate.timeFromNow(datetime)
