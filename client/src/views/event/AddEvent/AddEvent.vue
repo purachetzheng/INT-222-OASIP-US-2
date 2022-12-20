@@ -1,55 +1,55 @@
 <script setup>
-import { computed, onBeforeMount, reactive, ref, onUpdated, watch } from 'vue'
-import { apiEvent, apiEventCategory } from '../../../services/api/lib'
-import { serialize } from 'object-to-formdata'
-import { formatDatetime,datetimeForInput } from '../../../utils/dateTime'
-import PageWrapper from '../../../components/Layout/PageWrapper.vue'
-import BookingStepTemplate from './BookingStepTemplate.vue'
-import EventCategoryCard from './EventCategoryCard.vue'
-import { useUserStore } from '../../../stores'
-import { objRemoveEmpty, objRenameKeys } from '../../../utils/ObjectUtils'
-import {useRouter} from 'vue-router'
-import schema from '@/services/validation/schema/AddEventSchema'
-import { useForm } from 'vee-validate'
-import FillFormFileField from './FillFormFileField.vue'
+import { computed, onBeforeMount, reactive, ref, onUpdated, watch } from "vue";
+import { apiEvent, apiEventCategory } from "../../../services/api/lib";
+import { serialize } from "object-to-formdata";
+import { formatDatetime, datetimeForInput } from "../../../utils/dateTime";
+import PageWrapper from "../../../components/Layout/PageWrapper.vue";
+import BookingStepTemplate from "./BookingStepTemplate.vue";
+import EventCategoryCard from "./EventCategoryCard.vue";
+import { useUserStore } from "../../../stores";
+import { objRemoveEmpty, objRenameKeys } from "../../../utils/ObjectUtils";
+import { useRouter } from "vue-router";
+import schema from "@/services/validation/schema/AddEventSchema";
+import { useForm } from "vee-validate";
+import FillFormFileField from "./FillFormFileField.vue";
 
-const router = useRouter()
+const router = useRouter();
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 const { handleSubmit, resetForm, setValues, setFieldValue, meta: infoFormMeta } = useForm({
     validationSchema: schema,
     initialValues: {
-        name: '',
-        email: '',
-        notes: '',
+        name: "",
+        email: "",
+        notes: "",
     },
-})
+});
 
 const completedSteps = computed(() => {
-    let x = 0
+    let x = 0;
 
-    if (!Boolean(selectedCategory.value.id)) return x
-    x++
+    if (!Boolean(selectedCategory.value.id)) return x;
+    x++;
 
-    return x
-})
+    return x;
+});
 const bookingForm = reactive({
     step: 1,
     completedSteps: completedSteps,
     nextStep() {
-        bookingForm.step++
+        bookingForm.step++;
     },
     prevStep() {
-        bookingForm.step--
+        bookingForm.step--;
     },
     setStep(step) {
-        if (bookingForm.step == step) return (bookingForm.step = 0)
-        bookingForm.step = step
+        if (bookingForm.step == step) return (bookingForm.step = 0);
+        bookingForm.step = step;
     },
-})
-const selectedCategoryTemplate = { id: 0 }
-const selectedCategory = ref({ ...selectedCategoryTemplate })
+});
+const selectedCategoryTemplate = { id: 0 };
+const selectedCategory = ref({ ...selectedCategoryTemplate });
 // const isStepComplete = computed(() => {
 //     if ((bookingForm.step = 1)) {
 //         return Boolean(chooseCategoryStep.selected)
@@ -58,7 +58,7 @@ const selectedCategory = ref({ ...selectedCategoryTemplate })
 
 const fillInformationStep = reactive({
     THIS_STEP: 2,
-})
+});
 // const isFillInformationStepComplete = computed(() => meta.valid)
 const chooseCategoryStep = reactive({
     THIS_STEP: 1,
@@ -66,24 +66,24 @@ const chooseCategoryStep = reactive({
     selected: selectedCategory,
     async getCategories() {
         try {
-            const { data } = await apiEventCategory.get()
-            chooseCategoryStep.categories = data.content
-            console.log(data)
+            const { data } = await apiEventCategory.get();
+            chooseCategoryStep.categories = data.content;
+            console.log(data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     },
-    select(category){
-        chooseCategoryStep.selected = category
-        resetForm()
-        setFieldValue('email', userStore.user.email);
-        setFieldValue('name', userStore.user.name);
+    select(category) {
+        chooseCategoryStep.selected = category;
+        resetForm();
+        setFieldValue("email", userStore.user.email);
+        setFieldValue("name", userStore.user.name);
     },
     nextStep() {
-        bookingForm.setStep(chooseCategoryStep.THIS_STEP + 1)
+        bookingForm.setStep(chooseCategoryStep.THIS_STEP + 1);
     },
-})
-const isChooseCategoryStepComplete = computed(() => Boolean(chooseCategoryStep.selected.id))
+});
+const isChooseCategoryStepComplete = computed(() => Boolean(chooseCategoryStep.selected.id));
 // const categories = ref([])
 // const getCategories = async () => {
 //     try {
@@ -97,10 +97,10 @@ const isChooseCategoryStepComplete = computed(() => Boolean(chooseCategoryStep.s
 // }
 onBeforeMount(() => {
     // getCategories()
-    chooseCategoryStep.getCategories()
-})
+    chooseCategoryStep.getCategories();
+});
 
-const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => {
+const onSubmit = handleSubmit(async ({ name, email, datetime, notes, file }) => {
     const newEvent = {
         eventCategoryId: selectedCategory.value.id,
         eventDuration: selectedCategory.value.eventDuration,
@@ -109,30 +109,26 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
         name,
         email,
         file,
-    }
-    if (!notes) delete newEvent['notes']
-    if (!file) delete newEvent['file']
+    };
+    if (!notes) delete newEvent["notes"];
+    if (!file) delete newEvent["file"];
     const changesMap = {
-        name: 'bookingName',
-        email: 'bookingEmail',
-    }
-    objRenameKeys(newEvent, changesMap)
-    console.log(newEvent)
-    const newEventFormData = serialize(newEvent)
-    console.log(newEventFormData)
+        name: "bookingName",
+        email: "bookingEmail",
+    };
+    objRenameKeys(newEvent, changesMap);
+    console.log(newEvent);
+    const newEventFormData = serialize(newEvent);
+    console.log(newEventFormData);
     try {
-        const { data } = userStore.isAuth
-            ? await apiEvent.post(newEvent)
-            : await postGuestsEvent(newEvent)
-        console.log(data)
-        alert('Added New Event Successful')
-        router.push({name:'Schedules'})
-        
+        const { data } = userStore.isAuth ? await apiEvent.post(newEvent) : await postGuestsEvent(newEvent);
+        console.log(data);
+        alert("Added New Event Successful");
+        router.push({ name: "Schedules" });
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
-})
-
+});
 </script>
 
 <template>
@@ -152,9 +148,8 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
                 @next="chooseCategoryStep.nextStep"
                 @selectStep="bookingForm.setStep"
             >
-                <ul
-                    class="h-full auto-rows-min grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 grid-cols-1 gap-4"
-                >
+                <template #step-desc>Choose your category for booking event.</template>
+                <ul class="h-full auto-rows-min grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 grid-cols-1 gap-4">
                     <EventCategoryCard
                         v-for="category in chooseCategoryStep.categories"
                         :category="category"
@@ -179,9 +174,7 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
                 <div class="mx-auto max-w-2xl">
                     <div class="col-span-2">
                         <div class="">
-                            <label for="category" class="text-sm font-medium leading-3"
-                                >Category</label
-                            >
+                            <label for="category" class="text-sm font-medium leading-3">Category</label>
                         </div>
                         <input
                             class="form-input h-10 mb-4"
@@ -193,14 +186,20 @@ const onSubmit =handleSubmit( async ({ name, email, datetime, notes, file }) => 
                     </div>
                     <app-vee-input name="name" type="text" :max="100" label="Name" counter required />
                     <app-vee-input name="email" type="text" :max="100" label="Email" counter required />
-                    
+
                     <div class="grid grid-cols-2 gap-4"></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <app-vee-input name="datetime.date" type="date" label="Date" :min="datetimeForInput.getNow()" required />
+                        <app-vee-input
+                            name="datetime.date"
+                            type="date"
+                            label="Date"
+                            :min="datetimeForInput.getNow()"
+                            required
+                        />
                         <app-vee-input name="datetime.time" type="time" label="Time" required />
                     </div>
                     <FillFormFileField />
-                    <app-vee-textarea name="notes" :max="500" label="Notes" counter  />
+                    <app-vee-textarea name="notes" :max="500" label="Notes" counter />
                 </div>
             </BookingStepTemplate>
         </div>
