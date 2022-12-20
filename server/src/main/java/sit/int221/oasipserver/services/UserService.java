@@ -6,6 +6,7 @@ import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -108,12 +109,14 @@ public class UserService {
     }
 
     //Delete
-    public void delete(Integer id) throws BadRequestException {
+    public void delete(Integer id, HttpServletResponse response) throws BadRequestException {
         if(getById(id).getRole() == UserRole.lecturer) { //lecturer user
             for(Eventcategory category : eventcategoryRepository.findAllByUsersId(id)){ //loop all categories of this lec
                 if(eventcategoryRepository.countCategoryUsers(category.getId()) <= 1) {
                     System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer less than 1");
-                    throw new BadRequestException(category.getEventCategoryName() + " cannot be owned less than 1 lecturer");
+                    response.setStatus(HttpStatus.BAD_REQUEST.value());
+                    return;
+//                    throw new BadRequestException(category.getEventCategoryName() + " cannot be owned less than 1 lecturer");
                 } else {
                     System.out.println(category.getId() + ": " + category.getEventCategoryName() + "'s lecturer more than 1");
                 }
@@ -228,8 +231,10 @@ public class UserService {
         User user;
 
         if(repository.existsByEmail(matchUser.getEmail())){
+            System.out.println(matchUser.getEmail() + "match");
             user = repository.findByEmail(matchUser.getEmail().trim()); //Get user มาจาก Database ตาม email ที่ส่งมา
         } else {
+            System.out.println(matchUser.getEmail() + "throw");
             throw new ApiNotFoundException("Email does not exist");
         }
         String userArgon2Password = user.getPassword(); //เอา Argon2 password มาจาก Database
