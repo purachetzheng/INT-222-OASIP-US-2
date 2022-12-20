@@ -85,10 +85,11 @@ ENGINE = InnoDB;
 -- Event Category Owner Table
 CREATE TABLE IF NOT EXISTS eventcategoryowner (
   -- categoryOwnerId INT NOT NULL,
+  id INT NOT NULL AUTO_INCREMENT,
   userId INT NOT NULL,
   eventCategoryId INT NOT NULL,
   INDEX fk_eventcategoryowner_eventcategories1_idx (eventCategoryId ASC) VISIBLE,
-  PRIMARY KEY (userId, eventCategoryId),
+  PRIMARY KEY (id),
   CONSTRAINT fk_eventcategoryowner_users
     FOREIGN KEY (userId)
     REFERENCES oasip.users (userID)
@@ -133,16 +134,15 @@ INSERT INTO users values
 (10, 'lecturer', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 'l@l.com', 'lecturer', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
 (11, 'student', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 's@s.com', 'student', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00'),
 (12, 'admin', '$argon2id$v=19$m=150,t=2,p=1$1JMkXLioU05zcQ$WNOMZTvqCuV11VF2sKPN/ER7osU', 'a@a.com', 'admin', '2022-08-16 09:00:00+07:00', '2022-08-16 09:00:00+07:00');
-
 INSERT INTO eventcategoryowner VALUES
-(10, 1),
-(2, 1),
-(2, 2),
-(5, 2),
-(6, 3),
-(4, 4),
-(2, 5),
-(3, 5);
+-- (1, 10, 1),
+(2, 2, 1),
+(3, 2, 2),
+(4, 5, 2),
+(5, 6, 3),
+(6, 4, 4),
+(7, 2, 5),
+(8, 3, 5);
 
 CREATE USER 'OASIPBE'@'%' IDENTIFIED BY 'BEBE';
 GRANT ALL PRIVILEGES ON oasip.* TO 'OASIPBE'@'%';

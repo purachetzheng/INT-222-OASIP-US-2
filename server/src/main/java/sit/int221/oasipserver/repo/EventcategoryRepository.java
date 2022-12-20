@@ -20,6 +20,10 @@ public interface EventcategoryRepository extends JpaRepository<Eventcategory, In
             ,nativeQuery = true)
     public Integer countCategoryUsers(Integer categoryId);
 
+    @Query( value = "SELECT * FROM eventcategoryowner"
+            ,nativeQuery = true)
+    public List<?> categoryOwners();
+
 
     public List<Eventcategory> findEventcategoriesByUsersLike(User user);
 

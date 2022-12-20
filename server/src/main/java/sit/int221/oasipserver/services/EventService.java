@@ -163,6 +163,7 @@ public class EventService {
         repository.delete(getById(id, response));
     }
 
+    @PreAuthorize("hasRole('ROLE_student') or hasRole('ROLE_admin')")
     public SimpleEventDto create(PostEventDto newEvent, BindingResult result, TimeZone timeZone)
             throws MethodArgumentNotValidException, ApiRequestException {
 

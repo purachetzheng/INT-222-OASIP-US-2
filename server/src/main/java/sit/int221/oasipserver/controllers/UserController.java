@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) throws BadRequestException {userService.delete(id);}
+    public void deleteUser(@PathVariable Integer id, HttpServletResponse response) throws BadRequestException {userService.delete(id, response);}
 
     @PatchMapping("/{id}")
     public UserDto updateUser(

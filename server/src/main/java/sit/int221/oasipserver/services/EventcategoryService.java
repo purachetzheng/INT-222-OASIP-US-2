@@ -89,10 +89,6 @@ public class EventcategoryService {
         if(updateCategory.getUserOwners() != null) { //ถ้ามีส่งมา
             System.out.println("begin set");
             userCategoriesOwner.add(userRepository.findById(updateCategory.getUserOwners()).orElseThrow());
-//            for(Integer user : updateCategory.getUserOwners()) { //forEach แต่ละ userId ที่ส่งมา
-//                System.out.println("This is id: " + user + " to patched");
-//                userCategoriesOwner.add(userRepository.findById(user).orElseThrow()); //add object แต่ละ id เข้าไปใน Set
-//            }
             eventcategory.setUsers(userCategoriesOwner); //set object ว่า category นี้มี user ไหนบ้าง (ของ Lecturer)
             for(User user : eventcategory.getUsers()) {
                 System.out.println(user.getId() + ": " + user.getEmail());
